@@ -3,7 +3,11 @@ name = "document-service"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "beanie>=2.1.0",
+    "fastapi>=0.135.2",
+    "pydantic-settings>=2.13.1",
+]
 
 [dependency-groups]
 dev = [
