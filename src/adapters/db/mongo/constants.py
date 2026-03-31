@@ -14,8 +14,6 @@ class _MongoDefaults:
         ENV_PREFIX: Environment variable prefix for MongoDB
         PORT: Default MongoDB port (27017)
         SCHEMA: Connection scheme (mongodb or mongodb+srv)
-        TIMEZONE_AWARE: Whether to make datetime objects timezone-aware
-        DATETIME_CONVERSION: How to handle datetime objects
         (datetime_ms, datetime, datetime_auto, datetime_clamp)
         MAX_POOL_SIZE: Maximum number of connections in the pool
         MIN_POOL_SIZE: Minimum number of connections in the pool
@@ -64,8 +62,6 @@ class _MongoDefaults:
     ENV_PREFIX: Final[str] = "MONGODB_"
     PORT: Final[int] = 27017
     SCHEMA: Final[str] = "mongodb"
-    TIMEZONE_AWARE: Final[bool | None] = None
-    DATETIME_CONVERSION: Final[str] = "datetime"
     # Pool settings
     MAX_POOL_SIZE: Final[int | None] = None  # 100
     MIN_POOL_SIZE: Final[int | None] = None  # 0

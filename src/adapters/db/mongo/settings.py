@@ -1,41 +1,10 @@
-from collections.abc import Callable, Sequence
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from pydantic import Field, MongoDsn, NonNegativeInt, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
 from src.adapters.db.mongo.constants import _MongoDefaults
 from src.core.settings import Defaults, model_config
-
-if TYPE_CHECKING:
-    from pymongo.driver_info import DriverInfo
-    from pymongo.encryption_options import AutoEncryptionOpts
-    from pymongo.monitoring import (
-        CommandListener,
-        ConnectionPoolListener,
-        ServerHeartbeatListener,
-        ServerListener,
-        TopologyListener,
-    )
-    from pymongo.server_api import ServerApi
-    from pymongo.server_description import ServerDescription
-
-type ServerSelectorType = (
-    Callable[[list[ServerDescription]], list[ServerDescription]] | None
-)
-type DriverType = DriverInfo | None
-type EventListenerType = (
-    Sequence[
-        CommandListener
-        | ConnectionPoolListener
-        | ServerHeartbeatListener
-        | TopologyListener
-        | ServerListener
-    ]
-    | None
-)
-type AutoEncryptionOptsType = AutoEncryptionOpts | None
-type ServerApiType = ServerApi | None
 
 
 class _Settings(BaseSettings):
@@ -73,18 +42,6 @@ class _Settings(BaseSettings):
         description="Default database name",
         min_length=1,
         max_length=32,
-    )
-    TIMEZONE_AWARE: bool | None = Field(
-        default=_MongoDefaults.TIMEZONE_AWARE,
-        description="if ``True``, :class:`~datetime.datetime` instances "
-        "returned as values in a document by this "
-        ":class:`AsyncMongoClient` will be timezone aware "
-        "(otherwise they will be naive)",
-    )
-    DATETIME_CONVERSION: str = Field(
-        default=_MongoDefaults.DATETIME_CONVERSION,
-        description="Specifies how UTC datetimes should be decoded within BSON",
-        pattern="^(datetime_ms|datetime|datetime_auto|datetime_clamp)$",
     )
 
     # Pool settings
@@ -316,14 +273,7 @@ class _Settings(BaseSettings):
             path=f"/{self.DATABASE}" if self.DATABASE else "",
         )
 
-    def get_client_kwargs(
-        self,
-        server_selector: ServerSelectorType = None,
-        driver: DriverType = None,
-        event_listeners: EventListenerType = None,
-        auto_encryption_opts: AutoEncryptionOptsType = None,
-        server_api: ServerApiType = None,
-    ) -> dict[str, Any]:
+    def get_client_kwargs(self) -> dict[str, Any]:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
@@ -341,19 +291,6 @@ class _Settings(BaseSettings):
         self._read_concern_setting(result)
         self._srv_api_setting(result)
         self._unicode_error_handling_setting(result)
-
-        result["datetime_conversion"] = self.DATETIME_CONVERSION
-
-        if server_selector:
-            result["server_selector"] = server_selector
-        if driver:
-            result["driver"] = driver
-        if event_listeners:
-            result["event_listeners"] = event_listeners
-        if auto_encryption_opts:
-            result["auto_encryption_opts"] = auto_encryption_opts
-        if server_api:
-            result["server_api"] = server_api
 
         return result
 
@@ -387,7 +324,7 @@ class _Settings(BaseSettings):
 
     def _tls_setting(self, result: dict[str, Any]) -> None:
         if self.TLS:
-            result["TLS"] = self.TLS
+            result["tls"] = self.TLS
             result["tlsInsecure"] = self.TLS_INSECURE
             result["tlsallowinvalidcertificates"] = (
                 self.TLS_ALLOW_INVALID_CERTIFICATES
