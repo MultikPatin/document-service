@@ -270,7 +270,6 @@ class _Settings(BaseSettings):
             scheme=self.SCHEMA,
             username=self.USERNAME,
             password=self.PASSWORD.get_secret_value(),
-            path=f"/{self.DATABASE}" if self.DATABASE else "",
         )
 
     def get_client_kwargs(self) -> dict[str, Any]:
@@ -340,8 +339,8 @@ class _Settings(BaseSettings):
                 result["tlscafile"] = self.TLS_CA_FILE
             if self.TLS_CERTIFICATE_KEY_FILE:
                 result["tlscertificatekeyfile"] = self.TLS_CERTIFICATE_KEY_FILE
-            if self.TLS_CA_FILE:
-                result["tlsCRLFile"] = self.TLS_CA_FILE
+            if self.TLS_CRL_FILE:
+                result["tlsCRLFile"] = self.TLS_CRL_FILE
             if self.TLS_CERTIFICATE_KEY_FILE_PASSWORD:
                 result["tlsCertificateKeyFilePassword"] = (
                     self.TLS_CERTIFICATE_KEY_FILE_PASSWORD
@@ -390,5 +389,5 @@ class _Settings(BaseSettings):
 
     def _unicode_error_handling_setting(self, result: dict[str, Any]) -> None:
         result["unicode_decode_error_handler"] = (
-            self.UNICODE_DECODE_ERROR_HANDLER,
+            self.UNICODE_DECODE_ERROR_HANDLER
         )

@@ -79,6 +79,19 @@ uv run <command>
 
 ### Code Quality: Ruff and ty
 
+#### **Important**: They are installed as a uv tool
+
+```bash
+# Show available
+uv tool list
+
+# Install package
+uv tool install package_name
+
+# UnInstall packge
+uv tool uninstall package_name
+```
+
 #### Ruff
 
 Ruff is the primary formatter and linter, combining multiple Python tools into a single fast solution.
@@ -130,14 +143,8 @@ Located in `ty.toml`, includes:
 **Commands**
 
 ```bash
-# Run CLI application
-uv run python -m src.cli.main
-
-# Show help
-uv run python -m src.cli.main --help
-
-# Show version
-uv run python -m src.cli.main --version
+# Check code for issues
+uv run ty check .
 ```
 
 ### Pre-commit Hooks
@@ -177,13 +184,11 @@ uv run pre-commit run --all-files
 ### Setup Commands
 
 ```bash
-# Install runtime + dev dependencies
-uv sync --all-extras --dev
+# Install runtime
+uv sync --all-extras
 
 # Run full quality gate
-uv run ruff check ./src
-uv run ruff format --fix ./src
-uv run pytest tests/
+uv tool install ruff ty pre_commit
 
 # Install pre-commit hooks
 uv run pre-commit install
@@ -203,7 +208,7 @@ uv run pre-commit install
 
 ```bash
 uv run pre-commit run --all-files
-uv run ruff format ./src --fix
-uv run ruff check ./src --fix
+uv run ruff format
+uv run ruff check
 uv run pytest tests/
 ```

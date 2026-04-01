@@ -1,6 +1,4 @@
 [run]
-source = src
-branch = true
 omit =
     */constants.py
     */tests/*
