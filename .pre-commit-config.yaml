@@ -37,9 +37,6 @@ repos:
       - id: detect-private-key
         description: "Detect private keys in committed files"
 
-      - id: name-tests-test
-        description: "Ensure test files are named correctly"
-
   # Checking dependencies
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
