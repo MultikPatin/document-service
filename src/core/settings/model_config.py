@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic_settings import SettingsConfigDict
 
-from .constants import MODEL_CONFIG_DEFAULTS
+from .constants import _MODEL_CONFIG_DEFAULTS
 
 
 def model_config(**kwargs: Any) -> SettingsConfigDict:  # noqa: ANN401
@@ -39,7 +39,7 @@ def model_config(**kwargs: Any) -> SettingsConfigDict:  # noqa: ANN401
                           extra='allow',
                           frozen=True)
     """
-    for k in MODEL_CONFIG_DEFAULTS:
+    for k in _MODEL_CONFIG_DEFAULTS:
         if k not in kwargs:
-            kwargs[k] = MODEL_CONFIG_DEFAULTS[k]
+            kwargs[k] = _MODEL_CONFIG_DEFAULTS[k]
     return SettingsConfigDict(**kwargs)

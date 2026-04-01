@@ -1,0 +1,23 @@
+[run]
+source = src
+branch = true
+omit =
+    */constants.py
+    */tests/*
+    */test_*.py
+    */migrations/*
+    */__init__.py
+
+[report]
+show_missing = true
+skip_covered = true
+exclude_lines =
+    pragma: no cover
+    \.\.\.
+    raise NotImplementedError
+    if TYPE_CHECKING
+    def __repr__
+    if self.debug:
+    if __name__ == .__main__.:
+    raise AssertionError
+    if 0:

@@ -2,7 +2,7 @@ from typing import Any, Final, final
 
 from pydantic import SecretStr
 
-MODEL_CONFIG_DEFAULTS: Final[dict[str, Any]] = {
+_MODEL_CONFIG_DEFAULTS: Final[dict[str, Any]] = {
     "env_file": ".env",
     "env_file_encoding": "utf-8",
     "env_nested_delimiter": "__",

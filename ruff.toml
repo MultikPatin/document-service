@@ -51,14 +51,17 @@ line-ending = "lf"
 
 [lint.per-file-ignores]
 "tests/**/*.py" = [
+    "E501",
     "ANN",
     "S",
     "F811"
 ]
 "scripts/**/*.py" = [
+    "E501",
     "T20"
 ]
 "**/migrations/*.py" = [
+    "E501",
     "F811",
     "F401"
 ]

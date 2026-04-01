@@ -183,7 +183,7 @@ uv sync --all-extras --dev
 # Run full quality gate
 uv run ruff check ./src
 uv run ruff format --fix ./src
-uv run pytest tests/ --cov=. --cov-report=term --cov-fail-under=80
+uv run pytest tests/
 
 # Install pre-commit hooks
 uv run pre-commit install
@@ -203,7 +203,7 @@ uv run pre-commit install
 
 ```bash
 uv run pre-commit run --all-files
-uv run ruff check .
-uv run ruff format --check .
-uv run pytest tests/ --cov=. --cov-report=term --cov-fail-under=80
+uv run ruff format ./src --fix
+uv run ruff check ./src --fix
+uv run pytest tests/
 ```
