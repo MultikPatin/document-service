@@ -10,14 +10,10 @@ This document outlines the development standards, tools, and conventions used in
 
 ### pytest
 
-For testing and benchmarking, use pytest and libraries from its ecosystem.
+For testing, use pytest and libraries from its ecosystem.
 
-- Write tests in `tests/` directory
-- Tests should be organized in separate directories by functionality (e.g., unit, integration, etc.)
-- Benchmark tests should be placed in a separate dedicated directory
 - Use `pytest` for test execution
 - Utilize `pytest-cov` for coverage analysis
-- Consider `pytest-benchmark` for performance testing if needed
 
 Run tests with coverage:
 
@@ -26,6 +22,19 @@ uv run pytest tests/ --cov=. --cov-report=term --cov-fail-under=80
 ```
 
 This command is part of the Definition Of Done and ensures test coverage stays at or above 80%.
+
+### Test Structure and Naming Conventions
+
+- **Directory Structure**: Tests are located in the `tests/` directory, with subdirectories by type (e.g., `unit/`,
+  `integration/`). The path within `tests/` mirrors `src/`. For example, `src/core/settings.py` →
+  `tests/unit/core/settings/model_config_test.py`. The `unit/` directory is already present in the project structure.
+- **File Naming**: Test files should follow the pattern `*_test.py` (e.g., `model_config_test.py`). This aligns with
+  common Python practices and ensures pytest discovers them automatically.
+- **Function Naming**: Test functions must be prefixed with `test_` (e.g., `test_validate_settings()`).
+- **Class Naming**: Test classes should be named with the prefix `Test` followed by the name of the class being tested (
+  e.g., `TestSettingsModel`).
+- **PEP Standards**: Adhere to PEP 8 for code style and PEP 257 for docstring conventions. Tests should be readable,
+  concise, and include meaningful docstrings when necessary.
 
 ## Development Tools
 
@@ -43,8 +52,8 @@ Project uses `uv` as the primary package manager for dependency management and e
 #### Common Commands
 
 ```bash
-# Install all dependencies (runtime + dev + extras + tests)
-uv sync --all-extras --group dev --group tests
+# Install all dependencies (runtime + dev + extras)
+uv sync --all-extras --group dev
 
 # Install only runtime dependencies
 uv sync
@@ -58,17 +67,11 @@ uv add package_name
 # Add a dev dependency
 uv add --group dev package_name
 
-# Add a tests dependency
-uv add --group tests package_name
-
 # Remove a dependency
 uv remove package_name
 
 # Remove a dev dependency
 uv remove --group dev package_name
-
-# Remove a tests dependency
-uv remove --group tests package_name
 
 # Create virtual environment
 uv venv
@@ -185,7 +188,7 @@ uv run pre-commit run --all-files
 
 ```bash
 # Install runtime
-uv sync --all-extras
+uv sync --all-extras --group dev
 
 # Run full quality gate
 uv tool install ruff ty pre_commit
@@ -193,6 +196,8 @@ uv tool install ruff ty pre_commit
 # Install pre-commit hooks
 uv run pre-commit install
 ```
+
+**Note**: Use `--group` arguments only if the corresponding group is defined in `pyproject.toml`.
 
 ### **Important**:
 
