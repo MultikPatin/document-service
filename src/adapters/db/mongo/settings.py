@@ -388,7 +388,7 @@ class _Settings(BaseSettings):
         result["srvservicename"] = self.SRV_SERVICE_NAME
         result["srvmaxhosts"] = self.SRV_MAX_HOSTS
 
-    def _unicode_error_handling_setting(self, result: str) -> None:
+    def _unicode_error_handling_setting(self, result: dict[str, Any]) -> None:
         result["unicode_decode_error_handler"] = (
             self.UNICODE_DECODE_ERROR_HANDLER,
         )
