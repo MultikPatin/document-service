@@ -14,9 +14,10 @@ exclude_lines =
     pragma: no cover
     \.\.\.
     raise NotImplementedError
+    raise AssertionError
     if TYPE_CHECKING
     def __repr__
     if self.debug:
     if __name__ == .__main__.:
-    raise AssertionError
     if 0:
+    type

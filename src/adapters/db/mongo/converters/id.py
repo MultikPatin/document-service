@@ -4,8 +4,6 @@ from bson.errors import InvalidId
 from src.adapters.db.mongo.exceptions import InvalidMongoIDError
 from src.core.constants import CURSOR_SEPARATOR
 
-type ProjectionModelType[Model] = type[Model] | None
-
 
 def convert_to_id(_id: str) -> PydanticObjectId:
     s = _id.split(CURSOR_SEPARATOR, 1)
