@@ -14,9 +14,13 @@ class _Defaults:
 
     Attributes:
         ENV_PREFIX: Environment variable prefix for MongoDB
+        HOST: Default MongoDB host (localhost)
         PORT: Default MongoDB port (27017)
+        USERNAME: Default MongoDB username ("")
+        PASSWORD: Default MongoDB password ("")
         SCHEMA: Connection scheme (mongodb or mongodb+srv)
         (datetime_ms, datetime, datetime_auto, datetime_clamp)
+        DATABASE: Default MongoDB database name (default-db)
         MAX_POOL_SIZE: Maximum number of connections in the pool
         MIN_POOL_SIZE: Minimum number of connections in the pool
         MAX_IDLE_TIME_MS: Maximum idle time for a connection in milliseconds
