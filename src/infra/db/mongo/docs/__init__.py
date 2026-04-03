@@ -1,5 +1,5 @@
 import sys
-from collections.abc import Sequence
+from types import UnionType
 
 from beanie import Document, UnionDoc, View
 
@@ -12,13 +12,13 @@ from beanie import Document, UnionDoc, View
 #     "InputDocument",
 # ]
 
-type DocumentsType = Sequence[type[Document] | type[UnionDoc] | type[View]]
+type CollectedDocumentsType = list[type[UnionType | Document | UnionDoc | View]]
 
-DOCUMENT_CLASSES = Document | UnionDoc | View
-DOCUMENT_CLASSES_NAMES = (Document.__name__, UnionDoc.__name__, View.__name__)
+_DOCUMENT_CLASSES = Document | UnionDoc | View
+_DOCUMENT_CLASSES_NAMES = (Document.__name__, UnionDoc.__name__, View.__name__)
 
 
-def collect_documents() -> DocumentsType:
+def collect_documents() -> CollectedDocumentsType:
     """Collects all document classes defined in the current module.
 
     This function scans the current module's namespace and returns all classes
@@ -49,6 +49,6 @@ def collect_documents() -> DocumentsType:
     return [
         doc
         for _, doc in getmembers(sys.modules[__name__], isclass)
-        if issubclass(doc, DOCUMENT_CLASSES)
-        and doc.__name__ not in DOCUMENT_CLASSES_NAMES
+        if issubclass(doc, _DOCUMENT_CLASSES)
+        and doc.__name__ not in _DOCUMENT_CLASSES_NAMES
     ]

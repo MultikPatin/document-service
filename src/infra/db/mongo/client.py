@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     from pymongo.server_api import ServerApi
     from pymongo.server_description import ServerDescription
 
-    from .documents import DocumentsType
+    from .docs import CollectedDocumentsType
     from .settings import _Settings
 
 type DatetimeConversionType = Literal[
@@ -77,7 +77,7 @@ class _Client:
             **settings.get_client_kwargs(),
         )
 
-    async def init(self, documents: DocumentsType) -> None:
+    async def init(self, documents: CollectedDocumentsType) -> None:
         await init_beanie(database=self.database, document_models=documents)
 
     async def close(self) -> None:

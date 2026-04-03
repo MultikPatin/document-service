@@ -3,8 +3,8 @@ from typing import Any
 from pydantic import Field, MongoDsn, NonNegativeInt, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
-from src.adapters.db.mongo.constants import _MongoDefaults
 from src.core.settings import Defaults, model_config
+from src.infra.db.mongo.constants import _MongoDefaults
 
 
 class _Settings(BaseSettings):

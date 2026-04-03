@@ -1,9 +1,9 @@
 import pytest
 from beanie import PydanticObjectId
 
-from src.adapters.db.mongo.converters.id import convert_to_id
-from src.adapters.db.mongo.exceptions import InvalidMongoIDError
 from src.core.constants import CURSOR_SEPARATOR
+from src.infra.db.mongo.convs.id import to_mongo_id
+from src.infra.db.mongo.exceptions import InvalidMongoIDError
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def prefix() -> str:
 def test_convert_to_id_valid(valid_id):
     """Test converting a valid single ID string."""
     expected_object_id = PydanticObjectId(valid_id)
-    result = convert_to_id(valid_id)
+    result = to_mongo_id(valid_id)
     assert isinstance(result, PydanticObjectId)
     assert result == expected_object_id
 
@@ -33,7 +33,7 @@ def test_convert_to_id_with_cursor(valid_id, prefix):
     """Test converting an ID with cursor separator, using last part."""
     cursor = f"{prefix}{CURSOR_SEPARATOR}{valid_id}"
     expected_object_id = PydanticObjectId(valid_id)
-    result = convert_to_id(cursor)
+    result = to_mongo_id(cursor)
     assert isinstance(result, PydanticObjectId)
     assert result == expected_object_id
 
@@ -44,23 +44,23 @@ def test_convert_to_id_invalid_after_first_split(valid_id, prefix):
         f"{prefix}{CURSOR_SEPARATOR}{prefix}{CURSOR_SEPARATOR}{valid_id}"
     )
     with pytest.raises(InvalidMongoIDError):
-        convert_to_id(invalid_cursor)
+        to_mongo_id(invalid_cursor)
 
 
 def test_convert_to_id_empty_string():
     """Test converting an empty string."""
     empty_id = ""
     with pytest.raises(InvalidMongoIDError):
-        convert_to_id(empty_id)
+        to_mongo_id(empty_id)
 
 
 def test_convert_to_id_invalid_object_id(invalid_id):
     """Test converting an invalid ObjectId format."""
     with pytest.raises(InvalidMongoIDError):
-        convert_to_id(invalid_id)
+        to_mongo_id(invalid_id)
 
 
 def test_convert_to_id_none_input():
     """Test converting None input (should raise AttributeError)."""
     with pytest.raises(AttributeError):
-        convert_to_id(None)  # type: ignore
+        to_mongo_id(None)  # type: ignore

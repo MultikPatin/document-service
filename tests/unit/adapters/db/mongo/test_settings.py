@@ -1,9 +1,9 @@
 import pytest
 from pydantic import SecretStr, ValidationError
 
-from src.adapters.db.mongo.constants import _MongoDefaults
-from src.adapters.db.mongo.settings import _Settings
 from src.core.settings.constants import Defaults
+from src.infra.db.mongo.constants import _MongoDefaults
+from src.infra.db.mongo.settings import _Settings
 
 
 def test_settings_default_initialization():
