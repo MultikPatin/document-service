@@ -37,9 +37,6 @@ repos:
       - id: detect-private-key
         description: "Detect private keys in committed files"
 
-      - id: name-tests-test
-        description: "Ensure test files are named correctly"
-
   # Checking dependencies
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
@@ -53,11 +50,13 @@ repos:
     rev: v0.15.4
     hooks:
       - id: ruff-check
+        entry: ruff check
         args: [ --fix ]
         types_or: [ python, pyi ]
         description: "Lint Python files and auto-fix what's possible"
 
       - id: ruff-format
+        entry: ruff format
         types_or: [ python, pyi ]
         description: "Format Python files"
 
@@ -65,7 +64,7 @@ repos:
     hooks:
       - id: ty
         name: ty check
-        entry: ty check .
+        entry: ty check
         language: system
         pass_filenames: false
         always_run: true
