@@ -1,8 +1,7 @@
 import pytest
 from pydantic import SecretStr, ValidationError
 
-from src.core.settings.constants import Defaults
-from src.infra.db.mongo.constants import _MongoDefaults
+from src.infra.db.mongo.constants import _Defaults
 from src.infra.db.mongo.settings import _Settings
 
 
@@ -11,109 +10,98 @@ def test_settings_default_initialization():
     settings = _Settings()
 
     # Connection basics
-    assert settings.HOST == Defaults.HOST
-    assert settings.PORT == _MongoDefaults.PORT
-    assert settings.USERNAME == Defaults.USERNAME
+    assert settings.HOST == _Defaults.HOST
+    assert settings.PORT == _Defaults.PORT
+    assert settings.USERNAME == _Defaults.USERNAME
     assert (
         settings.PASSWORD.get_secret_value()
-        == Defaults.PASSWORD.get_secret_value()
+        == _Defaults.PASSWORD.get_secret_value()
     )
-    assert settings.SCHEMA == _MongoDefaults.SCHEMA
-    assert settings.DATABASE == Defaults.DATABASE
+    assert settings.SCHEMA == _Defaults.SCHEMA
+    assert settings.DATABASE == _Defaults.DATABASE
 
     # Pool settings
-    assert settings.MAX_POOL_SIZE == _MongoDefaults.MAX_POOL_SIZE
-    assert settings.MIN_POOL_SIZE == _MongoDefaults.MIN_POOL_SIZE
-    assert settings.MAX_IDLE_TIME_MS == _MongoDefaults.MAX_IDLE_TIME_MS
-    assert settings.MAX_CONNECTING == _MongoDefaults.MAX_CONNECTING
-    assert (
-        settings.WAIT_QUEUE_TIMEOUT_MS == _MongoDefaults.WAIT_QUEUE_TIMEOUT_MS
-    )
-    assert (
-        settings.HEARTBEAT_FREQUENCY_MS == _MongoDefaults.HEARTBEAT_FREQUENCY_MS
-    )
-    assert (
-        settings.SERVER_MONITORING_MODE == _MongoDefaults.SERVER_MONITORING_MODE
-    )
+    assert settings.MAX_POOL_SIZE == _Defaults.MAX_POOL_SIZE
+    assert settings.MIN_POOL_SIZE == _Defaults.MIN_POOL_SIZE
+    assert settings.MAX_IDLE_TIME_MS == _Defaults.MAX_IDLE_TIME_MS
+    assert settings.MAX_CONNECTING == _Defaults.MAX_CONNECTING
+    assert settings.WAIT_QUEUE_TIMEOUT_MS == _Defaults.WAIT_QUEUE_TIMEOUT_MS
+    assert settings.HEARTBEAT_FREQUENCY_MS == _Defaults.HEARTBEAT_FREQUENCY_MS
+    assert settings.SERVER_MONITORING_MODE == _Defaults.SERVER_MONITORING_MODE
 
     # Timeouts
-    assert settings.CONNECT_TIMEOUT_MS == _MongoDefaults.CONNECT_TIMEOUT_MS
-    assert settings.SOCKET_TIMEOUT_MS == _MongoDefaults.SOCKET_TIMEOUT_MS
+    assert settings.CONNECT_TIMEOUT_MS == _Defaults.CONNECT_TIMEOUT_MS
+    assert settings.SOCKET_TIMEOUT_MS == _Defaults.SOCKET_TIMEOUT_MS
     assert (
         settings.SERVER_SELECTION_TIMEOUT_MS
-        == _MongoDefaults.SERVER_SELECTION_TIMEOUT_MS
+        == _Defaults.SERVER_SELECTION_TIMEOUT_MS
     )
-    assert settings.TIMEOUT_MS == _MongoDefaults.TIMEOUT_MS
+    assert settings.TIMEOUT_MS == _Defaults.TIMEOUT_MS
 
     # Retry behavior
-    assert settings.RETRY_WRITES is _MongoDefaults.RETRY_WRITES
-    assert settings.RETRY_READS is _MongoDefaults.RETRY_READS
+    assert settings.RETRY_WRITES is _Defaults.RETRY_WRITES
+    assert settings.RETRY_READS is _Defaults.RETRY_READS
 
     # TLS/SSL
-    assert settings.TLS is _MongoDefaults.TLS
-    assert settings.TLS_INSECURE is _MongoDefaults.TLS_INSECURE
+    assert settings.TLS is _Defaults.TLS
+    assert settings.TLS_INSECURE is _Defaults.TLS_INSECURE
     assert (
         settings.TLS_ALLOW_INVALID_CERTIFICATES
-        is _MongoDefaults.TLS_ALLOW_INVALID_CERTIFICATES
+        is _Defaults.TLS_ALLOW_INVALID_CERTIFICATES
     )
     assert (
         settings.TLS_ALLOW_INVALID_HOSTNAMES
-        is _MongoDefaults.TLS_ALLOW_INVALID_HOSTNAMES
+        is _Defaults.TLS_ALLOW_INVALID_HOSTNAMES
     )
-    assert settings.TLS_CA_FILE == _MongoDefaults.TLS_CA_FILE
+    assert settings.TLS_CA_FILE == _Defaults.TLS_CA_FILE
     assert (
-        settings.TLS_CERTIFICATE_KEY_FILE
-        == _MongoDefaults.TLS_CERTIFICATE_KEY_FILE
+        settings.TLS_CERTIFICATE_KEY_FILE == _Defaults.TLS_CERTIFICATE_KEY_FILE
     )
-    assert settings.TLS_CRL_FILE == _MongoDefaults.TLS_CRL_FILE
+    assert settings.TLS_CRL_FILE == _Defaults.TLS_CRL_FILE
     assert (
         settings.TLS_CERTIFICATE_KEY_FILE_PASSWORD
-        == _MongoDefaults.TLS_CERTIFICATE_KEY_FILE_PASSWORD
+        == _Defaults.TLS_CERTIFICATE_KEY_FILE_PASSWORD
     )
     assert (
         settings.TLS_DISABLE_OCSP_ENDPOINT_CHECK
-        is _MongoDefaults.TLS_DISABLE_OCSP_ENDPOINT_CHECK
+        is _Defaults.TLS_DISABLE_OCSP_ENDPOINT_CHECK
     )
 
     # Compression
-    assert settings.COMPRESSORS == _MongoDefaults.COMPRESSORS
-    assert (
-        settings.ZLIB_COMPRESSION_LEVEL == _MongoDefaults.ZLIB_COMPRESSION_LEVEL
-    )
+    assert settings.COMPRESSORS == _Defaults.COMPRESSORS
+    assert settings.ZLIB_COMPRESSION_LEVEL == _Defaults.ZLIB_COMPRESSION_LEVEL
 
     # UUID representation
-    assert settings.UUID_REPRESENTATION == _MongoDefaults.UUID_REPRESENTATION
+    assert settings.UUID_REPRESENTATION == _Defaults.UUID_REPRESENTATION
 
     # Connection mode
-    assert settings.DIRECT_CONNECTION is _MongoDefaults.DIRECT_CONNECTION
-    assert settings.APPNAME == _MongoDefaults.APPNAME
-    assert settings.READ_PREFERENCE == _MongoDefaults.READ_PREFERENCE
-    assert settings.READ_PREFERENCE_TAGS == _MongoDefaults.READ_PREFERENCE_TAGS
-    assert (
-        settings.MAX_STALENESS_SECONDS == _MongoDefaults.MAX_STALENESS_SECONDS
-    )
-    assert settings.REPLICA_SET_NAME == _MongoDefaults.REPLICA_SET_NAME
+    assert settings.DIRECT_CONNECTION is _Defaults.DIRECT_CONNECTION
+    assert settings.APPNAME == _Defaults.APPNAME
+    assert settings.READ_PREFERENCE == _Defaults.READ_PREFERENCE
+    assert settings.READ_PREFERENCE_TAGS == _Defaults.READ_PREFERENCE_TAGS
+    assert settings.MAX_STALENESS_SECONDS == _Defaults.MAX_STALENESS_SECONDS
+    assert settings.REPLICA_SET_NAME == _Defaults.REPLICA_SET_NAME
 
     # Authentication
-    assert settings.AUTH_SOURCE == _MongoDefaults.AUTH_SOURCE
-    assert settings.AUTH_MECHANISM == _MongoDefaults.AUTH_MECHANISM
+    assert settings.AUTH_SOURCE == _Defaults.AUTH_SOURCE
+    assert settings.AUTH_MECHANISM == _Defaults.AUTH_MECHANISM
 
     # Write concern
-    assert settings.WRITE_CONCERN_W == _MongoDefaults.WRITE_CONCERN_W
-    assert settings.JOURNAL is _MongoDefaults.JOURNAL
-    assert settings.FSYNC is _MongoDefaults.FSYNC
+    assert settings.WRITE_CONCERN_W == _Defaults.WRITE_CONCERN_W
+    assert settings.JOURNAL is _Defaults.JOURNAL
+    assert settings.FSYNC is _Defaults.FSYNC
 
     # Read concern
-    assert settings.READ_CONCERN_LEVEL == _MongoDefaults.READ_CONCERN_LEVEL
+    assert settings.READ_CONCERN_LEVEL == _Defaults.READ_CONCERN_LEVEL
 
     # SRV & API
-    assert settings.SRV_SERVICE_NAME == _MongoDefaults.SRV_SERVICE_NAME
-    assert settings.SRV_MAX_HOSTS == _MongoDefaults.SRV_MAX_HOSTS
+    assert settings.SRV_SERVICE_NAME == _Defaults.SRV_SERVICE_NAME
+    assert settings.SRV_MAX_HOSTS == _Defaults.SRV_MAX_HOSTS
 
     # Unicode error handling
     assert (
         settings.UNICODE_DECODE_ERROR_HANDLER
-        == _MongoDefaults.UNICODE_DECODE_ERROR_HANDLER
+        == _Defaults.UNICODE_DECODE_ERROR_HANDLER
     )
 
 

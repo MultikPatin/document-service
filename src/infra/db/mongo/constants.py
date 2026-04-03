@@ -1,8 +1,10 @@
 from typing import Final, final
 
+from pydantic import SecretStr
+
 
 @final
-class _MongoDefaults:
+class _Defaults:
     """
     Class containing default values for MongoDB configuration.
 
@@ -60,8 +62,12 @@ class _MongoDefaults:
 
     # Connection basics
     ENV_PREFIX: Final[str] = "MONGODB_"
+    HOST: Final[str] = "localhost"
     PORT: Final[int] = 27017
+    USERNAME: Final[str] = ""
+    PASSWORD: Final[SecretStr] = SecretStr("")
     SCHEMA: Final[str] = "mongodb"
+    DATABASE: Final[str] = "default-db"
     # Pool settings
     MAX_POOL_SIZE: Final[int | None] = None  # 100
     MIN_POOL_SIZE: Final[int | None] = None  # 0
@@ -117,7 +123,7 @@ class _MongoDefaults:
 
 
 @final
-class _MongoKeys:
+class _Keys:
     """
     Class containing constants for MongoDB operators and keys.
 

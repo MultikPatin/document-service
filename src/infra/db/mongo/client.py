@@ -1,11 +1,10 @@
+from collections.abc import Callable, Mapping, Sequence
 from typing import TYPE_CHECKING, Any, Literal
 
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Mapping, Sequence
-
     from bson.codec_options import TypeRegistry
     from pymongo.asynchronous.client_session import AsyncClientSession
     from pymongo.asynchronous.collection import AsyncCollection
@@ -23,7 +22,7 @@ if TYPE_CHECKING:
     from pymongo.server_description import ServerDescription
 
     from .docs import CollectedDocumentsType
-    from .settings import _Settings
+    from .protocols import SettingsProtocol
 
 type DatetimeConversionType = Literal[
     "datetime_ms", "datetime", "datetime_auto", "datetime_clamp"
@@ -48,10 +47,11 @@ type AutoEncryptionOptsType = AutoEncryptionOpts | None
 type ServerApiType = ServerApi | None
 
 
-class _Client:
+class Client:
     def __init__(  # noqa: PLR0913
         self,
-        settings: _Settings,
+        settings: SettingsProtocol,
+        *,
         tz_aware: bool = False,
         datetime_conversion: DatetimeConversionType = "datetime",
         document_class: DocumentClassType = None,
@@ -62,9 +62,9 @@ class _Client:
         auto_encryption_opts: AutoEncryptionOptsType = None,
         server_api: ServerApiType = None,
     ) -> None:
-        self._database = settings.DATABASE
+        self._database = settings.database
         self._client = AsyncMongoClient(
-            host=settings.dsn.unicode_string(),
+            host=settings.connections,
             tz_aware=tz_aware,
             datetime_conversion=datetime_conversion,
             document_class=document_class,
@@ -74,11 +74,24 @@ class _Client:
             event_listeners=event_listeners,
             auto_encryption_opts=auto_encryption_opts,
             server_api=server_api,
-            **settings.get_client_kwargs(),
+            **settings.client_kwargs,
         )
 
-    async def init(self, documents: CollectedDocumentsType) -> None:
-        await init_beanie(database=self.database, document_models=documents)
+    async def init_beanie(
+        self,
+        documents: CollectedDocumentsType,
+        *,
+        allow_index_dropping: bool = False,
+        recreate_views: bool = False,
+        skip_indexes: bool = False,
+    ) -> None:
+        await init_beanie(
+            database=self.database,
+            document_models=documents,
+            allow_index_dropping=allow_index_dropping,
+            recreate_views=recreate_views,
+            skip_indexes=skip_indexes,
+        )
 
     async def close(self) -> None:
         await self._client.aclose()
@@ -94,7 +107,7 @@ class _Client:
     def database(self) -> AsyncDatabase:
         return self._client[self._database]
 
-    def collection(self, name: str) -> AsyncCollection:
+    def collection(self, name: str, /) -> AsyncCollection:
         return self.database[name]
 
     @property
@@ -104,6 +117,6 @@ class _Client:
     async def drop_database(self) -> None:
         await self._client.drop_database(self._database)
 
-    async def drop_collection(self, name: str) -> None:
+    async def drop_collection(self, name: str, /) -> None:
         collection = self.collection(name)
         await collection.drop()

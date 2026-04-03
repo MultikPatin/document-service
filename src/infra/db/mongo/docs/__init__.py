@@ -1,5 +1,5 @@
 import sys
-from types import UnionType
+from collections.abc import Sequence
 
 from beanie import Document, UnionDoc, View
 
@@ -12,9 +12,9 @@ from beanie import Document, UnionDoc, View
 #     "InputDocument",
 # ]
 
-type CollectedDocumentsType = list[type[UnionType | Document | UnionDoc | View]]
+type CollectedDocumentsType = Sequence[type[Document | UnionDoc | View]]
 
-_DOCUMENT_CLASSES = Document | UnionDoc | View
+_DOCUMENT_CLASSES = (Document, UnionDoc, View)
 _DOCUMENT_CLASSES_NAMES = (Document.__name__, UnionDoc.__name__, View.__name__)
 
 

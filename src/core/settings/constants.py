@@ -1,7 +1,5 @@
 from typing import Any, Final, final
 
-from pydantic import SecretStr
-
 _MODEL_CONFIG_DEFAULTS: Final[dict[str, Any]] = {
     "env_file": ".env",
     "env_file_encoding": "utf-8",
@@ -9,14 +7,6 @@ _MODEL_CONFIG_DEFAULTS: Final[dict[str, Any]] = {
     "extra": "ignore",
     "frozen": True,
 }
-
-
-@final
-class Defaults:
-    HOST: Final[str] = "localhost"
-    USERNAME: Final[str] = ""
-    PASSWORD: Final[SecretStr] = SecretStr("")
-    DATABASE: Final[str] = "default-db"
 
 
 @final

@@ -5,7 +5,7 @@ from src.core.constants import CURSOR_SEPARATOR
 from src.infra.db.mongo.exceptions import InvalidMongoIDError
 
 
-def to_mongo_id(_id: str) -> PydanticObjectId:
+def to_poid(_id: str, /) -> PydanticObjectId:
     s = _id.split(CURSOR_SEPARATOR, 1)
     try:
         if len(s) == 1:
