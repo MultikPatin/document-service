@@ -1,128 +1,128 @@
 import pytest
 from pydantic import SecretStr, ValidationError
 
-from src.infra.db.mongo.constants import _Defaults
-from src.infra.db.mongo.settings import _Settings
+from src.infra.db.mongo.constants import Defaults
+from src.infra.db.mongo.settings import Settings
 
 
 def test_settings_default_initialization():
     """Test that all fields are initialized with correct default values from constants."""
-    settings = _Settings()
+    settings = Settings()
 
     # Connection basics
-    assert settings.HOST == _Defaults.HOST
-    assert settings.PORT == _Defaults.PORT
-    assert settings.USERNAME == _Defaults.USERNAME
+    assert settings.HOST == Defaults.HOST
+    assert settings.PORT == Defaults.PORT
+    assert settings.USERNAME == Defaults.USERNAME
     assert (
         settings.PASSWORD.get_secret_value()
-        == _Defaults.PASSWORD.get_secret_value()
+        == Defaults.PASSWORD.get_secret_value()
     )
-    assert settings.SCHEMA == _Defaults.SCHEMA
-    assert settings.DATABASE == _Defaults.DATABASE
+    assert settings.SCHEMA == Defaults.SCHEMA
+    assert settings.DATABASE == Defaults.DATABASE
 
     # Pool settings
-    assert settings.MAX_POOL_SIZE == _Defaults.MAX_POOL_SIZE
-    assert settings.MIN_POOL_SIZE == _Defaults.MIN_POOL_SIZE
-    assert settings.MAX_IDLE_TIME_MS == _Defaults.MAX_IDLE_TIME_MS
-    assert settings.MAX_CONNECTING == _Defaults.MAX_CONNECTING
-    assert settings.WAIT_QUEUE_TIMEOUT_MS == _Defaults.WAIT_QUEUE_TIMEOUT_MS
-    assert settings.HEARTBEAT_FREQUENCY_MS == _Defaults.HEARTBEAT_FREQUENCY_MS
-    assert settings.SERVER_MONITORING_MODE == _Defaults.SERVER_MONITORING_MODE
+    assert settings.MAX_POOL_SIZE == Defaults.MAX_POOL_SIZE
+    assert settings.MIN_POOL_SIZE == Defaults.MIN_POOL_SIZE
+    assert settings.MAX_IDLE_TIME_MS == Defaults.MAX_IDLE_TIME_MS
+    assert settings.MAX_CONNECTING == Defaults.MAX_CONNECTING
+    assert settings.WAIT_QUEUE_TIMEOUT_MS == Defaults.WAIT_QUEUE_TIMEOUT_MS
+    assert settings.HEARTBEAT_FREQUENCY_MS == Defaults.HEARTBEAT_FREQUENCY_MS
+    assert settings.SERVER_MONITORING_MODE == Defaults.SERVER_MONITORING_MODE
 
     # Timeouts
-    assert settings.CONNECT_TIMEOUT_MS == _Defaults.CONNECT_TIMEOUT_MS
-    assert settings.SOCKET_TIMEOUT_MS == _Defaults.SOCKET_TIMEOUT_MS
+    assert settings.CONNECT_TIMEOUT_MS == Defaults.CONNECT_TIMEOUT_MS
+    assert settings.SOCKET_TIMEOUT_MS == Defaults.SOCKET_TIMEOUT_MS
     assert (
         settings.SERVER_SELECTION_TIMEOUT_MS
-        == _Defaults.SERVER_SELECTION_TIMEOUT_MS
+        == Defaults.SERVER_SELECTION_TIMEOUT_MS
     )
-    assert settings.TIMEOUT_MS == _Defaults.TIMEOUT_MS
+    assert settings.TIMEOUT_MS == Defaults.TIMEOUT_MS
 
     # Retry behavior
-    assert settings.RETRY_WRITES is _Defaults.RETRY_WRITES
-    assert settings.RETRY_READS is _Defaults.RETRY_READS
+    assert settings.RETRY_WRITES is Defaults.RETRY_WRITES
+    assert settings.RETRY_READS is Defaults.RETRY_READS
 
     # TLS/SSL
-    assert settings.TLS is _Defaults.TLS
-    assert settings.TLS_INSECURE is _Defaults.TLS_INSECURE
+    assert settings.TLS is Defaults.TLS
+    assert settings.TLS_INSECURE is Defaults.TLS_INSECURE
     assert (
         settings.TLS_ALLOW_INVALID_CERTIFICATES
-        is _Defaults.TLS_ALLOW_INVALID_CERTIFICATES
+        is Defaults.TLS_ALLOW_INVALID_CERTIFICATES
     )
     assert (
         settings.TLS_ALLOW_INVALID_HOSTNAMES
-        is _Defaults.TLS_ALLOW_INVALID_HOSTNAMES
+        is Defaults.TLS_ALLOW_INVALID_HOSTNAMES
     )
-    assert settings.TLS_CA_FILE == _Defaults.TLS_CA_FILE
+    assert settings.TLS_CA_FILE == Defaults.TLS_CA_FILE
     assert (
-        settings.TLS_CERTIFICATE_KEY_FILE == _Defaults.TLS_CERTIFICATE_KEY_FILE
+        settings.TLS_CERTIFICATE_KEY_FILE == Defaults.TLS_CERTIFICATE_KEY_FILE
     )
-    assert settings.TLS_CRL_FILE == _Defaults.TLS_CRL_FILE
+    assert settings.TLS_CRL_FILE == Defaults.TLS_CRL_FILE
     assert (
         settings.TLS_CERTIFICATE_KEY_FILE_PASSWORD
-        == _Defaults.TLS_CERTIFICATE_KEY_FILE_PASSWORD
+        == Defaults.TLS_CERTIFICATE_KEY_FILE_PASSWORD
     )
     assert (
         settings.TLS_DISABLE_OCSP_ENDPOINT_CHECK
-        is _Defaults.TLS_DISABLE_OCSP_ENDPOINT_CHECK
+        is Defaults.TLS_DISABLE_OCSP_ENDPOINT_CHECK
     )
 
     # Compression
-    assert settings.COMPRESSORS == _Defaults.COMPRESSORS
-    assert settings.ZLIB_COMPRESSION_LEVEL == _Defaults.ZLIB_COMPRESSION_LEVEL
+    assert settings.COMPRESSORS == Defaults.COMPRESSORS
+    assert settings.ZLIB_COMPRESSION_LEVEL == Defaults.ZLIB_COMPRESSION_LEVEL
 
     # UUID representation
-    assert settings.UUID_REPRESENTATION == _Defaults.UUID_REPRESENTATION
+    assert settings.UUID_REPRESENTATION == Defaults.UUID_REPRESENTATION
 
     # Connection mode
-    assert settings.DIRECT_CONNECTION is _Defaults.DIRECT_CONNECTION
-    assert settings.APPNAME == _Defaults.APPNAME
-    assert settings.READ_PREFERENCE == _Defaults.READ_PREFERENCE
-    assert settings.READ_PREFERENCE_TAGS == _Defaults.READ_PREFERENCE_TAGS
-    assert settings.MAX_STALENESS_SECONDS == _Defaults.MAX_STALENESS_SECONDS
-    assert settings.REPLICA_SET_NAME == _Defaults.REPLICA_SET_NAME
+    assert settings.DIRECT_CONNECTION is Defaults.DIRECT_CONNECTION
+    assert settings.APPNAME == Defaults.APPNAME
+    assert settings.READ_PREFERENCE == Defaults.READ_PREFERENCE
+    assert settings.READ_PREFERENCE_TAGS == Defaults.READ_PREFERENCE_TAGS
+    assert settings.MAX_STALENESS_SECONDS == Defaults.MAX_STALENESS_SECONDS
+    assert settings.REPLICA_SET_NAME == Defaults.REPLICA_SET_NAME
 
     # Authentication
-    assert settings.AUTH_SOURCE == _Defaults.AUTH_SOURCE
-    assert settings.AUTH_MECHANISM == _Defaults.AUTH_MECHANISM
+    assert settings.AUTH_SOURCE == Defaults.AUTH_SOURCE
+    assert settings.AUTH_MECHANISM == Defaults.AUTH_MECHANISM
 
     # Write concern
-    assert settings.WRITE_CONCERN_W == _Defaults.WRITE_CONCERN_W
-    assert settings.JOURNAL is _Defaults.JOURNAL
-    assert settings.FSYNC is _Defaults.FSYNC
+    assert settings.WRITE_CONCERN_W == Defaults.WRITE_CONCERN_W
+    assert settings.JOURNAL is Defaults.JOURNAL
+    assert settings.FSYNC is Defaults.FSYNC
 
     # Read concern
-    assert settings.READ_CONCERN_LEVEL == _Defaults.READ_CONCERN_LEVEL
+    assert settings.READ_CONCERN_LEVEL == Defaults.READ_CONCERN_LEVEL
 
     # SRV & API
-    assert settings.SRV_SERVICE_NAME == _Defaults.SRV_SERVICE_NAME
-    assert settings.SRV_MAX_HOSTS == _Defaults.SRV_MAX_HOSTS
+    assert settings.SRV_SERVICE_NAME == Defaults.SRV_SERVICE_NAME
+    assert settings.SRV_MAX_HOSTS == Defaults.SRV_MAX_HOSTS
 
     # Unicode error handling
     assert (
         settings.UNICODE_DECODE_ERROR_HANDLER
-        == _Defaults.UNICODE_DECODE_ERROR_HANDLER
+        == Defaults.UNICODE_DECODE_ERROR_HANDLER
     )
 
 
 def test_dsn_generation():
     """Test DSN generation with various combinations using constants."""
     # Basic DSN
-    settings = _Settings()
+    settings = Settings()
     expected_dsn = f"{settings.SCHEMA}://{settings.HOST}:{settings.PORT}"
     assert str(settings.dsn) == expected_dsn
 
     # With username and password
     username = "user1"
     password = "pass123"
-    settings = _Settings(USERNAME=username, PASSWORD=SecretStr(password))
+    settings = Settings(USERNAME=username, PASSWORD=SecretStr(password))
     expected_dsn = f"{settings.SCHEMA}://{username}:{password}@{settings.HOST}:{settings.PORT}"
     assert str(settings.dsn) == expected_dsn
 
     # With different schema (SRV)
     schema = "mongodb+srv"
     host = "cluster0.example.com"
-    settings = _Settings(
+    settings = Settings(
         SCHEMA=schema,
         HOST=host,
     )
@@ -130,7 +130,7 @@ def test_dsn_generation():
     assert str(settings.dsn) == expected_dsn
 
     # With port
-    settings = _Settings(PORT=27018)
+    settings = Settings(PORT=27018)
     expected_dsn = f"{settings.SCHEMA}://{settings.HOST}:{settings.PORT}"
     # Fix for double slash when database is empty
     assert str(settings.dsn) == expected_dsn
@@ -147,7 +147,7 @@ def test_get_client_kwargs_pool_settings():
     heartbeat_frequency_ms = 500
     server_monitoring_mode = "poll"
 
-    settings = _Settings(
+    settings = Settings(
         MAX_POOL_SIZE=max_pool_size,
         MIN_POOL_SIZE=min_pool_size,
         MAX_IDLE_TIME_MS=max_idle_time_ms,
@@ -166,7 +166,7 @@ def test_get_client_kwargs_pool_settings():
     assert kwargs["servermonitoringmode"] == server_monitoring_mode
 
     # None values should be excluded
-    settings = _Settings(
+    settings = Settings(
         MAX_POOL_SIZE=None,
         MIN_POOL_SIZE=None,
         MAX_IDLE_TIME_MS=None,
@@ -193,7 +193,7 @@ def test_get_client_kwargs_timeouts():
     timeout_ms = 60000
     wait_queue_timeout_ms = 20000
 
-    settings = _Settings(
+    settings = Settings(
         CONNECT_TIMEOUT_MS=connect_timeout_ms,
         SOCKET_TIMEOUT_MS=socket_timeout_ms,
         SERVER_SELECTION_TIMEOUT_MS=server_selection_timeout_ms,
@@ -208,7 +208,7 @@ def test_get_client_kwargs_timeouts():
     assert kwargs["waitqueuetimeoutms"] == wait_queue_timeout_ms
 
     # TIMEOUT_MS=None should exclude timeoutms
-    settings = _Settings(TIMEOUT_MS=None)
+    settings = Settings(TIMEOUT_MS=None)
     kwargs = settings.get_client_kwargs()
     assert "timeoutms" not in kwargs
 
@@ -218,7 +218,7 @@ def test_get_client_kwargs_retry_behavior():
     retry_writes = False
     retry_reads = False
 
-    settings = _Settings(RETRY_WRITES=retry_writes, RETRY_READS=retry_reads)
+    settings = Settings(RETRY_WRITES=retry_writes, RETRY_READS=retry_reads)
     kwargs = settings.get_client_kwargs()
     assert kwargs["retrywrites"] is retry_writes
     assert kwargs["retryreads"] is retry_reads
@@ -226,7 +226,7 @@ def test_get_client_kwargs_retry_behavior():
     retry_writes = True
     retry_reads = True
 
-    settings = _Settings(RETRY_WRITES=retry_writes, RETRY_READS=retry_reads)
+    settings = Settings(RETRY_WRITES=retry_writes, RETRY_READS=retry_reads)
     kwargs = settings.get_client_kwargs()
     assert kwargs["retrywrites"] is retry_writes
     assert kwargs["retryreads"] is retry_reads
@@ -235,7 +235,7 @@ def test_get_client_kwargs_retry_behavior():
 def test_get_client_kwargs_tls():
     """Test TLS settings in get_client_kwargs."""
     # TLS disabled
-    settings = _Settings(TLS=False)
+    settings = Settings(TLS=False)
     kwargs = settings.get_client_kwargs()
     assert "tls" not in kwargs
     assert "tlsInsecure" not in kwargs
@@ -258,7 +258,7 @@ def test_get_client_kwargs_tls():
     tls_certificate_key_file_password = "pass"
     tls_disable_ocsp_endpoint_check = False
 
-    settings = _Settings(
+    settings = Settings(
         TLS=tls,
         TLS_INSECURE=tls_insecure,
         TLS_ALLOW_INVALID_CERTIFICATES=tls_allow_invalid_certificates,
@@ -291,7 +291,7 @@ def test_get_client_kwargs_tls():
 def test_get_client_kwargs_compression():
     """Test compression settings in get_client_kwargs."""
     # No compression
-    settings = _Settings(COMPRESSORS=None, ZLIB_COMPRESSION_LEVEL=None)
+    settings = Settings(COMPRESSORS=None, ZLIB_COMPRESSION_LEVEL=None)
     kwargs = settings.get_client_kwargs()
     assert "compressors" not in kwargs
     assert "zlibcompressionlevel" not in kwargs
@@ -300,7 +300,7 @@ def test_get_client_kwargs_compression():
     compressors = "zlib"
     zlib_compression_level = 6
 
-    settings = _Settings(
+    settings = Settings(
         COMPRESSORS=compressors, ZLIB_COMPRESSION_LEVEL=zlib_compression_level
     )
     kwargs = settings.get_client_kwargs()
@@ -310,7 +310,7 @@ def test_get_client_kwargs_compression():
 
 def test_get_client_kwargs_uuid_representation():
     """Test UUID representation setting in get_client_kwargs."""
-    settings = _Settings(UUID_REPRESENTATION="pythonLegacy")
+    settings = Settings(UUID_REPRESENTATION="pythonLegacy")
     kwargs = settings.get_client_kwargs()
     assert kwargs["uuidrepresentation"] == "pythonLegacy"
 
@@ -324,7 +324,7 @@ def test_get_client_kwargs_connection_mode():
     max_staleness_seconds = 120
     replica_set_name = "rs0"
 
-    settings = _Settings(
+    settings = Settings(
         APPNAME=appname,
         DIRECT_CONNECTION=direct_connection,
         READ_PREFERENCE=read_preference,
@@ -341,7 +341,7 @@ def test_get_client_kwargs_connection_mode():
     assert kwargs["replicaSet"] == replica_set_name
 
     # None values should be excluded
-    settings = _Settings(
+    settings = Settings(
         APPNAME=None,
         DIRECT_CONNECTION=None,
         READ_PREFERENCE=None,
@@ -363,7 +363,7 @@ def test_get_client_kwargs_authentication():
     auth_source = "mydb"
     auth_mechanism = "SCRAM-SHA-1"
 
-    settings = _Settings(AUTH_SOURCE=auth_source, AUTH_MECHANISM=auth_mechanism)
+    settings = Settings(AUTH_SOURCE=auth_source, AUTH_MECHANISM=auth_mechanism)
     kwargs = settings.get_client_kwargs()
     assert kwargs["authsource"] == auth_source
     assert kwargs["authmechanism"] == auth_mechanism
@@ -376,7 +376,7 @@ def test_get_client_kwargs_write_concern():
     fsync = False
 
     # With w
-    settings = _Settings(
+    settings = Settings(
         WRITE_CONCERN_W=write_concern_w, JOURNAL=journal, FSYNC=fsync
     )
     kwargs = settings.get_client_kwargs()
@@ -385,7 +385,7 @@ def test_get_client_kwargs_write_concern():
     assert kwargs["fsync"] is fsync
 
     # Without w
-    settings = _Settings(WRITE_CONCERN_W=None, JOURNAL=journal, FSYNC=fsync)
+    settings = Settings(WRITE_CONCERN_W=None, JOURNAL=journal, FSYNC=fsync)
     kwargs = settings.get_client_kwargs()
     assert "w" not in kwargs
     assert kwargs["journal"] is journal
@@ -396,13 +396,13 @@ def test_get_client_kwargs_read_concern():
     """Test read concern settings in get_client_kwargs."""
     read_concern_level = "majority"
 
-    settings = _Settings(READ_CONCERN_LEVEL=read_concern_level)
+    settings = Settings(READ_CONCERN_LEVEL=read_concern_level)
     kwargs = settings.get_client_kwargs()
     assert kwargs["readconcernlevel"] == read_concern_level
 
     read_concern_level = "local"
 
-    settings = _Settings(READ_CONCERN_LEVEL=read_concern_level)
+    settings = Settings(READ_CONCERN_LEVEL=read_concern_level)
     kwargs = settings.get_client_kwargs()
     assert kwargs["readconcernlevel"] == read_concern_level
 
@@ -412,7 +412,7 @@ def test_get_client_kwargs_srv_api():
     srv_service_name = "custom"
     srv_max_hosts = 50
 
-    settings = _Settings(
+    settings = Settings(
         SRV_SERVICE_NAME=srv_service_name, SRV_MAX_HOSTS=srv_max_hosts
     )
     kwargs = settings.get_client_kwargs()
@@ -422,7 +422,7 @@ def test_get_client_kwargs_srv_api():
 
 def test_get_client_kwargs_unicode_error_handling():
     """Test Unicode error handling setting in get_client_kwargs."""
-    settings = _Settings(UNICODE_DECODE_ERROR_HANDLER="ignore")
+    settings = Settings(UNICODE_DECODE_ERROR_HANDLER="ignore")
     kwargs = settings.get_client_kwargs()
     assert kwargs["unicode_decode_error_handler"] == "ignore"
 
@@ -482,7 +482,7 @@ def test_get_client_kwargs_full_configuration():  # noqa: PLR0915
     # Unicode error handling
     unicode_decode_error_handler = "replace"
 
-    settings = _Settings(
+    settings = Settings(
         # Pool settings
         MAX_POOL_SIZE=max_pool_size,
         MIN_POOL_SIZE=min_pool_size,
@@ -606,79 +606,79 @@ def test_get_client_kwargs_full_configuration():  # noqa: PLR0915
 def test_field_validation_port():
     """Test PORT validation (must be < 65536)."""
     with pytest.raises(ValidationError):
-        _Settings(PORT=65536)
+        Settings(PORT=65536)
 
     with pytest.raises(ValidationError):
-        _Settings(PORT=0)
+        Settings(PORT=0)
 
     # Valid ports
     min_port = 1
     max_port = 65535
 
-    settings = _Settings(PORT=min_port)
+    settings = Settings(PORT=min_port)
     assert min_port == settings.PORT
-    settings = _Settings(PORT=max_port)
+    settings = Settings(PORT=max_port)
     assert max_port == settings.PORT
 
 
 def test_field_validation_username():
     """Test USERNAME validation (max_length=255)."""
     with pytest.raises(ValidationError):
-        _Settings(USERNAME="x" * 256)
+        Settings(USERNAME="x" * 256)
 
     # Valid username
-    settings = _Settings(USERNAME="x" * 255)
+    settings = Settings(USERNAME="x" * 255)
     assert settings.USERNAME == "x" * 255
 
 
 def test_field_validation_database():
     """Test DATABASE validation (max_length=32)."""
     with pytest.raises(ValidationError):
-        _Settings(DATABASE="x" * 33)
+        Settings(DATABASE="x" * 33)
 
     # Valid database
-    settings = _Settings(DATABASE="x" * 32)
+    settings = Settings(DATABASE="x" * 32)
     assert settings.DATABASE == "x" * 32
 
 
 def test_field_validation_schema():
     """Test SCHEMA validation (must be mongodb or mongodb+srv)."""
     with pytest.raises(ValidationError):
-        _Settings(SCHEMA="invalid")
+        Settings(SCHEMA="invalid")
 
     # Valid schemas
-    settings = _Settings(SCHEMA="mongodb")
+    settings = Settings(SCHEMA="mongodb")
     assert settings.SCHEMA == "mongodb"
-    settings = _Settings(SCHEMA="mongodb+srv")
+    settings = Settings(SCHEMA="mongodb+srv")
     assert settings.SCHEMA == "mongodb+srv"
 
 
 def test_field_validation_server_monitoring_mode():
     """Test SERVER_MONITORING_MODE validation."""
     with pytest.raises(ValidationError):
-        _Settings(SERVER_MONITORING_MODE="invalid")
+        Settings(SERVER_MONITORING_MODE="invalid")
 
     # Valid modes
     for mode in ["auto", "stream", "poll"]:
-        settings = _Settings(SERVER_MONITORING_MODE=mode)
+        settings = Settings(SERVER_MONITORING_MODE=mode)
         assert mode == settings.SERVER_MONITORING_MODE
 
 
 def test_field_validation_compression():
     """Test COMPRESSORS validation."""
     with pytest.raises(ValidationError):
-        _Settings(COMPRESSORS="invalid")
+        Settings(COMPRESSORS="invalid")
 
     # Valid compressors
     for comp in ["snappy", "zlib", "zstd", None]:
-        settings = _Settings(COMPRESSORS=comp)
+        settings = Settings(COMPRESSORS=comp)
         assert comp == settings.COMPRESSORS
 
 
 def test_field_validation_uuid_representation():
     """Test UUID_REPRESENTATION validation."""
     with pytest.raises(ValidationError):
-        _Settings(UUID_REPRESENTATION="invalid")
+        Settings(UUID_REPRESENTATION="invalid")
 
     # Valid representations
     valid_representations = [
@@ -689,14 +689,14 @@ def test_field_validation_uuid_representation():
         "unspecified",
     ]
     for rep in valid_representations:
-        settings = _Settings(UUID_REPRESENTATION=rep)
+        settings = Settings(UUID_REPRESENTATION=rep)
         assert rep == settings.UUID_REPRESENTATION
 
 
 def test_field_validation_read_preference():
     """Test READ_PREFERENCE validation."""
     with pytest.raises(ValidationError):
-        _Settings(READ_PREFERENCE="invalid")
+        Settings(READ_PREFERENCE="invalid")
 
     # Valid preferences
     valid_preferences = [
@@ -708,26 +708,26 @@ def test_field_validation_read_preference():
         None,
     ]
     for pref in valid_preferences:
-        settings = _Settings(READ_PREFERENCE=pref)
+        settings = Settings(READ_PREFERENCE=pref)
         assert pref == settings.READ_PREFERENCE
 
 
 def test_field_validation_read_concern_level():
     """Test READ_CONCERN_LEVEL validation."""
     with pytest.raises(ValidationError):
-        _Settings(READ_CONCERN_LEVEL="invalid")
+        Settings(READ_CONCERN_LEVEL="invalid")
 
     # Valid levels
     valid_levels = ["local", "majority", "linearizable"]
     for level in valid_levels:
-        settings = _Settings(READ_CONCERN_LEVEL=level)
+        settings = Settings(READ_CONCERN_LEVEL=level)
         assert level == settings.READ_CONCERN_LEVEL
 
 
 def test_field_validation_unicode_decode_error_handler():
     """Test UNICODE_DECODE_ERROR_HANDLER validation."""
     with pytest.raises(ValidationError):
-        _Settings(UNICODE_DECODE_ERROR_HANDLER="invalid")
+        Settings(UNICODE_DECODE_ERROR_HANDLER="invalid")
 
     # Valid handlers
     valid_handlers = [
@@ -738,5 +738,5 @@ def test_field_validation_unicode_decode_error_handler():
         "surrogateescape",
     ]
     for handler in valid_handlers:
-        settings = _Settings(UNICODE_DECODE_ERROR_HANDLER=handler)
+        settings = Settings(UNICODE_DECODE_ERROR_HANDLER=handler)
         assert handler == settings.UNICODE_DECODE_ERROR_HANDLER

@@ -1,8 +1,13 @@
+import inspect
+import logging
 from collections.abc import Callable, Mapping, Sequence
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
 from beanie import init_beanie
+from bson.codec_options import DatetimeConversion
 from pymongo import AsyncMongoClient
+
+from .constants import LoggerNames
 
 if TYPE_CHECKING:
     from bson.codec_options import TypeRegistry
@@ -24,9 +29,6 @@ if TYPE_CHECKING:
     from .docs import CollectedDocumentsType
     from .protocols import SettingsProtocol
 
-type DatetimeConversionType = Literal[
-    "datetime_ms", "datetime", "datetime_auto", "datetime_clamp"
-]
 type DocumentClassType = type[Mapping[str, Any]] | None
 type TypeRegistryType = TypeRegistry | None
 type ServerSelectorType = (
@@ -46,6 +48,8 @@ type EventListenerType = (
 type AutoEncryptionOptsType = AutoEncryptionOpts | None
 type ServerApiType = ServerApi | None
 
+logger = logging.getLogger(LoggerNames.init())
+
 
 class Client:
     def __init__(  # noqa: PLR0913
@@ -53,7 +57,7 @@ class Client:
         settings: SettingsProtocol,
         *,
         tz_aware: bool = False,
-        datetime_conversion: DatetimeConversionType = "datetime",
+        datetime_conversion: DatetimeConversion = DatetimeConversion.DATETIME,
         document_class: DocumentClassType = None,
         type_registry: TypeRegistryType = None,
         server_selector: ServerSelectorType = None,
@@ -62,9 +66,13 @@ class Client:
         auto_encryption_opts: AutoEncryptionOptsType = None,
         server_api: ServerApiType = None,
     ) -> None:
+        if event_listeners is None:
+            event_listeners = ()
+
         self._database = settings.database
+        logger.info("client initialization...")
         self._client = AsyncMongoClient(
-            host=settings.connections,
+            host=settings.get_connections(with_secret=True),
             tz_aware=tz_aware,
             datetime_conversion=datetime_conversion,
             document_class=document_class,
@@ -76,6 +84,7 @@ class Client:
             server_api=server_api,
             **settings.client_kwargs,
         )
+        logger.info("client initialization completed successfully")
 
     async def init_beanie(
         self,
@@ -85,6 +94,17 @@ class Client:
         recreate_views: bool = False,
         skip_indexes: bool = False,
     ) -> None:
+        logger.info("beanie initialization...")
+
+        excluded = ("self", "documents")
+        if logger.getEffectiveLevel() <= logging.DEBUG:
+            frame = inspect.currentframe()
+            if frame:
+                args, _, _, values = inspect.getargvalues(frame)
+                params = {a: values[a] for a in args if a not in excluded}
+                logger.debug("params: %s", params)
+                del frame
+
         await init_beanie(
             database=self.database,
             document_models=documents,
@@ -92,9 +112,12 @@ class Client:
             recreate_views=recreate_views,
             skip_indexes=skip_indexes,
         )
+        logger.info("beanie initialization completed successfully")
 
     async def close(self) -> None:
+        logger.info("stopping the client...")
         await self._client.aclose()
+        logger.info("stopping the client has been completed successfully")
 
     def start_session(self) -> AsyncClientSession:
         return self._client.start_session()
@@ -115,8 +138,14 @@ class Client:
         return await self.database.list_collection_names()
 
     async def drop_database(self) -> None:
+        logger.info("dropping database '%s'...", self._database)
         await self._client.drop_database(self._database)
+        logger.info(
+            "database '%s' has been dropped successfully", self._database
+        )
 
     async def drop_collection(self, name: str, /) -> None:
+        logger.info("dropping collection '%s'...", name)
         collection = self.collection(name)
         await collection.drop()
+        logger.info("collection '%s' has been dropped successfully", name)

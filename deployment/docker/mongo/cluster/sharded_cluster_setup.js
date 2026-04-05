@@ -1,0 +1,7 @@
+sh.addShard("mongo_rs1/mongo_rs1_n1:27017,mongo_rs1_n2:27017")
+sh.addShard("mongo_rs2/mongo_rs2_n1:27017,mongo_rs2_n2:27017")
+//sh.enableSharding("tmp_db")
+//db.createCollection("form_input.metas")
+//db.createCollection("form_input.models")
+//sh.shardCollection("form_input.metas", {"id": "hashed"})
+//sh.shardCollection("form_input.models", {"id": "hashed"})
