@@ -2,7 +2,7 @@ from beanie import PydanticObjectId
 from bson.errors import InvalidId
 
 from src.core.constants import CURSOR_SEPARATOR
-from src.infra.db.mongo.exceptions import InvalidMongoIDError
+from src.infrastructure.database.mongo.exceptions import InvalidMongoIDError
 
 
 def to_poid(_id: str, /) -> PydanticObjectId:

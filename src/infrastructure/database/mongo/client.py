@@ -7,7 +7,7 @@ from beanie import init_beanie
 from bson.codec_options import DatetimeConversion
 from pymongo import AsyncMongoClient
 
-from .constants import LoggerNames
+from .logger import LoggerNames
 
 if TYPE_CHECKING:
     from bson.codec_options import TypeRegistry
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from pymongo.server_api import ServerApi
     from pymongo.server_description import ServerDescription
 
-    from .docs import CollectedDocumentsType
+    from .collections import CollectedDocumentsType
     from .protocols import SettingsProtocol
 
 type DocumentClassType = type[Mapping[str, Any]] | None
