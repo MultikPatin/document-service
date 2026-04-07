@@ -1,7 +1,7 @@
 from pydantic import Field, MongoDsn, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
-from .defaults import ConnectionDefaults
+from .constants import ConnectionDefaults
 
 
 class ConnectionSettings(BaseSettings):

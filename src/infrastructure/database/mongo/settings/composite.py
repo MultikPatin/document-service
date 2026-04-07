@@ -11,7 +11,7 @@ from .authentication import AuthenticationSettings
 from .compression import CompressionSettings
 from .connection import ConnectionSettings
 from .connection_mode import ConnectionModeSettings
-from .defaults import BaseDefaults
+from .constants import BaseDefaults
 from .erro_handling import ErrorHandlingSettings
 from .pool import PoolSettings
 from .read_concern import ReadConcernSettings

@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field, NonNegativeInt
 from pydantic_settings import BaseSettings
 
-from .defaults import TimeoutsDefaults
+from .constants import TimeoutsDefaults
 
 
 class TimeoutsSettings(BaseSettings):

@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .defaults import AuthenticationDefaults
+from .constants import AuthenticationDefaults
 
 
 class AuthenticationSettings(BaseSettings):

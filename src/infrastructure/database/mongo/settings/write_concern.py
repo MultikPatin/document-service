@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .defaults import WriteConcernDefaults
+from .constants import WriteConcernDefaults
 
 
 class WriteConcernSettings(BaseSettings):

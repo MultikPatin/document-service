@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field, NonNegativeInt, PositiveInt
 from pydantic_settings import BaseSettings
 
-from .defaults import PoolDefaults
+from .constants import PoolDefaults
 
 
 class PoolSettings(BaseSettings):
@@ -48,19 +48,19 @@ class PoolSettings(BaseSettings):
         """
         result: dict[str, Any] = {}
 
-        if self.MAX_SIZE:
+        if self.MAX_SIZE is not None:
             result["maxPoolSize"] = self.MAX_SIZE
-        if self.MIN_SIZE:
+        if self.MIN_SIZE is not None:
             result["minPoolSize"] = self.MIN_SIZE
-        if self.MAX_IDLE_TIME_MS:
+        if self.MAX_IDLE_TIME_MS is not None:
             result["maxIdleTimeMS"] = self.MAX_IDLE_TIME_MS
-        if self.MAX_CONNECTING:
+        if self.MAX_CONNECTING is not None:
             result["maxConnecting"] = self.MAX_CONNECTING
-        if self.WAIT_QUEUE_TIMEOUT_MS:
+        if self.WAIT_QUEUE_TIMEOUT_MS is not None:
             result["waitQueueTimeoutMS"] = self.WAIT_QUEUE_TIMEOUT_MS
-        if self.HEARTBEAT_FREQUENCY_MS:
+        if self.HEARTBEAT_FREQUENCY_MS is not None:
             result["heartbeatFrequencyMS"] = self.HEARTBEAT_FREQUENCY_MS
-        if self.SERVER_MONITORING_MODE:
+        if self.SERVER_MONITORING_MODE is not None:
             result["serverMonitoringMode"] = self.SERVER_MONITORING_MODE
 
         return result

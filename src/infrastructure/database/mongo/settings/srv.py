@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field, PositiveInt
 from pydantic_settings import BaseSettings
 
-from .defaults import SRVDefaults
+from .constants import SRVDefaults
 
 
 class SRVSettings(BaseSettings):

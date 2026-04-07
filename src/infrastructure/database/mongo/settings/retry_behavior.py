@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .defaults import RetryBehaviorDefaults
+from .constants import RetryBehaviorDefaults
 
 
 class RetryBehaviorSettings(BaseSettings):

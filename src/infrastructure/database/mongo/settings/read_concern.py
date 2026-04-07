@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .defaults import ReadConcernDefaults
+from .constants import ReadConcernDefaults
 
 
 class ReadConcernSettings(BaseSettings):
@@ -11,6 +11,7 @@ class ReadConcernSettings(BaseSettings):
         default=ReadConcernDefaults.LEVEL,
         description="Read concern level: local, majority, linearizable",
         pattern="^(local|majority|linearizable)?$",
+        min_length=1,
     )
 
     @property
