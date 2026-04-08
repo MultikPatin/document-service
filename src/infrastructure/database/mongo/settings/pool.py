@@ -17,7 +17,7 @@ class PoolSettings(BaseSettings):
         description="Minimum number of connections in the pool",
         le=999,
     )
-    MAX_IDLE_TIME_MS: NonNegativeInt | None = Field(
+    MAX_IDLE_TIME_MS: PositiveInt | None = Field(
         default=PoolDefaults.MAX_IDLE_TIME_MS,
         description="Maximum idle time for a connection (ms), None disables "
         "limit",
@@ -27,7 +27,7 @@ class PoolSettings(BaseSettings):
         description="Maximum number of concurrent connection attempts",
         le=100,
     )
-    WAIT_QUEUE_TIMEOUT_MS: NonNegativeInt | None = Field(
+    WAIT_QUEUE_TIMEOUT_MS: PositiveInt | None = Field(
         default=PoolDefaults.WAIT_QUEUE_TIMEOUT_MS,
         description="Max time to wait for a free connection in the pool (ms)",
     )

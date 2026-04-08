@@ -62,7 +62,7 @@ def test_get_connections_with_secret(
     mock_connection_settings.dsn.return_value.encoded_string.return_value = url
 
     settings = Settings()
-    settings._connection0 = mock_connection_settings
+    settings.__dict__["connection0"] = mock_connection_settings
     connections = settings.get_connections(with_secret=True)
 
     assert isinstance(connections, list)
@@ -85,16 +85,16 @@ def test_client_kwargs_combines_all_component_settings(  # noqa: PLR0913
 ) -> None:
     """Test that client_kwargs property combines all component settings correctly."""
     settings = Settings()
-    settings._pool = mock_pool_settings
-    settings._timeouts = mock_timeouts_settings
-    settings._retry_behavior = mock_retry_behavior_settings
-    settings._tls = mock_tls_settings
-    settings._compression = mock_compression_settings
-    settings._representation = mock_representation_settings
-    settings._connection_mode = mock_connection_mode_settings
-    settings._write_concern = mock_write_concern_settings
-    settings._read_concern = mock_read_concern_settings
-    settings._error_handling = mock_error_handling_settings
+    settings.__dict__["pool"] = mock_pool_settings
+    settings.__dict__["timeouts"] = mock_timeouts_settings
+    settings.__dict__["retry_behavior"] = mock_retry_behavior_settings
+    settings.__dict__["tls"] = mock_tls_settings
+    settings.__dict__["compression"] = mock_compression_settings
+    settings.__dict__["representation"] = mock_representation_settings
+    settings.__dict__["connection_mode"] = mock_connection_mode_settings
+    settings.__dict__["write_concern"] = mock_write_concern_settings
+    settings.__dict__["read_concern"] = mock_read_concern_settings
+    settings.__dict__["error_handling"] = mock_error_handling_settings
 
     kwargs = settings.client_kwargs
 
@@ -137,8 +137,8 @@ def test_client_kwargs_includes_authentication_when_username_present(
     mock_connection_settings.USERNAME = username
 
     settings = Settings()
-    settings._connection0 = mock_connection_settings
-    settings._authentication = mock_authentication_settings
+    settings.__dict__["connection0"] = mock_connection_settings
+    settings.__dict__["authentication"] = mock_authentication_settings
     kwargs = settings.client_kwargs
 
     if username:
@@ -162,8 +162,8 @@ def test_client_kwargs_includes_srv_when_schema_ends_with_srv(
     mock_connection_settings.SCHEMA = schema
 
     settings = Settings()
-    settings._connection0 = mock_connection_settings
-    settings._srv = mock_srv_settings
+    settings.__dict__["connection0"] = mock_connection_settings
+    settings.__dict__["srv"] = mock_srv_settings
     kwargs = settings.client_kwargs
 
     if schema.endswith("srv"):

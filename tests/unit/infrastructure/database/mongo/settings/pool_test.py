@@ -319,9 +319,9 @@ def test_pool_settings_client_kwargs_zero_values_included() -> None:
     settings = PoolSettings(
         MAX_SIZE=100,
         MIN_SIZE=0,
-        MAX_IDLE_TIME_MS=0,
+        MAX_IDLE_TIME_MS=1,
         MAX_CONNECTING=5,
-        WAIT_QUEUE_TIMEOUT_MS=0,
+        WAIT_QUEUE_TIMEOUT_MS=1,
         HEARTBEAT_FREQUENCY_MS=0,
         SERVER_MONITORING_MODE="auto",
     )
@@ -329,9 +329,9 @@ def test_pool_settings_client_kwargs_zero_values_included() -> None:
     expected: dict[str, Any] = {
         "maxPoolSize": 100,
         "minPoolSize": 0,
-        "maxIdleTimeMS": 0,
+        "maxIdleTimeMS": 1,
         "maxConnecting": 5,
-        "waitQueueTimeoutMS": 0,
+        "waitQueueTimeoutMS": 1,
         "heartbeatFrequencyMS": 0,
         "serverMonitoringMode": "auto",
     }
