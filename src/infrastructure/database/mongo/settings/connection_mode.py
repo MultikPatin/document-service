@@ -14,6 +14,7 @@ class ConnectionModeSettings(BaseSettings):
     APPNAME: str | None = Field(
         default=ConnectionModeDefaults.APPNAME,
         description="Application name (visible in logs)",
+        min_length=1,
         max_length=128,
     )
     READ_PREFERENCE: str | None = Field(

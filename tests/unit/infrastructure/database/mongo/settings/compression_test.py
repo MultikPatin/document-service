@@ -6,89 +6,6 @@ from src.infrastructure.database.mongo.settings.compression import (
 )
 
 
-def test_compression_settings_valid_compressor():
-    """Test valid compressor values."""
-    # Test each valid compressor
-    for compressor in ["snappy", "zlib", "zstd"]:
-        settings = CompressionSettings(COMPRESSORS=compressor)
-        assert compressor == settings.COMPRESSORS
-        assert settings.client_kwargs == {"compressors": compressor}
-
-    # Test None compressor
-    settings = CompressionSettings(COMPRESSORS=None)
-    assert settings.COMPRESSORS is None
-    assert settings.client_kwargs == {}
-
-
-def test_compression_settings_valid_zlib_level():
-    """Test valid zlib compression level values."""
-    # Test valid levels 0-9
-    for level in range(10):
-        settings = CompressionSettings(ZLIB_COMPRESSION_LEVEL=level)
-        assert level == settings.ZLIB_COMPRESSION_LEVEL
-        expected_kwargs = {} if level == 0 else {"zlibCompressionLevel": level}
-        assert settings.client_kwargs == expected_kwargs
-
-    # Test None level
-    settings = CompressionSettings(ZLIB_COMPRESSION_LEVEL=None)
-    assert settings.ZLIB_COMPRESSION_LEVEL is None
-    assert settings.client_kwargs == {}
-
-
-def test_compression_settings_invalid_compressor():
-    """Test invalid compressor values raise validation error."""
-    invalid_values = ["invalid", "gzip", "lz4", "123"]
-
-    for value in invalid_values:
-        with pytest.raises(ValidationError):
-            CompressionSettings(COMPRESSORS=value)
-
-
-def test_compression_settings_invalid_zlib_level():
-    """Test invalid zlib compression level values raise validation error."""
-    # Test invalid integer values below range
-    for value in [-1, -5]:
-        with pytest.raises(ValidationError):
-            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
-
-    # Test invalid integer values above range
-    for value in [10, 15]:
-        with pytest.raises(ValidationError):
-            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
-
-    # Test invalid non-integer values
-    for value in ["invalid", 3.5]:
-        with pytest.raises(ValidationError):
-            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
-
-    # Test string that could be integer but is invalid due to range
-    with pytest.raises(ValidationError):
-        CompressionSettings(ZLIB_COMPRESSION_LEVEL="10")
-
-
-def test_compression_settings_both_fields():
-    """Test both fields set simultaneously."""
-    # Test valid combination
-    expected_level = 6
-    settings = CompressionSettings(
-        COMPRESSORS="zlib", ZLIB_COMPRESSION_LEVEL=expected_level
-    )
-    assert settings.COMPRESSORS == "zlib"
-    assert expected_level == settings.ZLIB_COMPRESSION_LEVEL
-    assert settings.client_kwargs == {
-        "compressors": "zlib",
-        "zlibCompressionLevel": expected_level,
-    }
-
-    # Test combination with invalid compressor
-    with pytest.raises(ValidationError):
-        CompressionSettings(COMPRESSORS="invalid", ZLIB_COMPRESSION_LEVEL=6)
-
-    # Test combination with invalid level
-    with pytest.raises(ValidationError):
-        CompressionSettings(COMPRESSORS="zlib", ZLIB_COMPRESSION_LEVEL=-1)
-
-
 def test_compression_settings_client_kwargs_empty():
     """Test client_kwargs returns empty dict when no values set."""
     settings = CompressionSettings()
@@ -97,12 +14,76 @@ def test_compression_settings_client_kwargs_empty():
     assert settings.client_kwargs == {}
 
 
+@pytest.mark.parametrize(
+    "compressor",
+    ["snappy", "zlib", "zstd", None],
+    ids=["snappy", "zlib", "zstd", "none"],
+)
+def test_compression_settings_valid_compressor(compressor):
+    """Test valid compressor values."""
+    settings = CompressionSettings(COMPRESSORS=compressor)
+    assert compressor == settings.COMPRESSORS
+
+    expected_kwargs = {}
+    if compressor:
+        expected_kwargs["compressors"] = compressor
+    assert settings.client_kwargs == expected_kwargs
+
+
+@pytest.mark.parametrize(
+    "level",
+    [*list(range(10)), None],
+    ids=[
+        "level-0",
+        "level-1",
+        "level-2",
+        "level-3",
+        "level-4",
+        "level-5",
+        "level-6",
+        "level-7",
+        "level-8",
+        "level-9",
+        "none",
+    ],
+)
+def test_compression_settings_valid_zlib_level(level):
+    """Test valid zlib compression level values."""
+    settings = CompressionSettings(ZLIB_COMPRESSION_LEVEL=level)
+    assert level == settings.ZLIB_COMPRESSION_LEVEL
+
+    expected_kwargs = {}
+    if isinstance(level, int) and level > 0:
+        expected_kwargs["zlibCompressionLevel"] = level
+    assert settings.client_kwargs == expected_kwargs
+
+
+@pytest.mark.parametrize(
+    ("compressor", "level", "expected_kwargs"),
+    [
+        ("zlib", 6, {"compressors": "zlib", "zlibCompressionLevel": 6}),
+        ("zstd", 3, {"compressors": "zstd", "zlibCompressionLevel": 3}),
+        ("snappy", 0, {"compressors": "snappy"}),
+        ("zlib", None, {"compressors": "zlib"}),
+        (None, 5, {"zlibCompressionLevel": 5}),
+    ],
+)
+def test_compression_settings_valid_combinations(
+    compressor, level, expected_kwargs
+):
+    """Test valid combinations of compressor and zlib level."""
+    settings = CompressionSettings(
+        COMPRESSORS=compressor, ZLIB_COMPRESSION_LEVEL=level
+    )
+    assert compressor == settings.COMPRESSORS
+    assert level == settings.ZLIB_COMPRESSION_LEVEL
+    assert settings.client_kwargs == expected_kwargs
+
+
 def test_compression_settings_client_kwargs_only_compressor():
     """Test client_kwargs includes only compressors when only COMPRESSORS is set."""
     settings = CompressionSettings(COMPRESSORS="snappy")
     assert settings.client_kwargs == {"compressors": "snappy"}
-
-    # Verify ZLIB_COMPRESSION_LEVEL is not in kwargs when not set
     assert "zlibCompressionLevel" not in settings.client_kwargs
 
 
@@ -110,8 +91,6 @@ def test_compression_settings_client_kwargs_only_zlib_level():
     """Test client_kwargs includes only zlibCompressionLevel when only ZLIB_COMPRESSION_LEVEL is set."""
     settings = CompressionSettings(ZLIB_COMPRESSION_LEVEL=9)
     assert settings.client_kwargs == {"zlibCompressionLevel": 9}
-
-    # Verify compressors is not in kwargs when not set
     assert "compressors" not in settings.client_kwargs
 
 
@@ -140,3 +119,67 @@ def test_compression_settings_client_kwargs_none_values():
 
     settings = CompressionSettings(COMPRESSORS=None, ZLIB_COMPRESSION_LEVEL=5)
     assert settings.client_kwargs == {"zlibCompressionLevel": 5}
+
+
+@pytest.mark.parametrize(
+    "value",
+    ["invalid", "gzip", "lz4", "123"],
+)
+def test_compression_settings_invalid_compressor(value):
+    """Test invalid compressor values raise validation error."""
+    with pytest.raises(ValidationError):
+        CompressionSettings(COMPRESSORS=value)
+
+
+def test_compression_settings_invalid_zlib_level_out_of_range_below():
+    """Test invalid zlib compression level values below range raise validation error."""
+    for value in [-1, -5]:
+        with pytest.raises(ValidationError):
+            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
+
+
+def test_compression_settings_invalid_zlib_level_out_of_range_above():
+    """Test invalid zlib compression level values above range raise validation error."""
+    for value in [10, 15]:
+        with pytest.raises(ValidationError):
+            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
+
+
+def test_compression_settings_invalid_zlib_level_non_integer():
+    """Test invalid non-integer zlib compression level values raise validation error."""
+    for value in ["invalid", 3.5]:
+        with pytest.raises(ValidationError):
+            CompressionSettings(ZLIB_COMPRESSION_LEVEL=value)
+
+
+def test_compression_settings_invalid_zlib_level_string_integer():
+    """Test string that could be integer but is invalid due to range raises validation error."""
+    with pytest.raises(ValidationError):
+        CompressionSettings(ZLIB_COMPRESSION_LEVEL="10")
+
+
+@pytest.mark.parametrize(
+    ("compressor", "level"),
+    [
+        ("invalid", 6),
+        ("lz4", 3),
+        ("gzip", 0),
+    ],
+)
+def test_compression_settings_invalid_compressor_combinations(
+    compressor, level
+):
+    """Test combinations with invalid compressor values raise validation error."""
+    with pytest.raises(ValidationError):
+        CompressionSettings(
+            COMPRESSORS=compressor, ZLIB_COMPRESSION_LEVEL=level
+        )
+
+
+def test_compression_settings_invalid_zlib_level_combinations():
+    """Test combinations with invalid zlib level values raise validation error."""
+    with pytest.raises(ValidationError):
+        CompressionSettings(COMPRESSORS="zlib", ZLIB_COMPRESSION_LEVEL=-1)
+
+    with pytest.raises(ValidationError):
+        CompressionSettings(COMPRESSORS="zlib", ZLIB_COMPRESSION_LEVEL=10)

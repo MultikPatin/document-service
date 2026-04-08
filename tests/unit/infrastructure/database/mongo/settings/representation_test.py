@@ -18,77 +18,76 @@ def test_representation_settings_default_values() -> None:
     assert settings.UUID == RepresentationDefaults.UUID
 
 
-def test_representation_settings_valid_values() -> None:
-    """Test that RepresentationSettings accepts valid values for UUID field."""
-    # Test all valid UUID representation formats
-    valid_uuid_formats = [
+@pytest.mark.parametrize(
+    "uuid_format",
+    [
         "standard",
         "pythonLegacy",
         "javaLegacy",
         "csharpLegacy",
         "unspecified",
-    ]
+    ],
+    ids=[
+        "standard",
+        "pythonLegacy",
+        "javaLegacy",
+        "csharpLegacy",
+        "unspecified",
+    ],
+)
+def test_representation_settings_valid_values(uuid_format: str) -> None:
+    """Test that RepresentationSettings accepts valid values for UUID field."""
+    settings = RepresentationSettings(UUID=uuid_format)
+    assert uuid_format == settings.UUID
 
-    for uuid_format in valid_uuid_formats:
-        settings = RepresentationSettings(UUID=uuid_format)
-        assert uuid_format == settings.UUID
 
-
-def test_representation_settings_invalid_values() -> None:
-    """Test that RepresentationSettings raises ValidationError for invalid UUID values."""
-    # Test invalid UUID representation formats
-    invalid_uuid_formats = [
+@pytest.mark.parametrize(
+    "uuid_format",
+    [
         "invalid",
         "",
-        "Standard",  # Case sensitive
-        "python-legacy",  # Wrong format
-        "random",  # Not in allowed values
-    ]
-
-    for uuid_format in invalid_uuid_formats:
-        with pytest.raises(ValidationError):
-            RepresentationSettings(UUID=uuid_format)
-
-
-def test_representation_settings_client_kwargs_with_default() -> None:
-    """Test client_kwargs returns correct dictionary with default UUID representation."""
-    settings = RepresentationSettings()
-    expected: dict[str, Any] = {
-        "uuidRepresentation": RepresentationDefaults.UUID
-    }
-    assert settings.client_kwargs == expected
-
-
-def test_representation_settings_client_kwargs_with_standard() -> None:
-    """Test client_kwargs returns correct dictionary with standard UUID representation."""
-    settings = RepresentationSettings(UUID="standard")
-    expected: dict[str, Any] = {"uuidRepresentation": "standard"}
-    assert settings.client_kwargs == expected
+        "Standard",
+        "python-legacy",
+        "random",
+    ],
+    ids=[
+        "invalid",
+        "empty",
+        "Case sensitive",
+        "Wrong format",
+        "Not in allowed values",
+    ],
+)
+def test_representation_settings_invalid_values(uuid_format: str) -> None:
+    """Test that RepresentationSettings raises ValidationError for invalid UUID values."""
+    with pytest.raises(ValidationError):
+        RepresentationSettings(UUID=uuid_format)
 
 
-def test_representation_settings_client_kwargs_with_python_legacy() -> None:
-    """Test client_kwargs returns correct dictionary with pythonLegacy UUID representation."""
-    settings = RepresentationSettings(UUID="pythonLegacy")
-    expected: dict[str, Any] = {"uuidRepresentation": "pythonLegacy"}
-    assert settings.client_kwargs == expected
+@pytest.mark.parametrize(
+    ("uuid_format", "expected_value"),
+    [
+        (None, RepresentationDefaults.UUID),
+        ("standard", "standard"),
+        ("pythonLegacy", "pythonLegacy"),
+        ("javaLegacy", "javaLegacy"),
+        ("csharpLegacy", "csharpLegacy"),
+        ("unspecified", "unspecified"),
+    ],
+)
+def test_representation_settings_client_kwargs(
+    uuid_format: str | None,
+    expected_value: str,
+    expected_client_kwargs: dict[str, Any],
+) -> None:
+    """Test client_kwargs returns correct dictionary for different UUID representations."""
+    # Arrange
+    if uuid_format is None:
+        settings = RepresentationSettings()
+    else:
+        settings = RepresentationSettings(UUID=uuid_format)
 
+    expected_client_kwargs["uuidRepresentation"] = expected_value
 
-def test_representation_settings_client_kwargs_with_java_legacy() -> None:
-    """Test client_kwargs returns correct dictionary with javaLegacy UUID representation."""
-    settings = RepresentationSettings(UUID="javaLegacy")
-    expected: dict[str, Any] = {"uuidRepresentation": "javaLegacy"}
-    assert settings.client_kwargs == expected
-
-
-def test_representation_settings_client_kwargs_with_csharp_legacy() -> None:
-    """Test client_kwargs returns correct dictionary with csharpLegacy UUID representation."""
-    settings = RepresentationSettings(UUID="csharpLegacy")
-    expected: dict[str, Any] = {"uuidRepresentation": "csharpLegacy"}
-    assert settings.client_kwargs == expected
-
-
-def test_representation_settings_client_kwargs_with_unspecified() -> None:
-    """Test client_kwargs returns correct dictionary with unspecified UUID representation."""
-    settings = RepresentationSettings(UUID="unspecified")
-    expected: dict[str, Any] = {"uuidRepresentation": "unspecified"}
-    assert settings.client_kwargs == expected
+    # Act & Assert
+    assert settings.client_kwargs == expected_client_kwargs

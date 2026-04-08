@@ -7,148 +7,214 @@ from src.infrastructure.database.mongo.settings.constants import PoolDefaults
 from src.infrastructure.database.mongo.settings.pool import PoolSettings
 
 
-def test_pool_settings_default_values() -> None:
-    """Test that PoolSettings uses default values from PoolDefaults when no values are provided."""
-    settings = PoolSettings()
-
-    assert settings.MAX_SIZE == PoolDefaults.MAX_SIZE
-    assert settings.MIN_SIZE == PoolDefaults.MIN_SIZE
-    assert settings.MAX_IDLE_TIME_MS == PoolDefaults.MAX_IDLE_TIME_MS
-    assert settings.MAX_CONNECTING == PoolDefaults.MAX_CONNECTING
-    assert settings.WAIT_QUEUE_TIMEOUT_MS == PoolDefaults.WAIT_QUEUE_TIMEOUT_MS
-    assert (
-        settings.HEARTBEAT_FREQUENCY_MS == PoolDefaults.HEARTBEAT_FREQUENCY_MS
-    )
-    assert (
-        settings.SERVER_MONITORING_MODE == PoolDefaults.SERVER_MONITORING_MODE
-    )
-
-
-def test_pool_settings_valid_values() -> None:
-    """Test that PoolSettings accepts valid values for all fields."""
-    test_max_size = 500
-    test_min_size = 10
-    test_max_idle_time_ms = 30000
-    test_max_connecting = 50
-    test_wait_queue_timeout_ms = 15000
-    test_heartbeat_frequency_ms = 5000
-    server_monitoring_mode = "poll"
-
+@pytest.mark.parametrize(
+    (
+        "max_size",
+        "min_size",
+        "max_idle_time_ms",
+        "max_connecting",
+        "wait_queue_timeout_ms",
+        "heartbeat_frequency_ms",
+        "server_monitoring_mode",
+    ),
+    [
+        (
+            PoolDefaults.MAX_SIZE,
+            PoolDefaults.MIN_SIZE,
+            PoolDefaults.MAX_IDLE_TIME_MS,
+            PoolDefaults.MAX_CONNECTING,
+            PoolDefaults.WAIT_QUEUE_TIMEOUT_MS,
+            PoolDefaults.HEARTBEAT_FREQUENCY_MS,
+            PoolDefaults.SERVER_MONITORING_MODE,
+        ),
+        (
+            500,
+            10,
+            30000,
+            50,
+            15000,
+            5000,
+            "poll",
+        ),
+    ],
+    ids=["default-values", "custom-values"],
+)
+def test_pool_settings_with_valid_values(  # noqa: PLR0913
+    max_size: int | None,
+    min_size: int | None,
+    max_idle_time_ms: int | None,
+    max_connecting: int | None,
+    wait_queue_timeout_ms: int | None,
+    heartbeat_frequency_ms: int | None,
+    server_monitoring_mode: str | None,
+) -> None:
+    """Test PoolSettings with valid values for all fields."""
     settings = PoolSettings(
-        MAX_SIZE=test_max_size,
-        MIN_SIZE=test_min_size,
-        MAX_IDLE_TIME_MS=test_max_idle_time_ms,
-        MAX_CONNECTING=test_max_connecting,
-        WAIT_QUEUE_TIMEOUT_MS=test_wait_queue_timeout_ms,
-        HEARTBEAT_FREQUENCY_MS=test_heartbeat_frequency_ms,
+        MAX_SIZE=max_size,
+        MIN_SIZE=min_size,
+        MAX_IDLE_TIME_MS=max_idle_time_ms,
+        MAX_CONNECTING=max_connecting,
+        WAIT_QUEUE_TIMEOUT_MS=wait_queue_timeout_ms,
+        HEARTBEAT_FREQUENCY_MS=heartbeat_frequency_ms,
         SERVER_MONITORING_MODE=server_monitoring_mode,
     )
 
-    assert test_max_size == settings.MAX_SIZE
-    assert test_min_size == settings.MIN_SIZE
-    assert test_max_idle_time_ms == settings.MAX_IDLE_TIME_MS
-    assert test_max_connecting == settings.MAX_CONNECTING
-    assert test_wait_queue_timeout_ms == settings.WAIT_QUEUE_TIMEOUT_MS
-    assert test_heartbeat_frequency_ms == settings.HEARTBEAT_FREQUENCY_MS
+    assert max_size == settings.MAX_SIZE
+    assert min_size == settings.MIN_SIZE
+    assert max_idle_time_ms == settings.MAX_IDLE_TIME_MS
+    assert max_connecting == settings.MAX_CONNECTING
+    assert wait_queue_timeout_ms == settings.WAIT_QUEUE_TIMEOUT_MS
+    assert heartbeat_frequency_ms == settings.HEARTBEAT_FREQUENCY_MS
     assert server_monitoring_mode == settings.SERVER_MONITORING_MODE
 
 
-def test_pool_settings_none_values() -> None:
+@pytest.mark.parametrize(
+    "field_name",
+    [
+        "MAX_SIZE",
+        "MIN_SIZE",
+        "MAX_IDLE_TIME_MS",
+        "MAX_CONNECTING",
+        "WAIT_QUEUE_TIMEOUT_MS",
+        "HEARTBEAT_FREQUENCY_MS",
+        "SERVER_MONITORING_MODE",
+    ],
+    ids=[
+        "max-size-none",
+        "min-size-none",
+        "max-idle-time-ms-none",
+        "max-connecting-none",
+        "wait-queue-timeout-ms-none",
+        "heartbeat-frequency-ms-none",
+        "server-monitoring-mode-none",
+    ],
+)
+def test_pool_settings_accepts_none_values(field_name: str) -> None:
     """Test that PoolSettings accepts None for all optional fields."""
-    settings = PoolSettings(
-        MAX_SIZE=None,
-        MIN_SIZE=None,
-        MAX_IDLE_TIME_MS=None,
-        MAX_CONNECTING=None,
-        WAIT_QUEUE_TIMEOUT_MS=None,
-        HEARTBEAT_FREQUENCY_MS=None,
-        SERVER_MONITORING_MODE=None,
-    )
+    # Create a dictionary with all fields set to None
+    kwargs = {
+        "MAX_SIZE": None,
+        "MIN_SIZE": None,
+        "MAX_IDLE_TIME_MS": None,
+        "MAX_CONNECTING": None,
+        "WAIT_QUEUE_TIMEOUT_MS": None,
+        "HEARTBEAT_FREQUENCY_MS": None,
+        "SERVER_MONITORING_MODE": None,
+    }
 
-    assert settings.MAX_SIZE is None
-    assert settings.MIN_SIZE is None
-    assert settings.MAX_IDLE_TIME_MS is None
-    assert settings.MAX_CONNECTING is None
-    assert settings.WAIT_QUEUE_TIMEOUT_MS is None
-    assert settings.HEARTBEAT_FREQUENCY_MS is None
-    assert settings.SERVER_MONITORING_MODE is None
+    settings = PoolSettings(**kwargs)
+
+    # Get the actual value from settings using getattr
+    actual_value = getattr(settings, field_name)
+    assert actual_value is None
 
 
-def test_pool_settings_max_size_validation() -> None:
-    """Test MAX_SIZE validation with boundary and invalid values."""
-    # Valid boundary values
-    assert PoolSettings(MAX_SIZE=1).MAX_SIZE == 1
-    assert (
-        PoolSettings(MAX_SIZE=PoolDefaults.MAX_SIZE).MAX_SIZE
-        == PoolDefaults.MAX_SIZE
-    )
+@pytest.mark.parametrize(
+    "max_size",
+    [1, PoolDefaults.MAX_SIZE],
+    ids=["max-size-minimum", "max-size-default"],
+)
+def test_pool_settings_with_valid_max_size_values(max_size: int) -> None:
+    """Test PoolSettings with valid boundary values for MAX_SIZE."""
+    settings = PoolSettings(MAX_SIZE=max_size)
+    assert max_size == settings.MAX_SIZE
 
-    # Invalid values
+
+@pytest.mark.parametrize(
+    "max_size",
+    [0, 1001, -1],
+    ids=["max-size-zero", "max-size-too-large", "max-size-negative"],
+)
+def test_pool_settings_validation_error_invalid_max_size(max_size: int) -> None:
+    """Test ValidationError for invalid MAX_SIZE values."""
     with pytest.raises(ValidationError):
-        PoolSettings(MAX_SIZE=0)
-    with pytest.raises(ValidationError):
-        PoolSettings(MAX_SIZE=1001)
-    with pytest.raises(ValidationError):
-        PoolSettings(MAX_SIZE=-1)
+        PoolSettings(MAX_SIZE=max_size)
 
 
-def test_pool_settings_min_size_validation() -> None:
-    """Test MIN_SIZE validation with boundary and invalid values."""
-    # Valid boundary values
-    assert PoolSettings(MIN_SIZE=0).MIN_SIZE == 0
-    assert (
-        PoolSettings(MIN_SIZE=PoolDefaults.MIN_SIZE).MIN_SIZE
-        == PoolDefaults.MIN_SIZE
-    )
-
-    # Invalid values
-    with pytest.raises(ValidationError):
-        PoolSettings(MIN_SIZE=-1)
-    with pytest.raises(ValidationError):
-        PoolSettings(MIN_SIZE=1000)
+@pytest.mark.parametrize(
+    "min_size",
+    [0, PoolDefaults.MIN_SIZE],
+    ids=["min-size-zero", "min-size-default"],
+)
+def test_pool_settings_with_valid_min_size_values(min_size: int) -> None:
+    """Test PoolSettings with valid boundary values for MIN_SIZE."""
+    settings = PoolSettings(MIN_SIZE=min_size)
+    assert min_size == settings.MIN_SIZE
 
 
-def test_pool_settings_max_connecting_validation() -> None:
-    """Test MAX_CONNECTING validation with boundary and invalid values."""
-    # Valid boundary values
-    assert PoolSettings(MAX_CONNECTING=1).MAX_CONNECTING == 1
-    assert (
-        PoolSettings(MAX_CONNECTING=PoolDefaults.MAX_CONNECTING).MAX_CONNECTING
-        == PoolDefaults.MAX_CONNECTING
-    )
-
-    # Invalid values
+@pytest.mark.parametrize(
+    "min_size",
+    [-1, 1000],
+    ids=["min-size-negative", "min-size-too-large"],
+)
+def test_pool_settings_validation_error_invalid_min_size(min_size: int) -> None:
+    """Test ValidationError for invalid MIN_SIZE values."""
     with pytest.raises(ValidationError):
-        PoolSettings(MAX_CONNECTING=0)
-    with pytest.raises(ValidationError):
-        PoolSettings(MAX_CONNECTING=101)
-    with pytest.raises(ValidationError):
-        PoolSettings(MAX_CONNECTING=-1)
+        PoolSettings(MIN_SIZE=min_size)
 
 
-def test_pool_settings_server_monitoring_mode_validation() -> None:
-    """Test SERVER_MONITORING_MODE validation with valid and invalid values."""
-    # Valid values
-    assert (
-        PoolSettings(SERVER_MONITORING_MODE="auto").SERVER_MONITORING_MODE
-        == "auto"
-    )
-    assert (
-        PoolSettings(SERVER_MONITORING_MODE="stream").SERVER_MONITORING_MODE
-        == "stream"
-    )
-    assert (
-        PoolSettings(SERVER_MONITORING_MODE="poll").SERVER_MONITORING_MODE
-        == "poll"
-    )
+@pytest.mark.parametrize(
+    "max_connecting",
+    [1, PoolDefaults.MAX_CONNECTING],
+    ids=["max-connecting-minimum", "max-connecting-default"],
+)
+def test_pool_settings_with_valid_max_connecting_values(
+    max_connecting: int,
+) -> None:
+    """Test PoolSettings with valid boundary values for MAX_CONNECTING."""
+    settings = PoolSettings(MAX_CONNECTING=max_connecting)
+    assert max_connecting == settings.MAX_CONNECTING
 
-    # Invalid values
+
+@pytest.mark.parametrize(
+    "max_connecting",
+    [0, 101, -1],
+    ids=[
+        "max-connecting-zero",
+        "max-connecting-too-large",
+        "max-connecting-negative",
+    ],
+)
+def test_pool_settings_validation_error_invalid_max_connecting(
+    max_connecting: int,
+) -> None:
+    """Test ValidationError for invalid MAX_CONNECTING values."""
     with pytest.raises(ValidationError):
-        PoolSettings(SERVER_MONITORING_MODE="invalid")
+        PoolSettings(MAX_CONNECTING=max_connecting)
+
+
+@pytest.mark.parametrize(
+    "server_monitoring_mode",
+    ["auto", "stream", "poll"],
+    ids=[
+        "server-monitoring-mode-auto",
+        "server-monitoring-mode-stream",
+        "server-monitoring-mode-poll",
+    ],
+)
+def test_pool_settings_with_valid_server_monitoring_mode_values(
+    server_monitoring_mode: str,
+) -> None:
+    """Test PoolSettings with valid values for SERVER_MONITORING_MODE."""
+    settings = PoolSettings(SERVER_MONITORING_MODE=server_monitoring_mode)
+    assert server_monitoring_mode == settings.SERVER_MONITORING_MODE
+
+
+@pytest.mark.parametrize(
+    "server_monitoring_mode",
+    ["invalid", "", "Auto"],
+    ids=[
+        "server-monitoring-mode-invalid",
+        "server-monitoring-mode-empty",
+        "server-monitoring-mode-wrong-case",
+    ],
+)
+def test_pool_settings_validation_error_invalid_server_monitoring_mode(
+    server_monitoring_mode: str,
+) -> None:
+    """Test ValidationError for invalid SERVER_MONITORING_MODE values."""
     with pytest.raises(ValidationError):
-        PoolSettings(SERVER_MONITORING_MODE="")
-    with pytest.raises(ValidationError):
-        PoolSettings(SERVER_MONITORING_MODE="Auto")  # Case sensitive
+        PoolSettings(SERVER_MONITORING_MODE=server_monitoring_mode)
 
 
 def test_pool_settings_client_kwargs_all_fields_set() -> None:

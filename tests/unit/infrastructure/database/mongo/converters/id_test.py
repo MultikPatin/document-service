@@ -6,21 +6,6 @@ from src.infrastructure.database.mongo.converters.id import to_poid
 from src.infrastructure.database.mongo.exceptions import InvalidMongoIDError
 
 
-@pytest.fixture
-def valid_id() -> str:
-    return str(PydanticObjectId())
-
-
-@pytest.fixture
-def invalid_id() -> str:
-    return "not-a-valid-object-id"
-
-
-@pytest.fixture
-def prefix() -> str:
-    return "prefix"
-
-
 def test_convert_to_id_valid(valid_id):
     """Test converting a valid single ID string."""
     expected_object_id = PydanticObjectId(valid_id)

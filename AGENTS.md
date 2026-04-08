@@ -6,35 +6,30 @@ This document outlines the development standards, tools, and conventions used in
 
 ### All actual versions of libraries and dependencies can be found in the `pyproject.toml` file.
 
-## Testing Tools
+### Project Layout
 
-### pytest
-
-For testing, use pytest and libraries from its ecosystem.
-
-- Use `pytest` for test execution
-- Utilize `pytest-cov` for coverage analysis
-
-Run tests with coverage:
-
-```bash
-uv run pytest tests/ --cov=. --cov-report=term --cov-fail-under=80
 ```
-
-This command is part of the Definition Of Done and ensures test coverage stays at or above 80%.
-
-### Test Structure and Naming Conventions
-
-- **Directory Structure**: Tests are located in the `tests/` directory, with subdirectories by type (e.g., `unit/`,
-  `integration/`). The path within `tests/` mirrors `src/`. For example, `src/core/settings.py` →
-  `tests/unit/core/settings/model_config_test.py`. The `unit/` directory is already present in the project structure.
-- **File Naming**: Test files should follow the pattern `*_test.py` (e.g., `model_config_test.py`). This aligns with
-  common Python practices and ensures pytest discovers them automatically.
-- **Function Naming**: Test functions must be prefixed with `test_` (e.g., `test_validate_settings()`).
-- **Class Naming**: Test classes should be named with the prefix `Test` followed by the name of the class being tested (
-  e.g., `TestSettingsModel`).
-- **PEP Standards**: Adhere to PEP 8 for code style and PEP 257 for docstring conventions. Tests should be readable,
-  concise, and include meaningful docstrings when necessary.
+project/              # Корень проекта
+├── deployment/       # Файлы сборки и деплоя
+│   └── ...
+├── documentation/    # Документация к проекту
+│   └── ...
+├── src/              # Исходный код
+│   └── ...
+├── tests/            # Корень тестов
+│   ├── conftest.py   # Глобальные настройки и pytest_plugins
+│   ├── fixtures/     # Все фикстуры по модулям
+│   │   ├──...
+│   └── unit/         # Тесты юнитов
+│   │   ├──...
+│   └── integration/  # Тесты интеграции
+│   │   ├──...
+│   └───...
+├── pyproject.toml    # Файл конфигурации для проекта
+├── ruff.toml         # Конфигурацяи ruff
+├── ty.toml           # Конфгурациия ty
+└── pytest.ini        # Конфигурация pytest
+```
 
 ## Development Tools
 
@@ -189,10 +184,8 @@ uv run pre-commit run --all-files
 ```bash
 # Install runtime
 uv sync --all-extras --group dev
-
 # Run full quality gate
 uv tool install ruff ty pre_commit
-
 # Install pre-commit hooks
 uv run pre-commit install
 ```
@@ -209,11 +202,52 @@ uv run pre-commit install
 - Docs/config changes stay aligned with the real file layout
 - `uv.lock` is updated if dependencies change
 
-#### Definition Of Done
+#### Definition Of Task Done
+
+Run to ensure everything works fine and task is completed. All check must succeed
 
 ```bash
+uv run ruff format .
+uv run ruff check . --fix
+uv run pytest tests/
 uv run pre-commit run --all-files
-uv run ruff format
-uv run ruff check
+```
+
+## Testing
+
+### pytest
+
+For testing, use pytest and libraries from its ecosystem.
+
+- Use `pytest` for test execution
+- Use `pytest-asyncio` for async support
+- Utilize `pytest-cov` for coverage analysis
+
+Run tests:
+
+```bash
 uv run pytest tests/
 ```
+
+### Test Implementation Guidelines
+
+- Use `@pytest.mark.parametrize` decorator whenever possible to test multiple input combinations in a single test
+  function
+- Always extract reusable test data and setup logic into fixtures
+- When creating a new fixture file, add its path to `pytest_plugins` list in `tests/conftest.py` to make fixtures
+  available across the test suite
+- Error tests should be placed in separate functions and located at the end of the test file, after all positive tests
+- Do not verify the exact text of error messages in tests, only verify the type and structure of exceptions
+
+### Test Structure and Naming Conventions
+
+- **Directory Structure**: Tests are located in the `tests/` directory, with subdirectories by type (e.g., `unit/`,
+  `integration/`). The path within `tests/` mirrors `src/`. For example, `src/core/settings.py` →
+  `tests/unit/core/settings/model_config_test.py`. The `unit/` directory is already present in the project structure.
+- **File Naming**: Test files should follow the pattern `*_test.py` (e.g., `model_config_test.py`). This aligns with
+  common Python practices and ensures pytest discovers them automatically.
+- **Function Naming**: Test functions must be prefixed with `test_` (e.g., `test_validate_settings()`).
+- **Class Naming**: Test classes should be named with the prefix `Test` followed by the name of the class being tested (
+  e.g., `TestSettingsModel`).
+- **PEP Standards**: Adhere to PEP 8 for code style and PEP 257 for docstring conventions. Tests should be readable,
+  concise, and include meaningful docstrings when necessary.
