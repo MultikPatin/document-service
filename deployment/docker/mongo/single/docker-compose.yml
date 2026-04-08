@@ -2,13 +2,12 @@ services:
   mongodb:
     image: mongo:${MONGODB_VERSION}
     ports:
-      - "${MONGODB_PORT}:${MONGODB_PORT}"
+      - "${MONGODB_CONNECTION0__PORT}:27017"
     volumes:
       - mongo_volume:/data/db
     environment:
-      MONGODB_HOST: ${MONGODB_HOST}
-      MONGODB_PORT: ${MONGODB_PORT}
-      MONGODB_DB_NAME: ${MONGODB_DATABASE}
+      MONGODB_HOST: ${MONGODB_CONNECTION0__HOST}
+      MONGODB_DB_NAME: ${MONGODB_DB_NAME}
 
 volumes:
   mongo_volume:

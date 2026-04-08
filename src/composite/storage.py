@@ -1,9 +1,9 @@
 import asyncio
 import logging
 
-from src.infra.db.mongo.client import Client
-from src.infra.db.mongo.docs import collect_documents
-from src.infra.db.mongo.settings import Settings
+from src.infrastructure.database.mongo.client import Client
+from src.infrastructure.database.mongo.collections import collect_documents
+from src.infrastructure.database.mongo.settings import Settings
 
 logging.basicConfig(level=logging.DEBUG)
 
