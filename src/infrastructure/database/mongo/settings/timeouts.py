@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field, NonNegativeInt
 from pydantic_settings import BaseSettings
 
-from .constants import TimeoutsDefaults
+from .constants import TimeoutsDefaults, TimeoutsKeys
 
 
 class TimeoutsSettings(BaseSettings):
@@ -29,13 +29,13 @@ class TimeoutsSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["connectTimeoutMS"] = self.CONNECTION_MS
-        result["socketTimeoutMS"] = self.SOCKET_MS
-        result["serverSelectionTimeoutMS"] = self.SERVER_SELECTION_MS
+        d[TimeoutsKeys.CONNECTION] = self.CONNECTION_MS
+        d[TimeoutsKeys.SOCKET] = self.SOCKET_MS
+        d[TimeoutsKeys.SERVER_SELECTION] = self.SERVER_SELECTION_MS
 
         if self.OPERATION_MS:
-            result["timeoutMS"] = self.OPERATION_MS
+            d[TimeoutsKeys.OPERATION] = self.OPERATION_MS
 
-        return result
+        return d

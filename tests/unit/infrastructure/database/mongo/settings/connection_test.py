@@ -4,6 +4,22 @@ from pydantic import SecretStr, ValidationError
 from src.infrastructure.database.mongo.settings.connection import (
     ConnectionSettings,
 )
+from src.infrastructure.database.mongo.settings.constants import (
+    ConnectionDefaults as Defaults,
+)
+
+
+def test_connection_settings_default(
+    default_connection_settings, default_dsn
+) -> None:
+    """Test default values for ConnectionSettings."""
+    s = default_connection_settings
+    assert s.HOST == Defaults.HOST
+    assert s.PORT == Defaults.PORT
+    assert s.USERNAME == Defaults.USERNAME
+    assert SecretStr(Defaults.PASSWORD) == s.PASSWORD
+    assert s.SCHEMA == Defaults.SCHEMA
+    assert s.dsn() == default_dsn
 
 
 @pytest.mark.parametrize(

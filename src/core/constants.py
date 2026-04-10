@@ -1,3 +1,8 @@
-from typing import Final
+from typing import Final, final
 
-CURSOR_SEPARATOR: Final[str] = "_"
+
+@final
+class PostgresDefaults:
+    ENV_PREFIX: Final[str] = "POSTGRES_"
+    PORT: Final[int] = 5432
+    SCHEMA: Final[str] = "postgresql"

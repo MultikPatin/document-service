@@ -6,18 +6,23 @@ from pydantic import ValidationError
 from src.infrastructure.database.mongo.settings.connection_mode import (
     ConnectionModeSettings,
 )
+from src.infrastructure.database.mongo.settings.constants import (
+    ConnectionModeDefaults as Defaults,
+)
 
 
-def test_connection_mode_settings_valid_minimal() -> None:
-    """Test valid minimal connection mode settings with default values."""
-    settings = ConnectionModeSettings()
-    assert settings.DIRECT_CONNECTION is None
-    assert settings.APPNAME is None
-    assert settings.READ_PREFERENCE is None
-    assert settings.READ_PREFERENCE_TAGS is None
-    assert settings.MAX_STALENESS_SECONDS is None
-    assert settings.REPLICA_SET_NAME is None
-    assert settings.client_kwargs == {}
+def test_connection_mode_settings_default(
+    default_connection_mode_settings, default_connection_mode_client_kwargs
+) -> None:
+    """Test default values for ConnectionModeSettings."""
+    s = default_connection_mode_settings
+    assert s.DIRECT_CONNECTION == Defaults.DIRECT_CONNECTION
+    assert s.APPNAME == Defaults.APPNAME
+    assert s.READ_PREFERENCE == Defaults.READ_PREFERENCE
+    assert s.READ_PREFERENCE_TAGS == Defaults.READ_PREFERENCE_TAGS
+    assert s.MAX_STALENESS_SECONDS == Defaults.MAX_STALENESS_SECONDS
+    assert s.REPLICA_SET_NAME == Defaults.REPLICA_SET_NAME
+    assert s.client_kwargs == default_connection_mode_client_kwargs
 
 
 @pytest.mark.parametrize(

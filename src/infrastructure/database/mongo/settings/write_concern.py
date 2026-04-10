@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import WriteConcernDefaults
+from .constants import WriteConcernDefaults, WriteConcernKeys
 
 
 class WriteConcernSettings(BaseSettings):
@@ -25,12 +25,12 @@ class WriteConcernSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["journal"] = self.JOURNAL
-        result["fsync"] = self.FSYNC
+        d[WriteConcernKeys.JOURNAL] = self.JOURNAL
+        d[WriteConcernKeys.FSYNC] = self.FSYNC
 
         if self.W:
-            result["w"] = self.W
+            d[WriteConcernKeys.W] = self.W
 
-        return result
+        return d

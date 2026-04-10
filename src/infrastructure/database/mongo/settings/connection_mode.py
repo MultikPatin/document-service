@@ -3,7 +3,11 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import ConnectionModeDefaults
+from .constants import (
+    ConnectionModeDefaults,
+    ConnectionModeKeys,
+    ConnectionModeReadPreferenceEnum,
+)
 
 
 class ConnectionModeSettings(BaseSettings):
@@ -17,10 +21,9 @@ class ConnectionModeSettings(BaseSettings):
         min_length=1,
         max_length=128,
     )
-    READ_PREFERENCE: str | None = Field(
+    READ_PREFERENCE: ConnectionModeReadPreferenceEnum | None = Field(
         default=ConnectionModeDefaults.READ_PREFERENCE,
         description="Read preference mode",
-        pattern="^(primary|primaryPreferred|secondary|secondaryPreferred|nearest)$",
     )
     READ_PREFERENCE_TAGS: str | None = Field(
         default=ConnectionModeDefaults.READ_PREFERENCE_TAGS,
@@ -47,19 +50,23 @@ class ConnectionModeSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        if self.APPNAME is not None and self.APPNAME != "":
-            result["appname"] = self.APPNAME
         if self.DIRECT_CONNECTION is not None:
-            result["directConnection"] = self.DIRECT_CONNECTION
+            d[ConnectionModeKeys.DIRECT_CONNECTION] = self.DIRECT_CONNECTION
+        if self.APPNAME is not None and self.APPNAME != "":
+            d[ConnectionModeKeys.APPNAME] = self.APPNAME
         if self.READ_PREFERENCE is not None:
-            result["readPreference"] = self.READ_PREFERENCE
+            d[ConnectionModeKeys.READ_PREFERENCE] = self.READ_PREFERENCE.value
         if self.READ_PREFERENCE_TAGS is not None:
-            result["readPreferenceTags"] = self.READ_PREFERENCE_TAGS
+            d[ConnectionModeKeys.READ_PREFERENCE_TAGS] = (
+                self.READ_PREFERENCE_TAGS
+            )
         if self.MAX_STALENESS_SECONDS is not None:
-            result["maxStalenessSeconds"] = self.MAX_STALENESS_SECONDS
+            d[ConnectionModeKeys.MAX_STALENESS_SECONDS] = (
+                self.MAX_STALENESS_SECONDS
+            )
         if self.REPLICA_SET_NAME is not None and self.REPLICA_SET_NAME != "":
-            result["replicaSet"] = self.REPLICA_SET_NAME
+            d[ConnectionModeKeys.REPLICA_SET_NAME] = self.REPLICA_SET_NAME
 
-        return result
+        return d

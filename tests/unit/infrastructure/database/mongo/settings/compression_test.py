@@ -4,14 +4,19 @@ from pydantic import ValidationError
 from src.infrastructure.database.mongo.settings.compression import (
     CompressionSettings,
 )
+from src.infrastructure.database.mongo.settings.constants import (
+    CompressionDefaults as D,
+)
 
 
-def test_compression_settings_client_kwargs_empty():
-    """Test client_kwargs returns empty dict when no values set."""
-    settings = CompressionSettings()
-    assert settings.COMPRESSORS is None
-    assert settings.ZLIB_COMPRESSION_LEVEL is None
-    assert settings.client_kwargs == {}
+def test_compression_settings_default(
+    default_compression_settings, default_compression_client_kwargs
+):
+    """Test default values for CompressionSettings."""
+    s = default_compression_settings
+    assert s.COMPRESSORS == D.COMPRESSORS
+    assert s.ZLIB_COMPRESSION_LEVEL == D.ZLIB_COMPRESSION_LEVEL
+    assert s.client_kwargs == default_compression_client_kwargs
 
 
 @pytest.mark.parametrize(

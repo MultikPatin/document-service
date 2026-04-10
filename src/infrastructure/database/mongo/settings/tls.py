@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import TLSDefaults
+from .constants import TLSDefaults, TLSKeys
 
 
 class TLSSettings(BaseSettings):
@@ -59,28 +59,28 @@ class TLSSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
         if self.ENABLE:
-            result["tls"] = self.ENABLE
-            result["tlsInsecure"] = self.INSECURE
-            result["tlsAllowInvalidCertificates"] = (
+            d[TLSKeys.ENABLE] = self.ENABLE
+            d[TLSKeys.INSECURE] = self.INSECURE
+            d[TLSKeys.ALLOW_INVALID_CERTIFICATES] = (
                 self.ALLOW_INVALID_CERTIFICATES
             )
-            result["tlsAllowInvalidHostnames"] = self.ALLOW_INVALID_HOSTNAMES
-            result["tlsDisableOCSPEndpointCheck"] = (
+            d[TLSKeys.ALLOW_INVALID_HOSTNAMES] = self.ALLOW_INVALID_HOSTNAMES
+            d[TLSKeys.DISABLE_OCSP_ENDPOINT_CHECK] = (
                 self.DISABLE_OCSP_ENDPOINT_CHECK
             )
 
             if self.CA_FILE:
-                result["tlsCAFile"] = self.CA_FILE
+                d[TLSKeys.CA_FILE] = self.CA_FILE
             if self.CERTIFICATE_KEY_FILE:
-                result["tlsCertificateKeyFile"] = self.CERTIFICATE_KEY_FILE
+                d[TLSKeys.CERTIFICATE_KEY_FILE] = self.CERTIFICATE_KEY_FILE
             if self.CRL_FILE:
-                result["tlsCRLFile"] = self.CRL_FILE
+                d[TLSKeys.CRL_FILE] = self.CRL_FILE
             if self.CERTIFICATE_KEY_FILE_PASSWORD:
-                result["tlsCertificateKeyFilePassword"] = (
+                d[TLSKeys.CERTIFICATE_KEY_FILE_PASSWORD] = (
                     self.CERTIFICATE_KEY_FILE_PASSWORD
                 )
 
-        return result
+        return d

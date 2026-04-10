@@ -1,107 +1,102 @@
 import pytest
 from pydantic import ValidationError
 
-from src.infrastructure.database.mongo.settings.authentication import (
-    AuthenticationSettings,
+from src.infrastructure.database.mongo.settings.constants import (
+    AuthenticationDefaults as D,
+)
+from src.infrastructure.database.mongo.settings.constants import (
+    AuthenticationKeys as K,
 )
 
 
-def test_authentication_settings_default_values() -> None:
+def test_authentication_settings_default(
+    default_authentication_settings, default_authentication_client_kwargs
+) -> None:
     """Test default values for AuthenticationSettings."""
-    settings = AuthenticationSettings()
-
-    assert settings.SOURCE == "admin"
-    assert settings.MECHANISM == "SCRAM-SHA-256"
-    assert settings.client_kwargs == {
-        "authSource": "admin",
-        "authMechanism": "SCRAM-SHA-256",
-    }
+    s = default_authentication_settings
+    assert s.SOURCE == D.SOURCE
+    assert D.MECHANISM == s.MECHANISM
+    assert s.client_kwargs == default_authentication_client_kwargs
 
 
 @pytest.mark.parametrize(
-    ("mechanism", "expected_mechanism"),
+    "kwargs",
     [
-        ("SCRAM-SHA-1", "SCRAM-SHA-1"),
-        ("SCRAM-SHA-256", "SCRAM-SHA-256"),
+        {"MECHANISM": "SCRAM-SHA-1"},
+        {"MECHANISM": "SCRAM-SHA-256"},
     ],
-    ids=["scram-sha1", "scram-sha256"],
+    ids=["scram-sha-1", "scram-sha-256"],
 )
 def test_authentication_settings_with_valid_mechanisms(
-    mechanism: str, expected_mechanism: str
+    custom_authentication_settings, kwargs
 ) -> None:
     """Test AuthenticationSettings with valid authentication mechanisms."""
-    settings = AuthenticationSettings(MECHANISM=mechanism)
+    settings = custom_authentication_settings(**kwargs)
 
-    assert settings.SOURCE == "admin"
-    assert expected_mechanism == settings.MECHANISM
+    assert kwargs["MECHANISM"] == settings.MECHANISM
     assert settings.client_kwargs == {
-        "authSource": "admin",
-        "authMechanism": expected_mechanism,
+        K.SOURCE: D.SOURCE,
+        K.MECHANISM: kwargs["MECHANISM"],
     }
 
 
 @pytest.mark.parametrize(
-    ("source", "mechanism", "expected_auth_source", "expected_auth_mechanism"),
+    "kwargs",
     [
-        ("testdb", "SCRAM-SHA-1", "testdb", "SCRAM-SHA-1"),
-        ("custom", "SCRAM-SHA-256", "custom", "SCRAM-SHA-256"),
+        {"SOURCE": "testdb", "MECHANISM": "SCRAM-SHA-1"},
+        {"SOURCE": "testdb2", "MECHANISM": "SCRAM-SHA-256"},
     ],
     ids=["scram-sha1-custom-source", "scram-sha256-custom-source"],
 )
-def test_authentication_settings_client_kwargs_with_combinations(
-    source: str,
-    mechanism: str,
-    expected_auth_source: str,
-    expected_auth_mechanism: str,
+def test_authentication_settings_with_combinations(
+    custom_authentication_settings, kwargs
 ) -> None:
     """Test client_kwargs with various combinations of source and mechanism."""
-    settings = AuthenticationSettings(SOURCE=source, MECHANISM=mechanism)
+    settings = custom_authentication_settings(**kwargs)
 
     assert settings.client_kwargs == {
-        "authSource": expected_auth_source,
-        "authMechanism": expected_auth_mechanism,
+        K.SOURCE: kwargs["SOURCE"],
+        K.MECHANISM: kwargs["MECHANISM"],
     }
 
 
 @pytest.mark.parametrize(
-    "source_length",
-    [1, 64],
+    "kwargs",
+    [{"SOURCE": "a"}, {"SOURCE": "a" * 64}],
+    ids=["min-source-length", "max-source-length"],
 )
-def test_authentication_settings_with_boundary_source_lengths(
-    source_length: int,
+def test_authentication_settings_with_valid_source_string_lengths(
+    custom_authentication_settings, kwargs
 ) -> None:
     """Test AuthenticationSettings with boundary values for SOURCE length."""
-    source = "a" * source_length
-    settings = AuthenticationSettings(SOURCE=source)
+    settings = custom_authentication_settings(**kwargs)
 
-    assert source == settings.SOURCE
-    assert settings.MECHANISM == "SCRAM-SHA-256"
+    assert kwargs["SOURCE"] == settings.SOURCE
+    assert D.MECHANISM == settings.MECHANISM
     assert settings.client_kwargs == {
-        "authSource": source,
-        "authMechanism": "SCRAM-SHA-256",
+        K.SOURCE: kwargs["SOURCE"],
+        K.MECHANISM: D.MECHANISM,
     }
 
 
-def test_authentication_settings_validation_error_too_long_source() -> None:
-    """Test ValidationError for SOURCE longer than 64 characters."""
-    long_source = "a" * 65
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"SOURCE": "a" * 65},
+        {"SOURCE": ""},
+        {"MECHANISM": "INVALID"},
+        {"MECHANISM": ""},
+    ],
+    ids=[
+        "too-long-source-length",
+        "empty-source",
+        "invalid-mechanism",
+        "empty-mechanism",
+    ],
+)
+def test_authentication_settings_validation_errors(
+    custom_authentication_settings, kwargs
+) -> None:
+    """Test ValidationErrors"""
     with pytest.raises(ValidationError):
-        AuthenticationSettings(SOURCE=long_source)
-
-
-def test_authentication_settings_validation_error_empty_source() -> None:
-    """Test ValidationError for empty SOURCE."""
-    with pytest.raises(ValidationError):
-        AuthenticationSettings(SOURCE="")
-
-
-def test_authentication_settings_validation_error_invalid_mechanism() -> None:
-    """Test ValidationError for invalid MECHANISM."""
-    with pytest.raises(ValidationError):
-        AuthenticationSettings(MECHANISM="INVALID")
-
-
-def test_authentication_settings_validation_error_empty_mechanism() -> None:
-    """Test ValidationError for empty MECHANISM."""
-    with pytest.raises(ValidationError):
-        AuthenticationSettings(MECHANISM="")
+        custom_authentication_settings(**kwargs)

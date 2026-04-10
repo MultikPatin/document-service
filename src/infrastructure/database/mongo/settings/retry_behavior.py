@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import RetryBehaviorDefaults
+from .constants import RetryBehaviorDefaults, RetryBehaviorKeys
 
 
 class RetryBehaviorSettings(BaseSettings):
@@ -21,9 +21,9 @@ class RetryBehaviorSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["retryWrites"] = self.WRITES
-        result["retryReads"] = self.READS
+        d[RetryBehaviorKeys.WRITES] = self.WRITES
+        d[RetryBehaviorKeys.READS] = self.READS
 
-        return result
+        return d
