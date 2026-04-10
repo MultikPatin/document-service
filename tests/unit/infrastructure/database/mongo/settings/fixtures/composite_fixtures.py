@@ -2,6 +2,10 @@ from unittest.mock import Mock
 
 import pytest
 
+from src.infrastructure.database.mongo.settings.constants import (
+    ConnectionSchemaEnum,
+)
+
 
 @pytest.fixture
 def mock_authentication_settings() -> Mock:
@@ -30,7 +34,7 @@ def mock_connection_settings() -> Mock:
     """Fixture for ConnectionSettings mock."""
     mock = Mock()
     mock.USERNAME = ""
-    mock.SCHEMA = "mongodb"
+    mock.SCHEMA = ConnectionSchemaEnum.mongodb
     dsn_mock = Mock()
     dsn_mock.encoded_string.return_value = "mongodb://localhost:27017"
     mock.dsn.return_value = dsn_mock

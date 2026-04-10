@@ -7,6 +7,9 @@ from src.infrastructure.database.mongo.settings.connection import (
 from src.infrastructure.database.mongo.settings.constants import (
     ConnectionDefaults as Defaults,
 )
+from src.infrastructure.database.mongo.settings.constants import (
+    ConnectionSchemaEnum,
+)
 
 
 def test_connection_settings_default(
@@ -20,6 +23,32 @@ def test_connection_settings_default(
     assert SecretStr(Defaults.PASSWORD) == s.PASSWORD
     assert s.SCHEMA == Defaults.SCHEMA
     assert s.dsn() == default_dsn
+
+
+@pytest.mark.parametrize(
+    ("username", "expect"),
+    [
+        ("", False),
+        ("u", True),
+    ],
+)
+def test_connection_settings_use_authentication(username, expect):
+    """Test valid minimal connection settings."""
+    settings = ConnectionSettings(USERNAME=username)
+    assert settings.use_authentication == expect
+
+
+@pytest.mark.parametrize(
+    ("schema", "expect"),
+    [
+        (ConnectionSchemaEnum.mongodb, False),
+        (ConnectionSchemaEnum.mongodb_srv, True),
+    ],
+)
+def test_connection_settings_use_srv(schema, expect):
+    """Test valid minimal connection settings."""
+    settings = ConnectionSettings(SCHEMA=schema)
+    assert settings.use_srv == expect
 
 
 @pytest.mark.parametrize(

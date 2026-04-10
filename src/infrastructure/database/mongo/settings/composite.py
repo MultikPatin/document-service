@@ -85,9 +85,9 @@ class Settings(BaseSettings):
         result.update(self.error_handling.client_kwargs)
 
         # Fix for more than 1 connection
-        if self.connection0.USERNAME:
+        if self.connection0.use_authentication:
             result.update(self.authentication.client_kwargs)
-        if self.connection0.SCHEMA.endswith("srv"):
+        if self.connection0.use_srv:
             result.update(self.srv.client_kwargs)
 
         return result

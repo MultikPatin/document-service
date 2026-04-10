@@ -31,6 +31,14 @@ class ConnectionSettings(BaseSettings):
         description="Connection scheme: mongodb or mongodb+srv",
     )
 
+    @property
+    def use_srv(self) -> bool:
+        return ConnectionSchemaEnum.mongodb_srv == self.SCHEMA
+
+    @property
+    def use_authentication(self) -> bool:
+        return bool(self.USERNAME)
+
     def dsn(self, with_secret: bool = False) -> MongoDsn:
         """Generate MongoDB DSN with pre-built query parameters."""
         return MongoDsn.build(
