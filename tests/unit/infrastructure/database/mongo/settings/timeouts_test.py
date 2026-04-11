@@ -11,10 +11,10 @@ from src.infrastructure.database.mongo.settings.timeouts import TimeoutsSettings
     ("connection_ms", "socket_ms", "server_selection_ms", "operation_ms"),
     [
         (
-            TimeoutsDefaults.CONNECTION_MS,
-            TimeoutsDefaults.SOCKET_MS,
-            TimeoutsDefaults.SERVER_SELECTION_MS,
-            TimeoutsDefaults.OPERATION_MS,
+            TimeoutsDefaults.CONNECTION,
+            TimeoutsDefaults.SOCKET,
+            TimeoutsDefaults.SERVER_SELECTION,
+            TimeoutsDefaults.OPERATION,
         ),
         (5000, 15000, 25000, 35000),
     ],

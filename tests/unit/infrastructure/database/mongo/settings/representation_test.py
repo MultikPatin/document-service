@@ -78,7 +78,7 @@ def test_representation_settings_invalid_values(uuid_format: str) -> None:
 def test_representation_settings_client_kwargs(
     uuid_format: str | None,
     expected_value: str,
-    expected_client_kwargs: dict[str, Any],
+    default_representation_client_kwargs: dict[str, Any],
 ) -> None:
     """Test client_kwargs returns correct dictionary for different UUID representations."""
     # Arrange
@@ -87,7 +87,7 @@ def test_representation_settings_client_kwargs(
     else:
         settings = RepresentationSettings(UUID=uuid_format)
 
-    expected_client_kwargs["uuidRepresentation"] = expected_value
+    default_representation_client_kwargs["uuidRepresentation"] = expected_value
 
     # Act & Assert
-    assert settings.client_kwargs == expected_client_kwargs
+    assert settings.client_kwargs == default_representation_client_kwargs

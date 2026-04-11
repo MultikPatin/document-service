@@ -1,5 +1,4 @@
 import logging
-from collections.abc import Sequence
 from typing import Any
 
 from pydantic import Field
@@ -26,14 +25,7 @@ logger = logging.getLogger(LoggerNames.init())
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=BaseDefaults.ENV_FILE,
-        env_prefix=BaseDefaults.ENV_PREFIX,
-        env_file_encoding=BaseDefaults.ENV_FILE_ENCODING,
-        env_nested_delimiter=BaseDefaults.ENV_NESTED_DELIMITER,
-        extra=BaseDefaults.EXTRA,
-        frozen=BaseDefaults.FROZEN,
-    )
+    model_config = SettingsConfigDict(**BaseDefaults.model_config())
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:  # noqa: ANN401
         logger.info("loading the settings...")
@@ -44,7 +36,7 @@ class Settings(BaseSettings):
     def _parameters(self) -> dict[str, Any]:
         config = self.client_kwargs
         config.update({"database": self.database})
-        config.update({"connections": self.get_connections()})
+        config.update({"connection": self.connection.dsn().encoded_string()})
         return config
 
     DB_NAME: str = Field(
@@ -54,44 +46,7 @@ class Settings(BaseSettings):
         max_length=32,
     )
 
-    connection0: ConnectionSettings = ConnectionSettings()
-
-    @property
-    def database(self) -> str:
-        """Returns the name of the MongoDB database"""
-        return self.DB_NAME
-
-    def get_connections(self, with_secret: bool = False) -> Sequence[str]:
-        """It can also be a list of connections but no more than one URI"""
-        dsn = self.connection0.dsn(with_secret=with_secret)
-        return [dsn.encoded_string()]
-
-    @property
-    def client_kwargs(self) -> dict[str, Any]:
-        """Returns a dictionary with parameters for creating an AsyncMongoClient
-        instance.
-        """
-        result: dict[str, Any] = {}
-
-        result.update(self.pool.client_kwargs)
-        result.update(self.timeouts.client_kwargs)
-        result.update(self.retry_behavior.client_kwargs)
-        result.update(self.tls.client_kwargs)
-        result.update(self.compression.client_kwargs)
-        result.update(self.representation.client_kwargs)
-        result.update(self.connection_mode.client_kwargs)
-        result.update(self.write_concern.client_kwargs)
-        result.update(self.read_concern.client_kwargs)
-        result.update(self.error_handling.client_kwargs)
-
-        # Fix for more than 1 connection
-        if self.connection0.use_authentication:
-            result.update(self.authentication.client_kwargs)
-        if self.connection0.use_srv:
-            result.update(self.srv.client_kwargs)
-
-        return result
-
+    connection: ConnectionSettings = ConnectionSettings()
     pool: PoolSettings = PoolSettings()
     timeouts: TimeoutsSettings = TimeoutsSettings()
     retry_behavior: RetryBehaviorSettings = RetryBehaviorSettings()
@@ -104,3 +59,38 @@ class Settings(BaseSettings):
     read_concern: ReadConcernSettings = ReadConcernSettings()
     srv: SRVSettings = SRVSettings()
     error_handling: ErrorHandlingSettings = ErrorHandlingSettings()
+
+    @property
+    def database(self) -> str:
+        """Returns the name of the MongoDB database"""
+        return self.DB_NAME
+
+    @property
+    def connection_string(self) -> str:
+        """Returns the MongoDB connection string"""
+        return self.connection.dsn(with_secret=True).encoded_string()
+
+    @property
+    def client_kwargs(self) -> dict[str, Any]:
+        """Returns a dictionary with parameters for creating an AsyncMongoClient
+        instance.
+        """
+        d: dict[str, Any] = {}
+
+        d.update(self.pool.client_kwargs)
+        d.update(self.timeouts.client_kwargs)
+        d.update(self.retry_behavior.client_kwargs)
+        d.update(self.tls.client_kwargs)
+        d.update(self.compression.client_kwargs)
+        d.update(self.representation.client_kwargs)
+        d.update(self.connection_mode.client_kwargs)
+        d.update(self.write_concern.client_kwargs)
+        d.update(self.read_concern.client_kwargs)
+        d.update(self.error_handling.client_kwargs)
+
+        if self.connection.use_authentication:
+            d.update(self.authentication.client_kwargs)
+        if self.connection.use_srv:
+            d.update(self.srv.client_kwargs)
+
+        return d

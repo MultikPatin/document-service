@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from typing import Any
+
 import pytest
 from pydantic import MongoDsn
 
@@ -12,6 +15,14 @@ from src.infrastructure.database.mongo.settings.constants import (
 @pytest.fixture(name="default_connection_settings")
 def default() -> ConnectionSettings:
     return ConnectionSettings(USERNAME=Defaults.USERNAME)
+
+
+@pytest.fixture(name="custom_connection_settings")
+def custom() -> Callable[[dict[str, Any]], ConnectionSettings]:
+    def _custom(**kwargs: Any) -> ConnectionSettings:
+        return ConnectionSettings(**kwargs)
+
+    return _custom
 
 
 @pytest.fixture(name="default_dsn")

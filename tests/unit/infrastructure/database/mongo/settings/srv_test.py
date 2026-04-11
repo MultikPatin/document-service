@@ -7,18 +7,25 @@ from src.infrastructure.database.mongo.settings.srv import (
 )
 
 
-def test_srv_settings_default_values(default_srv_settings: SRVSettings) -> None:
+def test_srv_settings_default_values(
+    default_srv_settings, default_srv_client_kwargs
+) -> None:
     """Test that SRVSettings uses default values from SRVDefaults when no values are provided."""
     assert default_srv_settings.SERVICE_NAME == SRVDefaults.SERVICE_NAME
     assert default_srv_settings.MAX_HOSTS == SRVDefaults.MAX_HOSTS
+    assert default_srv_settings.client_kwargs == default_srv_client_kwargs
 
 
-def test_srv_settings_custom_values(custom_srv_settings: SRVSettings) -> None:
+def test_srv_settings_custom_values(custom_srv_settings) -> None:
     """Test that SRVSettings properly sets custom values for SERVICE_NAME and MAX_HOSTS."""
     name = "customService"
     max_hosts = 15
-    assert name == custom_srv_settings.SERVICE_NAME
-    assert max_hosts == custom_srv_settings.MAX_HOSTS
+    kwargs = {"SERVICE_NAME": name, "MAX_HOSTS": max_hosts}
+
+    settings = custom_srv_settings(**kwargs)
+
+    assert name == settings.SERVICE_NAME
+    assert max_hosts == settings.MAX_HOSTS
 
 
 def test_srv_settings_client_kwargs_returns_dict(

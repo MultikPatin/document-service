@@ -8,19 +8,19 @@ from .constants import TimeoutsDefaults, TimeoutsKeys
 
 class TimeoutsSettings(BaseSettings):
     CONNECTION_MS: NonNegativeInt = Field(
-        default=TimeoutsDefaults.CONNECTION_MS,
+        default=TimeoutsDefaults.CONNECTION,
         description="Connect timeout (ms)",
     )
     SOCKET_MS: NonNegativeInt = Field(
-        default=TimeoutsDefaults.SOCKET_MS,
+        default=TimeoutsDefaults.SOCKET,
         description="Socket timeout (ms)",
     )
     SERVER_SELECTION_MS: NonNegativeInt = Field(
-        default=TimeoutsDefaults.SERVER_SELECTION_MS,
+        default=TimeoutsDefaults.SERVER_SELECTION,
         description="Server selection timeout (ms)",
     )
     OPERATION_MS: NonNegativeInt | None = Field(
-        default=TimeoutsDefaults.OPERATION_MS,
+        default=TimeoutsDefaults.OPERATION,
         description="Operation timeout (ms), None means no timeout",
     )
 

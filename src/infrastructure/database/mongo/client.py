@@ -72,7 +72,7 @@ class Client:
         self._database = settings.database
         logger.info("client initialization...")
         self._client = AsyncMongoClient(
-            host=settings.get_connections(with_secret=True),
+            host=settings.connection_string,
             tz_aware=tz_aware,
             datetime_conversion=datetime_conversion,
             document_class=document_class,

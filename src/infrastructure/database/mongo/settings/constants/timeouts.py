@@ -3,10 +3,10 @@ from typing import Final, final
 
 @final
 class TimeoutsDefaults:
-    CONNECTION_MS: Final[int] = 20000
-    SOCKET_MS: Final[int] = 20000
-    SERVER_SELECTION_MS: Final[int] = 30000
-    OPERATION_MS: Final[int] = 10000
+    CONNECTION: Final[int] = 20000
+    SOCKET: Final[int] = 20000
+    SERVER_SELECTION: Final[int] = 30000
+    OPERATION: Final[int] = 10000
 
 
 @final
