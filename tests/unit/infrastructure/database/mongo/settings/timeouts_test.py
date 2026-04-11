@@ -2,19 +2,32 @@ import pytest
 from pydantic import ValidationError
 
 from src.infrastructure.database.mongo.settings.constants import (
-    TimeoutsDefaults,
+    TimeoutsDefaults as D,
 )
 from src.infrastructure.database.mongo.settings.timeouts import TimeoutsSettings
+
+
+def test_timeouts_settings_default(
+    default_timeouts_settings, default_timeouts_client_kwargs
+) -> None:
+    """Test default values for TimeoutsSettings."""
+    s = default_timeouts_settings
+
+    assert s.CONNECTION_MS == D.CONNECTION
+    assert s.SOCKET_MS == D.SOCKET
+    assert s.SERVER_SELECTION_MS == D.SERVER_SELECTION
+    assert s.OPERATION_MS == D.OPERATION
+    assert s.client_kwargs == default_timeouts_client_kwargs
 
 
 @pytest.mark.parametrize(
     ("connection_ms", "socket_ms", "server_selection_ms", "operation_ms"),
     [
         (
-            TimeoutsDefaults.CONNECTION,
-            TimeoutsDefaults.SOCKET,
-            TimeoutsDefaults.SERVER_SELECTION,
-            TimeoutsDefaults.OPERATION,
+            D.CONNECTION,
+            D.SOCKET,
+            D.SERVER_SELECTION,
+            D.OPERATION,
         ),
         (5000, 15000, 25000, 35000),
     ],

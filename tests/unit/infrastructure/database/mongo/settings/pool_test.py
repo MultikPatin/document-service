@@ -3,8 +3,26 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
-from src.infrastructure.database.mongo.settings.constants import PoolDefaults
+from src.infrastructure.database.mongo.settings.constants import (
+    PoolDefaults as D,
+)
 from src.infrastructure.database.mongo.settings.pool import PoolSettings
+
+
+def test_pool_settings_default(
+    default_pool_settings, default_pool_client_kwargs
+) -> None:
+    """Test default values for PoolSettings."""
+    s = default_pool_settings
+
+    assert s.MAX_SIZE == D.MAX_SIZE
+    assert s.MIN_SIZE == D.MIN_SIZE
+    assert s.MAX_IDLE_TIME_MS == D.MAX_IDLE_TIME
+    assert s.MAX_CONNECTING == D.MAX_CONNECTING
+    assert s.WAIT_QUEUE_TIMEOUT_MS == D.WAIT_QUEUE_TIMEOUT
+    assert s.HEARTBEAT_FREQUENCY_MS == D.HEARTBEAT_FREQUENCY
+    assert s.SERVER_MONITORING_MODE == D.SERVER_MONITORING_MODE
+    assert s.client_kwargs == default_pool_client_kwargs
 
 
 @pytest.mark.parametrize(
@@ -19,13 +37,13 @@ from src.infrastructure.database.mongo.settings.pool import PoolSettings
     ),
     [
         (
-            PoolDefaults.MAX_SIZE,
-            PoolDefaults.MIN_SIZE,
-            PoolDefaults.MAX_IDLE_TIME_MS,
-            PoolDefaults.MAX_CONNECTING,
-            PoolDefaults.WAIT_QUEUE_TIMEOUT_MS,
-            PoolDefaults.HEARTBEAT_FREQUENCY_MS,
-            PoolDefaults.SERVER_MONITORING_MODE,
+            D.MAX_SIZE,
+            D.MIN_SIZE,
+            D.MAX_IDLE_TIME,
+            D.MAX_CONNECTING,
+            D.WAIT_QUEUE_TIMEOUT,
+            D.HEARTBEAT_FREQUENCY,
+            D.SERVER_MONITORING_MODE,
         ),
         (
             500,
@@ -111,7 +129,7 @@ def test_pool_settings_accepts_none_values(field_name: str) -> None:
 
 @pytest.mark.parametrize(
     "max_size",
-    [1, PoolDefaults.MAX_SIZE],
+    [1, D.MAX_SIZE],
     ids=["max-size-minimum", "max-size-default"],
 )
 def test_pool_settings_with_valid_max_size_values(max_size: int) -> None:
@@ -133,7 +151,7 @@ def test_pool_settings_validation_error_invalid_max_size(max_size: int) -> None:
 
 @pytest.mark.parametrize(
     "min_size",
-    [0, PoolDefaults.MIN_SIZE],
+    [0, D.MIN_SIZE],
     ids=["min-size-zero", "min-size-default"],
 )
 def test_pool_settings_with_valid_min_size_values(min_size: int) -> None:
@@ -155,7 +173,7 @@ def test_pool_settings_validation_error_invalid_min_size(min_size: int) -> None:
 
 @pytest.mark.parametrize(
     "max_connecting",
-    [1, PoolDefaults.MAX_CONNECTING],
+    [1, D.MAX_CONNECTING],
     ids=["max-connecting-minimum", "max-connecting-default"],
 )
 def test_pool_settings_with_valid_max_connecting_values(

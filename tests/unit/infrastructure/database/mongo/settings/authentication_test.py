@@ -14,6 +14,7 @@ def test_authentication_settings_default(
 ) -> None:
     """Test default values for AuthenticationSettings."""
     s = default_authentication_settings
+
     assert s.SOURCE == D.SOURCE
     assert D.MECHANISM == s.MECHANISM
     assert s.client_kwargs == default_authentication_client_kwargs
@@ -31,10 +32,10 @@ def test_authentication_settings_with_valid_mechanisms(
     custom_authentication_settings, kwargs
 ) -> None:
     """Test AuthenticationSettings with valid authentication mechanisms."""
-    settings = custom_authentication_settings(**kwargs)
+    s = custom_authentication_settings(**kwargs)
 
-    assert kwargs["MECHANISM"] == settings.MECHANISM
-    assert settings.client_kwargs == {
+    assert kwargs["MECHANISM"] == s.MECHANISM
+    assert s.client_kwargs == {
         K.SOURCE: D.SOURCE,
         K.MECHANISM: kwargs["MECHANISM"],
     }
@@ -52,9 +53,9 @@ def test_authentication_settings_with_combinations(
     custom_authentication_settings, kwargs
 ) -> None:
     """Test client_kwargs with various combinations of source and mechanism."""
-    settings = custom_authentication_settings(**kwargs)
+    s = custom_authentication_settings(**kwargs)
 
-    assert settings.client_kwargs == {
+    assert s.client_kwargs == {
         K.SOURCE: kwargs["SOURCE"],
         K.MECHANISM: kwargs["MECHANISM"],
     }

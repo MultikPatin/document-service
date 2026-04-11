@@ -3,6 +3,12 @@ from typing import Any
 
 import pytest
 
+from src.infrastructure.database.mongo.settings.constants import (
+    PoolDefaults as D,
+)
+from src.infrastructure.database.mongo.settings.constants import (
+    PoolKeys as K,
+)
 from src.infrastructure.database.mongo.settings.pool import (
     PoolSettings,
 )
@@ -23,4 +29,9 @@ def custom() -> Callable[[dict[str, Any]], PoolSettings]:
 
 @pytest.fixture(name="default_pool_client_kwargs")
 def default_client_kwargs() -> dict[str, Any]:
-    return {}
+    return {
+        K.HEARTBEAT_FREQUENCY: D.HEARTBEAT_FREQUENCY,
+        K.MAX_SIZE: D.MAX_SIZE,
+        K.MIN_SIZE: D.MIN_SIZE,
+        K.SERVER_MONITORING_MODE: D.SERVER_MONITORING_MODE,
+    }

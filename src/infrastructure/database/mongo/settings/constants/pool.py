@@ -12,10 +12,10 @@ class PoolServerMonitoringModEenum(StrEnum):
 class PoolDefaults:
     MAX_SIZE: Final[int] = 100
     MIN_SIZE: Final[int] = 0
-    MAX_IDLE_TIME_MS: Final[int | None] = None
+    MAX_IDLE_TIME: Final[int | None] = None
     MAX_CONNECTING: Final[int | None] = None
-    WAIT_QUEUE_TIMEOUT_MS: Final[int | None] = None
-    HEARTBEAT_FREQUENCY_MS: Final[int] = 10000
+    WAIT_QUEUE_TIMEOUT: Final[int | None] = None
+    HEARTBEAT_FREQUENCY: Final[int] = 10000
     SERVER_MONITORING_MODE: Final[PoolServerMonitoringModEenum | None] = (
         PoolServerMonitoringModEenum.auto
     )

@@ -1,19 +1,23 @@
 import pytest
 from pydantic import ValidationError
 
+from src.infrastructure.database.mongo.settings.constants import (
+    SRVDefaults as D,
+)
 from src.infrastructure.database.mongo.settings.srv import (
-    SRVDefaults,
     SRVSettings,
 )
 
 
-def test_srv_settings_default_values(
+def test_srv_settings_default(
     default_srv_settings, default_srv_client_kwargs
 ) -> None:
-    """Test that SRVSettings uses default values from SRVDefaults when no values are provided."""
-    assert default_srv_settings.SERVICE_NAME == SRVDefaults.SERVICE_NAME
-    assert default_srv_settings.MAX_HOSTS == SRVDefaults.MAX_HOSTS
-    assert default_srv_settings.client_kwargs == default_srv_client_kwargs
+    """Test default values for RepresentationSettings."""
+    s = default_srv_settings
+
+    assert s.SERVICE_NAME == D.SERVICE_NAME
+    assert s.MAX_HOSTS == D.MAX_HOSTS
+    assert s.client_kwargs == default_srv_client_kwargs
 
 
 def test_srv_settings_custom_values(custom_srv_settings) -> None:
@@ -63,8 +67,8 @@ def test_srv_settings_client_kwargs_with_defaults(
 ) -> None:
     """Test that client_kwargs property returns correct values when using defaults."""
     expected_kwargs = {
-        "srvServiceName": SRVDefaults.SERVICE_NAME,
-        "srvMaxHosts": SRVDefaults.MAX_HOSTS,
+        "srvServiceName": D.SERVICE_NAME,
+        "srvMaxHosts": D.MAX_HOSTS,
     }
 
     assert default_srv_settings.client_kwargs == expected_kwargs

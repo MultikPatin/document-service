@@ -2,9 +2,23 @@ from typing import Any
 
 import pytest
 
+from src.infrastructure.database.mongo.settings.constants import (
+    RetryBehaviorDefaults as D,
+)
 from src.infrastructure.database.mongo.settings.retry_behavior import (
     RetryBehaviorSettings,
 )
+
+
+def test_retry_behavior_settings_default(
+    default_retry_behavior_settings, default_retry_behavior_client_kwargs
+) -> None:
+    """Test default values for RepresentationSettings."""
+    s = default_retry_behavior_settings
+
+    assert s.WRITES == D.WRITES
+    assert s.READS == D.READS
+    assert s.client_kwargs == default_retry_behavior_client_kwargs
 
 
 def test_retry_behavior_settings_client_kwargs_returns_dict() -> None:

@@ -18,7 +18,7 @@ class PoolSettings(BaseSettings):
         le=999,
     )
     MAX_IDLE_TIME_MS: PositiveInt | None = Field(
-        default=PoolDefaults.MAX_IDLE_TIME_MS,
+        default=PoolDefaults.MAX_IDLE_TIME,
         description="Maximum idle time for a connection (ms), None disables "
         "limit",
     )
@@ -28,11 +28,11 @@ class PoolSettings(BaseSettings):
         le=100,
     )
     WAIT_QUEUE_TIMEOUT_MS: PositiveInt | None = Field(
-        default=PoolDefaults.WAIT_QUEUE_TIMEOUT_MS,
+        default=PoolDefaults.WAIT_QUEUE_TIMEOUT,
         description="Max time to wait for a free connection in the pool (ms)",
     )
     HEARTBEAT_FREQUENCY_MS: NonNegativeInt | None = Field(
-        default=PoolDefaults.HEARTBEAT_FREQUENCY_MS,
+        default=PoolDefaults.HEARTBEAT_FREQUENCY,
         description="Interval between server monitoring checks (ms)",
     )
     SERVER_MONITORING_MODE: PoolServerMonitoringModEenum | None = Field(
@@ -60,6 +60,8 @@ class PoolSettings(BaseSettings):
         if self.HEARTBEAT_FREQUENCY_MS is not None:
             d[PoolKeys.HEARTBEAT_FREQUENCY] = self.HEARTBEAT_FREQUENCY_MS
         if self.SERVER_MONITORING_MODE is not None:
-            d[PoolKeys.SERVER_MONITORING_MODE] = self.SERVER_MONITORING_MODE
+            d[PoolKeys.SERVER_MONITORING_MODE] = (
+                self.SERVER_MONITORING_MODE.value
+            )
 
         return d

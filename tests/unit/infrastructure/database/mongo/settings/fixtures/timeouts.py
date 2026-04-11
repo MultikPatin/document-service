@@ -33,4 +33,5 @@ def default_client_kwargs() -> dict[str, Any]:
         K.CONNECTION: D.CONNECTION,
         K.SOCKET: D.SOCKET,
         K.SERVER_SELECTION: D.SERVER_SELECTION,
+        K.OPERATION: D.OPERATION,
     }

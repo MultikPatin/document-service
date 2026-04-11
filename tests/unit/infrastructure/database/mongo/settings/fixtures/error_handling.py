@@ -14,12 +14,12 @@ from src.infrastructure.database.mongo.settings.erro_handling import (
 )
 
 
-@pytest.fixture(name="default_erro_handling_settings")
+@pytest.fixture(name="default_error_handling_settings")
 def default() -> ErrorHandlingSettings:
     return ErrorHandlingSettings()
 
 
-@pytest.fixture(name="custom_erro_handling_settings")
+@pytest.fixture(name="custom_error_handling_settings")
 def custom() -> Callable[[dict[str, Any]], ErrorHandlingSettings]:
     def _custom(**kwargs: Any) -> ErrorHandlingSettings:
         return ErrorHandlingSettings(**kwargs)
@@ -27,6 +27,6 @@ def custom() -> Callable[[dict[str, Any]], ErrorHandlingSettings]:
     return _custom
 
 
-@pytest.fixture(name="default_erro_handling_client_kwargs")
+@pytest.fixture(name="default_error_handling_client_kwargs")
 def default_client_kwargs() -> dict[str, Any]:
     return {K.UNICODE_DECODE: D.UNICODE_DECODE}
