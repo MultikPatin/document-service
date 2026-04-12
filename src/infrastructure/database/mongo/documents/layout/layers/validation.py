@@ -6,7 +6,7 @@ from .constants import VALIDATION_DOCUMENT_NAME
 # from pymongo import DESCENDING, IndexModel
 
 
-class LayoutLayerValidation(Document):
+class LayoutLayerValidationDocument(Document):
     gt: int | None = Field(default=None)
     ge: int | None = Field(default=None)
     lt: int | None = Field(default=None)

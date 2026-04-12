@@ -4,7 +4,7 @@ from pydantic import Field
 from .constants import SINGLE_DOCUMENT_NAME
 
 
-class LayoutBlockSingle(Document):
+class LayoutBlockSingleDocument(Document):
     key: str = Field(min_length=1, max_length=64)
 
     schemas: list[str]

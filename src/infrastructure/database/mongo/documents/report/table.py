@@ -6,7 +6,7 @@ from pydantic import Field
 from .constants import TABLE_DOCUMENT_NAME
 
 
-class ReportBlockTable(Document):
+class ReportBlockTableDocument(Document):
     key: str = Field(min_length=1, max_length=64)
     values: list[list[Any]]
 

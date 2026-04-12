@@ -1,5 +1,9 @@
-from .report import Report
-from .single import ReportBlockSingle
-from .table import ReportBlockTable
+from .report import ReportDocument
+from .single import ReportBlockSingleDocument
+from .table import ReportBlockTableDocument
 
-__all__ = ["Report", "ReportBlockSingle", "ReportBlockTable"]
+__all__ = [
+    "ReportBlockSingleDocument",
+    "ReportBlockTableDocument",
+    "ReportDocument",
+]

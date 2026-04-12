@@ -1,37 +1,41 @@
 import sys
 from collections.abc import Sequence
 from inspect import getmembers, isclass
+from typing import TYPE_CHECKING
 
 from beanie import Document, UnionDoc, View
 
+if TYPE_CHECKING:
+    from logging import Logger
+
 from .layout import (
-    Layout,
-    LayoutBlockCard,
-    LayoutBlockMessage,
-    LayoutBlockSingle,
-    LayoutBlockTable,
-    LayoutLayerDefault,
-    LayoutLayerSchema,
-    LayoutLayerValidation,
+    LayoutBlockCardDocument,
+    LayoutBlockMessageDocument,
+    LayoutBlockSingleDocument,
+    LayoutBlockTableDocument,
+    LayoutDocument,
+    LayoutLayerDefaultDocument,
+    LayoutLayerSchemaDocument,
+    LayoutLayerValidationDocument,
 )
 from .report import (
-    Report,
-    ReportBlockSingle,
-    ReportBlockTable,
+    ReportBlockSingleDocument,
+    ReportBlockTableDocument,
+    ReportDocument,
 )
 
 __all__ = [
-    "Layout",
-    "LayoutBlockCard",
-    "LayoutBlockMessage",
-    "LayoutBlockSingle",
-    "LayoutBlockTable",
-    "LayoutLayerDefault",
-    "LayoutLayerSchema",
-    "LayoutLayerValidation",
-    "Report",
-    "ReportBlockSingle",
-    "ReportBlockTable",
+    "LayoutBlockCardDocument",
+    "LayoutBlockMessageDocument",
+    "LayoutBlockSingleDocument",
+    "LayoutBlockTableDocument",
+    "LayoutDocument",
+    "LayoutLayerDefaultDocument",
+    "LayoutLayerSchemaDocument",
+    "LayoutLayerValidationDocument",
+    "ReportBlockSingleDocument",
+    "ReportBlockTableDocument",
+    "ReportDocument",
     "collect_documents",
 ]
 
@@ -41,7 +45,7 @@ _DOCUMENT_CLASSES = (Document, UnionDoc, View)
 _DOCUMENT_CLASSES_NAMES = (Document.__name__, UnionDoc.__name__, View.__name__)
 
 
-def collect_documents() -> CollectedDocumentsType:
+def collect_documents(logger: Logger) -> CollectedDocumentsType:
     """Collects all document classes defined in the current module.
 
     This function scans the current module's namespace and returns all classes
@@ -56,10 +60,17 @@ def collect_documents() -> CollectedDocumentsType:
         (__init__.py). Make sure all document classes are imported and available
         in the module's namespace when this function is called.
     """
+    logger.info("Collecting documents...")
 
-    return [
-        doc
-        for _, doc in getmembers(sys.modules[__name__], isclass)
-        if issubclass(doc, _DOCUMENT_CLASSES)
-        and doc.__name__ not in _DOCUMENT_CLASSES_NAMES
-    ]
+    documents = []
+    for _, doc in getmembers(sys.modules[__name__], isclass):
+        if (
+            issubclass(doc, _DOCUMENT_CLASSES)
+            and doc.__name__ not in _DOCUMENT_CLASSES_NAMES
+        ):
+            documents.append(doc)
+            logger.debug("Collect document: %s", doc.__name__)
+
+    logger.info("Collecting documents completed successfully")
+
+    return documents

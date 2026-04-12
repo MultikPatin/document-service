@@ -8,7 +8,7 @@ class LayoutCardTitle(BaseModel):
     path: list[str]
 
 
-class LayoutBlockCard(Document):
+class LayoutBlockCardDocument(Document):
     cells: list[LayoutCardTitle]
 
     class Settings:

@@ -10,14 +10,14 @@ from .utils import time_now
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
     from .blocks import (
-        LayoutBlockCard,
-        LayoutBlockMessage,
-        LayoutBlockSingle,
-        LayoutBlockTable,
+        LayoutBlockCardDocument,
+        LayoutBlockMessageDocument,
+        LayoutBlockSingleDocument,
+        LayoutBlockTableDocument,
     )
 
 
-class Layout(Document):
+class LayoutDocument(Document):
     key: str = Field(min_length=1, max_length=64)
     label: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None)
@@ -34,10 +34,12 @@ class Layout(Document):
 
     skeleton: list[dict[str, Any]]
 
-    card: Link[LayoutBlockCard] | None = Field(default=None)
-    singles: list[Link[LayoutBlockSingle]] | None = Field(default=None)
-    tables: list[Link[LayoutBlockTable]] | None = Field(default=None)
-    messages: list[Link[LayoutBlockMessage]] | None = Field(default=None)
+    card: Link[LayoutBlockCardDocument] | None = Field(default=None)
+    singles: list[Link[LayoutBlockSingleDocument]] | None = Field(default=None)
+    tables: list[Link[LayoutBlockTableDocument]] | None = Field(default=None)
+    messages: list[Link[LayoutBlockMessageDocument]] | None = Field(
+        default=None
+    )
 
     class Settings:
         name = LAYOUT_DOCUMENT_NAME

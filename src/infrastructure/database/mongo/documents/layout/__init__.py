@@ -1,23 +1,23 @@
 from .blocks import (
-    LayoutBlockCard,
-    LayoutBlockMessage,
-    LayoutBlockSingle,
-    LayoutBlockTable,
+    LayoutBlockCardDocument,
+    LayoutBlockMessageDocument,
+    LayoutBlockSingleDocument,
+    LayoutBlockTableDocument,
 )
 from .layers import (
-    LayoutLayerDefault,
-    LayoutLayerSchema,
-    LayoutLayerValidation,
+    LayoutLayerDefaultDocument,
+    LayoutLayerSchemaDocument,
+    LayoutLayerValidationDocument,
 )
-from .layout import Layout
+from .layout import LayoutDocument
 
 __all__ = [
-    "Layout",
-    "LayoutBlockCard",
-    "LayoutBlockMessage",
-    "LayoutBlockSingle",
-    "LayoutBlockTable",
-    "LayoutLayerDefault",
-    "LayoutLayerSchema",
-    "LayoutLayerValidation",
+    "LayoutBlockCardDocument",
+    "LayoutBlockMessageDocument",
+    "LayoutBlockSingleDocument",
+    "LayoutBlockTableDocument",
+    "LayoutDocument",
+    "LayoutLayerDefaultDocument",
+    "LayoutLayerSchemaDocument",
+    "LayoutLayerValidationDocument",
 ]

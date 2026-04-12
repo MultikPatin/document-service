@@ -1,9 +1,9 @@
-from .default import LayoutLayerDefault
-from .schema import LayoutLayerSchema
-from .validation import LayoutLayerValidation
+from .default import LayoutLayerDefaultDocument
+from .schema import LayoutLayerSchemaDocument
+from .validation import LayoutLayerValidationDocument
 
 __all__ = [
-    "LayoutLayerDefault",
-    "LayoutLayerSchema",
-    "LayoutLayerValidation",
+    "LayoutLayerDefaultDocument",
+    "LayoutLayerSchemaDocument",
+    "LayoutLayerValidationDocument",
 ]

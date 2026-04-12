@@ -6,7 +6,7 @@ from .constants import DEFAULT_DOCUMENT_NAME
 # from pymongo import DESCENDING, IndexModel
 
 
-class LayoutLayerDefault(Document):
+class LayoutLayerDefaultDocument(Document):
     value: str | None = Field(default=None)
 
     hash: str = Field(min_length=8, max_length=255)

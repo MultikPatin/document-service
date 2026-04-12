@@ -6,7 +6,7 @@ from .constants import SCHEMA_DOCUMENT_NAME, LayoutDataTypeEnum
 # from pymongo import DESCENDING, IndexModel
 
 
-class LayoutLayerSchema(Document):
+class LayoutLayerSchemaDocument(Document):
     key: str = Field(min_length=1, max_length=64)
     label: str = Field(min_length=1, max_length=255)
     required: bool = Field(default=False)

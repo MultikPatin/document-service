@@ -6,13 +6,13 @@ from pydantic import Field
 from .constants import INPUT_DOCUMENT_NAME
 
 if TYPE_CHECKING:
-    from .single import ReportBlockSingle
-    from .table import ReportBlockTable
+    from .single import ReportBlockSingleDocument
+    from .table import ReportBlockTableDocument
 
 
-class Report(Document):
-    singles: list[Link[ReportBlockSingle]] | None = Field(default=None)
-    tables: list[Link[ReportBlockTable]] | None = Field(default=None)
+class ReportDocument(Document):
+    singles: list[Link[ReportBlockSingleDocument]] | None = Field(default=None)
+    tables: list[Link[ReportBlockTableDocument]] | None = Field(default=None)
     # layout: Link["LayoutDocument"]
 
     class Settings:

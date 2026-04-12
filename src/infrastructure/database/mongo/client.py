@@ -7,8 +7,6 @@ from beanie import init_beanie
 from bson.codec_options import DatetimeConversion
 from pymongo import AsyncMongoClient
 
-from .logger import LoggerNames
-
 if TYPE_CHECKING:
     from bson.codec_options import TypeRegistry
     from pymongo.asynchronous.client_session import AsyncClientSession
@@ -48,13 +46,12 @@ type EventListenerType = (
 type AutoEncryptionOptsType = AutoEncryptionOpts | None
 type ServerApiType = ServerApi | None
 
-logger = logging.getLogger(LoggerNames.init())
-
 
 class Client:
     def __init__(  # noqa: PLR0913
         self,
         settings: SettingsProtocol,
+        logger: logging.Logger,
         *,
         tz_aware: bool = False,
         datetime_conversion: DatetimeConversion = DatetimeConversion.DATETIME,
@@ -70,7 +67,8 @@ class Client:
             event_listeners = ()
 
         self._database = settings.database
-        logger.info("client initialization...")
+        self._logger = logger
+        self._logger.info("client initialization...")
         self._client = AsyncMongoClient(
             host=settings.connection_string,
             tz_aware=tz_aware,
@@ -84,7 +82,7 @@ class Client:
             server_api=server_api,
             **settings.client_kwargs,
         )
-        logger.info("client initialization completed successfully")
+        self._logger.info("client initialization completed successfully")
 
     async def init_beanie(
         self,
@@ -94,21 +92,16 @@ class Client:
         recreate_views: bool = False,
         skip_indexes: bool = False,
     ) -> None:
-        logger.info("beanie initialization...")
+        self._logger.info("beanie initialization...")
 
         excluded = ("self", "documents")
-        if logger.getEffectiveLevel() <= logging.DEBUG:
+        if self._is_debug_logger_level():
             frame = inspect.currentframe()
             if frame:
                 args, _, _, values = inspect.getargvalues(frame)
                 params = {a: values[a] for a in args if a not in excluded}
-                logger.debug("params: %s", params)
+                self._logger.debug("params: %s", params)
                 del frame
-
-            logger.debug(
-                "Collect documents: %s",
-                [document.__name__ for document in documents],
-            )
 
         await init_beanie(
             database=self.database,
@@ -117,12 +110,12 @@ class Client:
             recreate_views=recreate_views,
             skip_indexes=skip_indexes,
         )
-        logger.info("beanie initialization completed successfully")
+        self._logger.info("beanie initialization completed successfully")
 
     async def close(self) -> None:
-        logger.info("stopping the client...")
+        self._logger.info("stopping the client...")
         await self._client.aclose()
-        logger.info("stopping the client has been completed successfully")
+        self._logger.info("stopping the client has been completed successfully")
 
     def start_session(self) -> AsyncClientSession:
         return self._client.start_session()
@@ -143,14 +136,17 @@ class Client:
         return await self.database.list_collection_names()
 
     async def drop_database(self) -> None:
-        logger.info("dropping database '%s'...", self._database)
+        self._logger.info("dropping database '%s'...", self._database)
         await self._client.drop_database(self._database)
-        logger.info(
+        self._logger.info(
             "database '%s' has been dropped successfully", self._database
         )
 
     async def drop_collection(self, name: str, /) -> None:
-        logger.info("dropping collection '%s'...", name)
+        self._logger.info("dropping collection '%s'...", name)
         collection = self.collection(name)
         await collection.drop()
-        logger.info("collection '%s' has been dropped successfully", name)
+        self._logger.info("collection '%s' has been dropped successfully", name)
+
+    def _is_debug_logger_level(self) -> bool:
+        return self._logger.getEffectiveLevel() <= logging.DEBUG
