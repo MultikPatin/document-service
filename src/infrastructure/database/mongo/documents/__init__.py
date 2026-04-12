@@ -1,16 +1,39 @@
 import sys
 from collections.abc import Sequence
+from inspect import getmembers, isclass
 
 from beanie import Document, UnionDoc, View
 
-# Import documents
-# from .documents import (
-#     InputDocument,
-# )
-#
-# __all__ = [
-#     "InputDocument",
-# ]
+from .layout import (
+    Layout,
+    LayoutBlockCard,
+    LayoutBlockMessage,
+    LayoutBlockSingle,
+    LayoutBlockTable,
+    LayoutLayerDefault,
+    LayoutLayerSchema,
+    LayoutLayerValidation,
+)
+from .report import (
+    Report,
+    ReportBlockSingle,
+    ReportBlockTable,
+)
+
+__all__ = [
+    "Layout",
+    "LayoutBlockCard",
+    "LayoutBlockMessage",
+    "LayoutBlockSingle",
+    "LayoutBlockTable",
+    "LayoutLayerDefault",
+    "LayoutLayerSchema",
+    "LayoutLayerValidation",
+    "Report",
+    "ReportBlockSingle",
+    "ReportBlockTable",
+    "collect_documents",
+]
 
 type CollectedDocumentsType = Sequence[type[Document | UnionDoc | View]]
 
@@ -28,23 +51,11 @@ def collect_documents() -> CollectedDocumentsType:
     The function is typically used to automatically discover and register
     all document models in the application without manual registration.
 
-    Returns:
-        DocumentsType: A sequence of document classes that can be used for
-                       Beanie ODM initialization. The sequence contains classes
-                       that inherit from Document, UnionDoc, or View but are not
-                       the base classes themselves.
-
-    Example:
-        >>> docs = collect_documents()
-        >>> print([doc.__name__ for doc in docs])
-        ['InputDocument', 'OutputDocument']
-
     Note:
         This function only discovers classes defined in the current module
         (__init__.py). Make sure all document classes are imported and available
         in the module's namespace when this function is called.
     """
-    from inspect import getmembers, isclass  # noqa: PLC0415
 
     return [
         doc

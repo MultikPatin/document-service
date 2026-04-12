@@ -4,13 +4,19 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
 dependencies = [
-    "beanie>=2.1.0",
     "fastapi>=0.135.2",
     "pydantic-settings>=2.13.1",
 ]
 
+[project.optional-dependencies]
+mongo = [
+    "beanie>=2.1.0",
+]
+
 [dependency-groups]
-dev = [
-    "pytest>=9.0.2",
+coverage = [
     "pytest-cov>=7.1.0",
+]
+tests = [
+    "pytest>=9.0.3",
 ]

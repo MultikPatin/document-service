@@ -23,6 +23,6 @@ class RepresentationSettings(BaseSettings):
         """
         d: dict[str, Any] = {}
 
-        d[RepresentationKeys.UUID] = self.UUID
+        d[RepresentationKeys.UUID] = self.UUID.value
 
         return d

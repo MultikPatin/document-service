@@ -26,7 +26,7 @@ if TYPE_CHECKING:
     from pymongo.server_api import ServerApi
     from pymongo.server_description import ServerDescription
 
-    from .collections import CollectedDocumentsType
+    from .documents import CollectedDocumentsType
     from .protocols import SettingsProtocol
 
 type DocumentClassType = type[Mapping[str, Any]] | None
@@ -104,6 +104,11 @@ class Client:
                 params = {a: values[a] for a in args if a not in excluded}
                 logger.debug("params: %s", params)
                 del frame
+
+            logger.debug(
+                "Collect documents: %s",
+                [document.__name__ for document in documents],
+            )
 
         await init_beanie(
             database=self.database,

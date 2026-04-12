@@ -2,10 +2,11 @@ import asyncio
 import logging
 
 from src.infrastructure.database.mongo.client import Client
-from src.infrastructure.database.mongo.collections import collect_documents
+from src.infrastructure.database.mongo.documents import collect_documents
 from src.infrastructure.database.mongo.settings import Settings
 
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("pymongo").setLevel(logging.INFO)
 
 
 async def main() -> None:
