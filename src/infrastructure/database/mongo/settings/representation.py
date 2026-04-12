@@ -3,14 +3,17 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import RepresentationDefaults
+from .constants import (
+    RepresentationDefaults,
+    RepresentationKeys,
+    RepresentationUuidEnum,
+)
 
 
 class RepresentationSettings(BaseSettings):
-    UUID: str = Field(
+    UUID: RepresentationUuidEnum = Field(
         default=RepresentationDefaults.UUID,
         description="UUID representation format",
-        pattern="^(standard|pythonLegacy|javaLegacy|csharpLegacy|unspecified)$",
     )
 
     @property
@@ -18,8 +21,8 @@ class RepresentationSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["uuidRepresentation"] = self.UUID
+        d[RepresentationKeys.UUID] = self.UUID.value
 
-        return result
+        return d

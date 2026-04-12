@@ -19,28 +19,6 @@
 согласованную конфигурацию клиента MongoDB. Он реализует паттерн компоновщика, агрегируя специализированные классы
 настроек для различных областей конфигурации MongoDB.
 
-### Загрузка переменных окружения
-
-Класс использует `SettingsConfigDict` Pydantic для определения способа загрузки переменных окружения:
-
-```python
-model_config = SettingsConfigDict(
-    env_file=BaseDefaults.ENV_FILE,
-    env_prefix=BaseDefaults.ENV_PREFIX,  # "MONGODB_"
-    env_file_encoding=BaseDefaults.ENV_FILE_ENCODING,
-    env_nested_delimiter=BaseDefaults.ENV_NESTED_DELIMITER,  # "__"
-    extra=BaseDefaults.EXTRA,
-    frozen=BaseDefaults.FROZEN,
-)
-```
-
-Эта конфигурация обеспечивает:
-
-- Загрузку из файлов окружения (по умолчанию `.env`)
-- Использование `MONGODB_` в качестве префикса для всех переменных окружения, связанных с MongoDB
-- Использование `__` в качестве разделителя для вложенных настроек (например, `MONGODB_POOL__MAX_SIZE`)
-- Правильную обработку дополнительных полей и настроек неизменяемости
-
 ### Процесс сборки параметров
 
 Основой класса `Settings` является свойство `client_kwargs`, которое собирает итоговый словарь конфигурации для клиента
@@ -49,56 +27,40 @@ MongoDB:
 ```python
 @property
 def client_kwargs(self) -> dict[str, Any]:
-    result: dict[str, Any] = {}
+    """Returns a dictionary with parameters for creating an AsyncMongoClient
+    instance.
+    """
+    d: dict[str, Any] = {}
 
-    result.update(self.pool.client_kwargs)
-    result.update(self.timeouts.client_kwargs)
-    result.update(self.retry_behavior.client_kwargs)
-    result.update(self.tls.client_kwargs)
-    result.update(self.compression.client_kwargs)
-    result.update(self.representation.client_kwargs)
-    result.update(self.connection_mode.client_kwargs)
-    result.update(self.write_concern.client_kwargs)
-    result.update(self.read_concern.client_kwargs)
-    result.update(self.error_handling.client_kwargs)
+    d.update(self.pool.client_kwargs)
+    d.update(self.timeouts.client_kwargs)
+    d.update(self.retry_behavior.client_kwargs)
+    d.update(self.tls.client_kwargs)
+    d.update(self.compression.client_kwargs)
+    d.update(self.representation.client_kwargs)
+    d.update(self.connection_mode.client_kwargs)
+    d.update(self.write_concern.client_kwargs)
+    d.update(self.read_concern.client_kwargs)
+    d.update(self.error_handling.client_kwargs)
 
-    # Аутентификация включается только при наличии учетных данных
-    if self.connection0.USERNAME:
-        result.update(self.authentication.client_kwargs)
+    if self.connection.use_authentication:
+        d.update(self.authentication.client_kwargs)
+    if self.connection.use_srv:
+        d.update(self.srv.client_kwargs)
 
-    # Настройки SRV включаются только для подключений mongodb+srv
-    if self.connection0.SCHEMA.endswith("srv"):
-        result.update(self.srv.client_kwargs)
-
-    return result
+    return d
 ```
-
-#### Порядок слияния и приоритет
-
-Параметры конфигурации объединяются в определенном порядке:
-
-1. Настройки пула
-2. Таймауты
-3. Поведение при повторных попытках
-4. TLS/SSL
-5. Сжатие
-6. Представление
-7. Режим подключения
-8. Подтверждение записи
-9. Согласованность чтения
-10. Обработка ошибок
-
-Этот порядок гарантирует, что более фундаментальные параметры подключения устанавливаются первыми, а более высокие
-уровни применяются после. При наличии перекрывающихся ключей более поздние настройки переопределяют более ранние.
 
 #### Условное включение конфигурации
 
 Два важных условных включения обеспечивают соответствующую конфигурацию:
 
-- **Аутентификация**: Включается только при наличии `connection0.USERNAME`, что предотвращает ненужные параметры
+- **Аутентификация**: Включается только при наличии `self.connection.use_authentication`, что предотвращает ненужные
+  параметры
   аутентификации при подключении к экземплярам MongoDB, которым не требуется аутентификация.
 
-- **Настройки SRV**: Включаются только при использовании схемы `mongodb+srv`, так как записи SRV специфичны для этого
+- **Настройки SRV**: Включаются только при использовании схемы `self.connection.use_srv`, так как записи SRV специфичны
+  для этого
   типа подключения.
 
 ### Роли компонентов в процессе сборки
@@ -118,55 +80,6 @@ def client_kwargs(self) -> dict[str, Any]:
 - **AuthenticationSettings**: Управляет учетными данными и механизмами аутентификации
 - **SRVSettings**: Обрабатывает параметры, специфичные для записей SRV
 
-### Генерация строки подключения
-
-Хотя напрямую не является частью свойства `client_kwargs`, класс `Settings` также предоставляет генерацию строк
-подключения через метод `get_connections()`:
-
-```python
-def get_connections(self, with_secret: bool = False) -> Sequence[str]:
-    return [self.connection0.dsn(with_secret=with_secret).encoded_string()]
-```
-
-Этот метод генерирует правильно отформатированные строки подключения MongoDB из конфигурации, с возможностью включения
-или исключения конфиденциальной информации, такой как пароли.
-
-### Построение итоговой конфигурации
-
-Итоговый словарь конфигурации строится путем объединения:
-
-1. Параметров клиента из `client_kwargs`
-2. Имени базы данных из `DB_NAME`
-3. Строк подключения из `get_connections()`
-
-Это обрабатывается методом `_parameters()`:
-
-```python
-def _parameters(self) -> dict[str, Any]:
-    config = self.client_kwargs
-    config.update({"database": self.database})
-    config.update({"connections": self.get_connections()})
-    return config
-```
-
-### Механизм логирования
-
-Класс включает комплексное логирование во время инициализации:
-
-```python
-def __init__(self) -> None:
-    logger.info("loading the settings...")
-    super().__init__()
-    logger.info("settings was loaded successfully")
-    logger.debug(f"settings parameters: {self._parameters()}")
-```
-
-Это обеспечивает:
-
-- Информационное сообщение при начале загрузки настроек
-- Подтверждение успешной загрузки
-- Отладочное логирование всех итоговых параметров (полезно для устранения неполадок)
-
 ## Группы настроек
 
 Настройки разделены на группы, каждая из которых соответствует отдельному классу в кодовой базе. Переменные окружения
@@ -176,18 +89,14 @@ def __init__(self) -> None:
 
 **Python Path:** `src.infrastructure.database.mongo.settings.connection.ConnectionSettings`
 
-| Переменная окружения            | Описание                                    | Значение по умолчанию | Константа в коде              |
-|---------------------------------|---------------------------------------------|-----------------------|-------------------------------|
-| `MONGODB_CONNECTION0__HOST`     | Хост MongoDB                                | `localhost`           | `ConnectionDefaults.HOST`     |
-| `MONGODB_CONNECTION0__PORT`     | Порт MongoDB                                | `27017`               | `ConnectionDefaults.PORT`     |
-| `MONGODB_CONNECTION0__USERNAME` | Имя пользователя для аутентификации         | пустая строка         | `ConnectionDefaults.USERNAME` |
-| `MONGODB_CONNECTION0__PASSWORD` | Пароль для аутентификации                   | пустая строка         | `ConnectionDefaults.PASSWORD` |
-| `MONGODB_CONNECTION0__SCHEMA`   | Схема подключения (mongodb или mongodb+srv) | `mongodb`             | `ConnectionDefaults.SCHEMA`   |
-| `MONGODB_CONNECTION0__DATABASE` | Имя базы данных                             | `default-database`    | `ConnectionDefaults.DATABASE` |
-
-> **Важно:** Поддерживается несколько соединений с MongoDB. Для этого используйте нумерацию в имени переменной (
-> например, `connection0`, `connection1`, `connection2` и т.д.). В текущей реализации используется `connection0` как
-> пример, но можно настроить дополнительные соединения с другими номерами.
+| Переменная окружения           | Описание                                    | Значение по умолчанию | Константа в коде              |
+|--------------------------------|---------------------------------------------|-----------------------|-------------------------------|
+| `MONGODB_CONNECTION__HOST`     | Хост MongoDB                                | `localhost`           | `ConnectionDefaults.HOST`     |
+| `MONGODB_CONNECTION__PORT`     | Порт MongoDB                                | `27017`               | `ConnectionDefaults.PORT`     |
+| `MONGODB_CONNECTION__USERNAME` | Имя пользователя для аутентификации         | пустая строка         | `ConnectionDefaults.USERNAME` |
+| `MONGODB_CONNECTION__PASSWORD` | Пароль для аутентификации                   | пустая строка         | `ConnectionDefaults.PASSWORD` |
+| `MONGODB_CONNECTION__SCHEMA`   | Схема подключения (mongodb или mongodb+srv) | `mongodb`             | `ConnectionDefaults.SCHEMA`   |
+| `MONGODB_CONNECTION__DATABASE` | Имя базы данных                             | `default-database`    | `ConnectionDefaults.DATABASE` |
 
 ### Pool Settings (Пул соединений)
 

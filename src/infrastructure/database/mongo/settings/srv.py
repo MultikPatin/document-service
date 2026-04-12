@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import Field, PositiveInt
 from pydantic_settings import BaseSettings
 
-from .constants import SRVDefaults
+from .constants import SRVDefaults, SRVKeys
 
 
 class SRVSettings(BaseSettings):
@@ -22,9 +22,9 @@ class SRVSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["srvServiceName"] = self.SERVICE_NAME
-        result["srvMaxHosts"] = self.MAX_HOSTS
+        d[SRVKeys.SERVICE_NAME] = self.SERVICE_NAME
+        d[SRVKeys.MAX_HOSTS] = self.MAX_HOSTS
 
-        return result
+        return d

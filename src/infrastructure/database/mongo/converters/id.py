@@ -1,8 +1,9 @@
 from beanie import PydanticObjectId
 from bson.errors import InvalidId
 
-from src.core.constants import CURSOR_SEPARATOR
 from src.infrastructure.database.mongo.exceptions import InvalidMongoIDError
+
+from .constants import CURSOR_SEPARATOR
 
 
 def to_poid(_id: str, /) -> PydanticObjectId:

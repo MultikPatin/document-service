@@ -1,7 +1,7 @@
 from pydantic import Field, MongoDsn, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
-from .constants import ConnectionDefaults
+from .constants import ConnectionDefaults, ConnectionSchemaEnum
 
 
 class ConnectionSettings(BaseSettings):
@@ -26,18 +26,25 @@ class ConnectionSettings(BaseSettings):
         description="Authentication password",
         max_length=255,
     )
-    SCHEMA: str = Field(
-        default=ConnectionDefaults.SCHEMA,
+    SCHEMA: ConnectionSchemaEnum = Field(
+        default=ConnectionSchemaEnum.mongodb,
         description="Connection scheme: mongodb or mongodb+srv",
-        pattern="^mongodb(?:\\+srv)?$",
     )
+
+    @property
+    def use_srv(self) -> bool:
+        return ConnectionSchemaEnum.mongodb_srv == self.SCHEMA
+
+    @property
+    def use_authentication(self) -> bool:
+        return bool(self.USERNAME)
 
     def dsn(self, with_secret: bool = False) -> MongoDsn:
         """Generate MongoDB DSN with pre-built query parameters."""
         return MongoDsn.build(
             host=self.HOST,
             port=self.PORT,
-            scheme=self.SCHEMA,
+            scheme=self.SCHEMA.value,
             username=self.USERNAME,
             password=self.PASSWORD.get_secret_value()
             if with_secret

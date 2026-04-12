@@ -3,14 +3,17 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import ReadConcernDefaults
+from .constants import (
+    ReadConcernDefaults,
+    ReadConcernKeys,
+    ReadConcernLevelEnum,
+)
 
 
 class ReadConcernSettings(BaseSettings):
-    LEVEL: str = Field(
+    LEVEL: ReadConcernLevelEnum = Field(
         default=ReadConcernDefaults.LEVEL,
         description="Read concern level: local, majority, linearizable",
-        pattern="^(local|majority|linearizable)?$",
         min_length=1,
     )
 
@@ -19,8 +22,8 @@ class ReadConcernSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["readConcernLevel"] = self.LEVEL
+        d[ReadConcernKeys.LEVEL] = self.LEVEL.value
 
-        return result
+        return d

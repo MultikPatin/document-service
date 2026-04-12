@@ -3,15 +3,18 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import ErrorHandlingDefaults
+from .constants import (
+    ErrorHandlingDefaults,
+    ErrorHandlingKeys,
+    ErrorHandlingUnicodeDecodeEnum,
+)
 
 
 class ErrorHandlingSettings(BaseSettings):
-    UNICODE_DECODE: str = Field(
+    UNICODE_DECODE: ErrorHandlingUnicodeDecodeEnum = Field(
         default=ErrorHandlingDefaults.UNICODE_DECODE,
         description="Handler for Unicode decode errors: "
         "strict, ignore, replace",
-        pattern="^(strict|ignore|replace|backslashreplace|surrogateescape)$",
     )
 
     @property
@@ -19,8 +22,8 @@ class ErrorHandlingSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["unicode_decode_error_handler"] = self.UNICODE_DECODE
+        d[ErrorHandlingKeys.UNICODE_DECODE] = self.UNICODE_DECODE.value
 
-        return result
+        return d

@@ -1,20 +1,32 @@
 import pytest
 
 from src.infrastructure.database.mongo.settings.constants import (
-    WriteConcernDefaults,
+    WriteConcernDefaults as D,
 )
 from src.infrastructure.database.mongo.settings.write_concern import (
     WriteConcernSettings,
 )
 
 
+def test_write_concern_settings_default(
+    default_write_concern_settings, default_write_concern_client_kwargs
+) -> None:
+    """Test default values for WriteConcernSettings."""
+    s = default_write_concern_settings
+
+    assert s.W == D.W
+    assert s.JOURNAL == D.JOURNAL
+    assert s.FSYNC == D.FSYNC
+    assert s.client_kwargs == default_write_concern_client_kwargs
+
+
 @pytest.mark.parametrize(
     ("w_value", "journal_value", "fsync_value"),
     [
         (
-            WriteConcernDefaults.W,
-            WriteConcernDefaults.JOURNAL,
-            WriteConcernDefaults.FSYNC,
+            D.W,
+            D.JOURNAL,
+            D.FSYNC,
         ),
         ("majority", True, True),
         (2, False, True),
@@ -51,10 +63,10 @@ def test_write_concern_settings_client_kwargs_returns_dict(
     ("journal_value", "fsync_value", "expected_journal", "expected_fsync"),
     [
         (
-            WriteConcernDefaults.JOURNAL,
-            WriteConcernDefaults.FSYNC,
-            WriteConcernDefaults.JOURNAL,
-            WriteConcernDefaults.FSYNC,
+            D.JOURNAL,
+            D.FSYNC,
+            D.JOURNAL,
+            D.FSYNC,
         ),
         (True, False, True, False),
         (False, True, False, True),
@@ -79,7 +91,7 @@ def test_write_concern_settings_client_kwargs_without_w(
 @pytest.mark.parametrize(
     ("w_value", "journal_value", "fsync_value"),
     [
-        (2, WriteConcernDefaults.JOURNAL, WriteConcernDefaults.FSYNC),
+        (2, D.JOURNAL, D.FSYNC),
         ("majority", True, False),
         (1, False, True),
     ],

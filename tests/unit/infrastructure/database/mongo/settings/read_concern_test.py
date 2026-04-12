@@ -4,17 +4,21 @@ import pytest
 from pydantic import ValidationError
 
 from src.infrastructure.database.mongo.settings.constants import (
-    ReadConcernDefaults,
+    ReadConcernDefaults as D,
 )
 from src.infrastructure.database.mongo.settings.read_concern import (
     ReadConcernSettings,
 )
 
 
-def test_read_concern_settings_default_level() -> None:
-    """Test that ReadConcernSettings uses default level from constants."""
-    settings = ReadConcernSettings()
-    assert settings.LEVEL == ReadConcernDefaults.LEVEL
+def test_read_concern_settings_default(
+    default_read_concern_settings, default_read_concern_client_kwargs
+) -> None:
+    """Test default values for ReadConcernSettings."""
+    s = default_read_concern_settings
+
+    assert s.LEVEL == D.LEVEL
+    assert s.client_kwargs == default_read_concern_client_kwargs
 
 
 @pytest.mark.parametrize(
@@ -32,7 +36,7 @@ def test_read_concern_settings_valid_levels(level) -> None:
     ("level", "expected_level"),
     [
         ("linearizable", "linearizable"),
-        (ReadConcernDefaults.LEVEL, ReadConcernDefaults.LEVEL),
+        (D.LEVEL, D.LEVEL),
     ],
     ids=["linear", "random"],
 )

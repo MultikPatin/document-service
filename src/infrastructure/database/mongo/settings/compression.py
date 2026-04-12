@@ -3,14 +3,13 @@ from typing import Any
 from pydantic import Field, NonNegativeInt
 from pydantic_settings import BaseSettings
 
-from .constants import CompressionDefaults
+from .constants import CompressionDefaults, CompressionKeys, CompressorsEnum
 
 
 class CompressionSettings(BaseSettings):
-    COMPRESSORS: str | None = Field(
+    COMPRESSORS: CompressorsEnum | None = Field(
         default=CompressionDefaults.COMPRESSORS,
         description="Compression method: snappy, zlib, zstd",
-        pattern="^(snappy|zlib|zstd)?$",
     )
     ZLIB_COMPRESSION_LEVEL: NonNegativeInt | None = Field(
         default=CompressionDefaults.ZLIB_COMPRESSION_LEVEL,
@@ -23,11 +22,13 @@ class CompressionSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
         if self.COMPRESSORS:
-            result["compressors"] = self.COMPRESSORS
+            d[CompressionKeys.COMPRESSORS] = self.COMPRESSORS.value
         if self.ZLIB_COMPRESSION_LEVEL:
-            result["zlibCompressionLevel"] = self.ZLIB_COMPRESSION_LEVEL
+            d[CompressionKeys.ZLIB_COMPRESSION_LEVEL] = (
+                self.ZLIB_COMPRESSION_LEVEL
+            )
 
-        return result
+        return d

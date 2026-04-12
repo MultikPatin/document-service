@@ -4,6 +4,7 @@ from pydantic import ValidationError
 from src.infrastructure.database.mongo.settings.composite import Settings
 from src.infrastructure.database.mongo.settings.constants import (
     BaseDefaults,
+    ConnectionSchemaEnum,
 )
 
 
@@ -153,7 +154,7 @@ def test_client_kwargs_includes_authentication_when_username_present(
 
 @pytest.mark.parametrize(
     "schema",
-    ["mongodb+srv", "mongodb"],
+    [ConnectionSchemaEnum.mongodb_srv, ConnectionSchemaEnum.mongodb],
 )
 def test_client_kwargs_includes_srv_when_schema_ends_with_srv(
     mock_connection_settings, mock_srv_settings, schema

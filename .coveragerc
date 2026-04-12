@@ -1,5 +1,6 @@
 [run]
 omit =
+    */constants/*
     */constants.py
     */tests/*
     */test_*.py

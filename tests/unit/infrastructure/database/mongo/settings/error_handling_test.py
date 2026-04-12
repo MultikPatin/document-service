@@ -1,9 +1,22 @@
 import pytest
 from pydantic import ValidationError
 
+from src.infrastructure.database.mongo.settings.constants import (
+    ErrorHandlingDefaults as D,
+)
 from src.infrastructure.database.mongo.settings.erro_handling import (
     ErrorHandlingSettings,
 )
+
+
+def test_error_handling_settings_default(
+    default_error_handling_settings, default_error_handling_client_kwargs
+) -> None:
+    """Test default values for ErrorHandlingSettings."""
+    s = default_error_handling_settings
+
+    assert s.UNICODE_DECODE == D.UNICODE_DECODE
+    assert s.client_kwargs == default_error_handling_client_kwargs
 
 
 @pytest.mark.parametrize(

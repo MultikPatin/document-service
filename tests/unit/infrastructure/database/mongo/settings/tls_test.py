@@ -3,22 +3,28 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
+from src.infrastructure.database.mongo.settings.constants import (
+    TLSDefaults as D,
+)
 from src.infrastructure.database.mongo.settings.tls import TLSSettings
 
 
-def test_tls_settings_default_values(
-    tls_settings_default: TLSSettings,
+def test_tls_settings_default(
+    default_tls_settings, default_tls_client_kwargs
 ) -> None:
-    """Test TLSSettings default values."""
-    assert tls_settings_default.ENABLE is False
-    assert tls_settings_default.INSECURE is False
-    assert tls_settings_default.ALLOW_INVALID_CERTIFICATES is False
-    assert tls_settings_default.ALLOW_INVALID_HOSTNAMES is False
-    assert tls_settings_default.DISABLE_OCSP_ENDPOINT_CHECK is False
-    assert tls_settings_default.CA_FILE is None
-    assert tls_settings_default.CERTIFICATE_KEY_FILE is None
-    assert tls_settings_default.CRL_FILE is None
-    assert tls_settings_default.CERTIFICATE_KEY_FILE_PASSWORD is None
+    """Test default values for TLSSettings."""
+    s = default_tls_settings
+
+    assert s.ENABLE == D.ENABLE
+    assert s.INSECURE == D.INSECURE
+    assert s.ALLOW_INVALID_CERTIFICATES == D.ALLOW_INVALID_CERTIFICATES
+    assert s.ALLOW_INVALID_HOSTNAMES == D.ALLOW_INVALID_HOSTNAMES
+    assert s.DISABLE_OCSP_ENDPOINT_CHECK == D.DISABLE_OCSP_ENDPOINT_CHECK
+    assert s.CA_FILE == D.CA_FILE
+    assert s.CERTIFICATE_KEY_FILE == D.CERTIFICATE_KEY_FILE
+    assert s.CRL_FILE == D.CRL_FILE
+    assert s.CERTIFICATE_KEY_FILE_PASSWORD == D.CERTIFICATE_KEY_FILE_PASSWORD
+    assert s.client_kwargs == default_tls_client_kwargs
 
 
 def test_tls_settings_custom_values(

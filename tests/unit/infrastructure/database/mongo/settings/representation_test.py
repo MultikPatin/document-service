@@ -4,18 +4,28 @@ import pytest
 from pydantic import ValidationError
 
 from src.infrastructure.database.mongo.settings.constants import (
-    RepresentationDefaults,
+    RepresentationDefaults as D,
 )
 from src.infrastructure.database.mongo.settings.representation import (
     RepresentationSettings,
 )
 
 
+def test_representation_settings_default(
+    default_representation_settings, default_representation_client_kwargs
+) -> None:
+    """Test default values for RepresentationSettings."""
+    s = default_representation_settings
+
+    assert s.UUID == D.UUID
+    assert s.client_kwargs == default_representation_client_kwargs
+
+
 def test_representation_settings_default_values() -> None:
     """Test that RepresentationSettings uses default values from RepresentationDefaults when no values are provided."""
     settings = RepresentationSettings()
 
-    assert settings.UUID == RepresentationDefaults.UUID
+    assert settings.UUID == D.UUID
 
 
 @pytest.mark.parametrize(
@@ -67,7 +77,7 @@ def test_representation_settings_invalid_values(uuid_format: str) -> None:
 @pytest.mark.parametrize(
     ("uuid_format", "expected_value"),
     [
-        (None, RepresentationDefaults.UUID),
+        (None, D.UUID),
         ("standard", "standard"),
         ("pythonLegacy", "pythonLegacy"),
         ("javaLegacy", "javaLegacy"),
@@ -78,7 +88,7 @@ def test_representation_settings_invalid_values(uuid_format: str) -> None:
 def test_representation_settings_client_kwargs(
     uuid_format: str | None,
     expected_value: str,
-    expected_client_kwargs: dict[str, Any],
+    default_representation_client_kwargs: dict[str, Any],
 ) -> None:
     """Test client_kwargs returns correct dictionary for different UUID representations."""
     # Arrange
@@ -87,7 +97,7 @@ def test_representation_settings_client_kwargs(
     else:
         settings = RepresentationSettings(UUID=uuid_format)
 
-    expected_client_kwargs["uuidRepresentation"] = expected_value
+    default_representation_client_kwargs["uuidRepresentation"] = expected_value
 
     # Act & Assert
-    assert settings.client_kwargs == expected_client_kwargs
+    assert settings.client_kwargs == default_representation_client_kwargs

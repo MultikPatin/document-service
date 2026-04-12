@@ -1,8 +1,10 @@
 import pytest
 from beanie import PydanticObjectId
 
-from src.core.constants import CURSOR_SEPARATOR
-from src.infrastructure.database.mongo.converters.id import to_poid
+from src.infrastructure.database.mongo.converters import (
+    CURSOR_SEPARATOR,
+    to_poid,
+)
 from src.infrastructure.database.mongo.exceptions import InvalidMongoIDError
 
 

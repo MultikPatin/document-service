@@ -3,7 +3,11 @@ from typing import Any
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from .constants import AuthenticationDefaults
+from .constants import (
+    AuthenticationDefaults,
+    AuthenticationKeys,
+    AuthenticationMechanismEnum,
+)
 
 
 class AuthenticationSettings(BaseSettings):
@@ -13,15 +17,13 @@ class AuthenticationSettings(BaseSettings):
         min_length=1,
         max_length=64,
     )
-    MECHANISM: str = Field(
+    MECHANISM: AuthenticationMechanismEnum = Field(
         default=AuthenticationDefaults.MECHANISM,
         description="Authentication mechanism",
-        pattern="^(SCRAM-SHA-1|SCRAM-SHA-256)$",
     )
     # MECHANISM_PROPERTIES: str | None = Field(
     #     default=AuthenticationDefaults.MECHANISM_PROPERTIES,
-    #     description="Authentication mechanism",
-    #     pattern="^(SCRAM-SHA-1|SCRAM-SHA-256)$",
+    #     description="Authentication mechanism properties",
     # )
 
     @property
@@ -29,10 +31,12 @@ class AuthenticationSettings(BaseSettings):
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        result: dict[str, Any] = {}
+        d: dict[str, Any] = {}
 
-        result["authSource"] = self.SOURCE
-        result["authMechanism"] = self.MECHANISM
-        # result["authMechanismProperties"] = self.MECHANISM_PROPERTIES
+        d[AuthenticationKeys.SOURCE] = self.SOURCE
+        d[AuthenticationKeys.MECHANISM] = self.MECHANISM.value
+        # result[AuthenticationKeys.MECHANISM_PROPERTIES] = (
+        #     self.MECHANISM_PROPERTIES
+        # )
 
-        return result
+        return d
