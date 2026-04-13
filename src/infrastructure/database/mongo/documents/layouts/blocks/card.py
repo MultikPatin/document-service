@@ -1,7 +1,9 @@
 from beanie import Document
 from pydantic import BaseModel
 
-from .constants import CARD_DOCUMENT_NAME
+from src.infrastructure.database.mongo.documents.constants import (
+    LayoutCollections,
+)
 
 
 class LayoutCardTitle(BaseModel):
@@ -12,5 +14,5 @@ class LayoutBlockCardDocument(Document):
     cells: list[LayoutCardTitle]
 
     class Settings:
-        name = CARD_DOCUMENT_NAME
+        name = LayoutCollections.block_cards()
         max_nesting_depth = 0

@@ -3,7 +3,9 @@ from typing import TYPE_CHECKING
 from beanie import Document, Link
 from pydantic import Field
 
-from .constants import INPUT_DOCUMENT_NAME
+from src.infrastructure.database.mongo.documents.constants import (
+    ReportCollections,
+)
 
 if TYPE_CHECKING:
     from .single import ReportBlockSingleDocument
@@ -16,6 +18,6 @@ class ReportDocument(Document):
     # layout: Link["LayoutDocument"]
 
     class Settings:
-        name = INPUT_DOCUMENT_NAME
+        name = ReportCollections.reports()
         max_nesting_depth = 1
         use_state_management = True

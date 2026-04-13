@@ -4,8 +4,11 @@ from typing import TYPE_CHECKING, Any
 from beanie import Document, Link
 from pydantic import Field
 
-from .constants import LAYOUT_DOCUMENT_NAME, LifeStatusEnum
-from .utils import time_now
+from src.infrastructure.database.mongo.documents.constants import (
+    LayoutCollections,
+    LifeStatusEnum,
+)
+from src.infrastructure.database.mongo.documents.utils import time_now
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
@@ -42,7 +45,7 @@ class LayoutDocument(Document):
     )
 
     class Settings:
-        name = LAYOUT_DOCUMENT_NAME
+        name = LayoutCollections.layouts()
         max_nesting_depth = 1
         use_state_management = True
         # indexes = [
