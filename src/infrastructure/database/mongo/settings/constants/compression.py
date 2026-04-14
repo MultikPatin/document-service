@@ -10,7 +10,7 @@ class CompressorsEnum(StrEnum):
 
 @final
 class CompressionDefaults:
-    COMPRESSORS: Final[CompressorsEnum | None] = None
+    COMPRESSORS: Final[CompressorsEnum | list[CompressorsEnum] | None] = None
     ZLIB_COMPRESSION_LEVEL: Final[int | None] = None
 
 

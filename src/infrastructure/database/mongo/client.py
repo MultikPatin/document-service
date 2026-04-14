@@ -27,12 +27,9 @@ if TYPE_CHECKING:
     from .documents import CollectedDocumentsType
     from .protocols import SettingsProtocol
 
-type DocumentClassType = type[Mapping[str, Any]] | None
-type TypeRegistryType = TypeRegistry | None
 type ServerSelectorType = (
     Callable[[list[ServerDescription]], list[ServerDescription]] | None
 )
-type DriverType = DriverInfo | None
 type EventListenerType = (
     Sequence[
         CommandListener
@@ -43,8 +40,6 @@ type EventListenerType = (
     ]
     | None
 )
-type AutoEncryptionOptsType = AutoEncryptionOpts | None
-type ServerApiType = ServerApi | None
 
 
 class Client:
@@ -55,13 +50,13 @@ class Client:
         *,
         tz_aware: bool = False,
         datetime_conversion: DatetimeConversion = DatetimeConversion.DATETIME,
-        document_class: DocumentClassType = None,
-        type_registry: TypeRegistryType = None,
+        document_class: type[Mapping[str, Any]] | None = None,
+        type_registry: TypeRegistry | None = None,
         server_selector: ServerSelectorType = None,
-        driver: DriverType = None,
+        driver: DriverInfo | None = None,
         event_listeners: EventListenerType = None,
-        auto_encryption_opts: AutoEncryptionOptsType = None,
-        server_api: ServerApiType = None,
+        auto_encryption_opts: AutoEncryptionOpts | None = None,
+        server_api: ServerApi | None = None,
     ) -> None:
         if event_listeners is None:
             event_listeners = ()

@@ -1,11 +1,9 @@
 from beanie import Document
 from pydantic import Field
-from pymongo import DESCENDING, IndexModel
+from pymongo import HASHED, IndexModel
 
 hash_index_class = IndexModel(
-    [("hash", DESCENDING)],
-    name="hash_idx_DESCENDING",
-    unique=True,
+    [("hash", HASHED)], name="hash_idx_DESCENDING", unique=True
 )
 
 

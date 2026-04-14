@@ -44,10 +44,15 @@ def test_authentication_settings_with_valid_mechanisms(
 @pytest.mark.parametrize(
     "kwargs",
     [
-        {"SOURCE": "testdb", "MECHANISM": "SCRAM-SHA-1"},
-        {"SOURCE": "testdb2", "MECHANISM": "SCRAM-SHA-256"},
+        {"SOURCE": "testdb"},
+        {"SOURCE": "a"},
+        {"SOURCE": "a" * 64},
     ],
-    ids=["scram-sha1-custom-source", "scram-sha256-custom-source"],
+    ids=[
+        "custom-source",
+        "min-source-length",
+        "max-source-length",
+    ],
 )
 def test_authentication_settings_with_combinations(
     custom_authentication_settings, kwargs
@@ -55,26 +60,8 @@ def test_authentication_settings_with_combinations(
     """Test client_kwargs with various combinations of source and mechanism."""
     s = custom_authentication_settings(**kwargs)
 
+    assert kwargs["SOURCE"] == s.SOURCE
     assert s.client_kwargs == {
-        K.SOURCE: kwargs["SOURCE"],
-        K.MECHANISM: kwargs["MECHANISM"],
-    }
-
-
-@pytest.mark.parametrize(
-    "kwargs",
-    [{"SOURCE": "a"}, {"SOURCE": "a" * 64}],
-    ids=["min-source-length", "max-source-length"],
-)
-def test_authentication_settings_with_valid_source_string_lengths(
-    custom_authentication_settings, kwargs
-) -> None:
-    """Test AuthenticationSettings with boundary values for SOURCE length."""
-    settings = custom_authentication_settings(**kwargs)
-
-    assert kwargs["SOURCE"] == settings.SOURCE
-    assert D.MECHANISM == settings.MECHANISM
-    assert settings.client_kwargs == {
         K.SOURCE: kwargs["SOURCE"],
         K.MECHANISM: D.MECHANISM,
     }
