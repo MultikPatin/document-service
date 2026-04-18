@@ -28,7 +28,7 @@ if TYPE_CHECKING:
         CollectedDocumentsType,
     )
 
-    from .protocols import SettingsProtocol
+    from .protocols.settings import SettingsProtocol
 
 type ServerSelectorType = (
     Callable[[list[ServerDescription]], list[ServerDescription]] | None

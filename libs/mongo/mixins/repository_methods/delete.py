@@ -11,10 +11,10 @@ if TYPE_CHECKING:
 
 class DeleteByIDMixin(BaseRepository):
     async def delete_by_id(
-        self, _id: str, *, session: AsyncClientSession | None = None
+        self, document_id: str, *, session: AsyncClientSession | None = None
     ) -> bool:
         result = await self._document.find_one(
-            {KeyEnum.id: to_poid(_id)}
+            {KeyEnum.id: to_poid(document_id)}
         ).delete(session=session)
         if result is None:
             return False

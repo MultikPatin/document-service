@@ -16,7 +16,7 @@ class KeyEnum(StrEnum):
     skip = "$skip"
     limit = "$limit"
     facet = "$facet"
-    count = "$count"
+    count_ = "$count"
     all = "$all"
     regex = "$regex"
     options = "$options"

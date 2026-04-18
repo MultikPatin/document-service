@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class AddMixin(BaseRepository):
-    async def add[ReturnSchema: BaseModel, CreateSchema: BaseModel](
+    async def add[ReturnSchema, CreateSchema: BaseModel](
         self,
         condition: CreateSchema,
         *,
@@ -40,7 +40,7 @@ class BulkAddWithReturnIdMixin(BaseRepository):
 
 
 class BulkAddMixin(BaseRepository):
-    async def bulk_add[ReturnSchema: BaseModel, CreateSchema: BaseModel](
+    async def bulk_add[ReturnSchema, CreateSchema: BaseModel](
         self,
         conditions: Iterable[CreateSchema],
         *,
@@ -48,6 +48,9 @@ class BulkAddMixin(BaseRepository):
         return_as: type[ReturnSchema],
         max_concurrent: int = 10,
     ) -> list[ReturnSchema]:
+        if not conditions:
+            return []
+
         semaphore = asyncio.Semaphore(max_concurrent)
 
         async def process(condition: CreateSchema) -> ReturnSchema:
@@ -60,11 +63,5 @@ class BulkAddMixin(BaseRepository):
 
         async with asyncio.TaskGroup() as tg:
             tasks = [tg.create_task(process(b)) for b in conditions]
-            if not tasks:
-                msg = (
-                    "Must provide at least one condition to process in bulk_add"
-                )
-                # TODO: Реализовать специфическую ошибку
-                raise ValueError(msg)
 
         return [t.result() for t in tasks]

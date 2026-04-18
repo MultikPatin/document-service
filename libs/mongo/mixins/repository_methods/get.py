@@ -14,20 +14,19 @@ from libs.mongo.enums import KeyEnum
 from .base import BaseRepository
 
 if TYPE_CHECKING:
-    from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
 
 class GetMixin(BaseRepository):
-    async def get[ReturnSchema: BaseModel](
+    async def get[ReturnSchema](
         self,
-        _id: str,
+        document_id: str,
         *,
         session: AsyncClientSession | None = None,
         return_as: type[ReturnSchema],
     ) -> ReturnSchema | None:
         document = await self._document.find_one(
-            {KeyEnum.id: to_poid(_id)}, session=session
+            {KeyEnum.id: to_poid(document_id)}, session=session
         )
         if document is None:
             return None
@@ -35,15 +34,15 @@ class GetMixin(BaseRepository):
 
 
 class GetByHashMixin(BaseRepository):
-    async def get_by_hash[ReturnSchema: BaseModel](
+    async def get_by_hash[ReturnSchema](
         self,
-        _hash: str,
+        hash_string: str,
         *,
         session: AsyncClientSession | None = None,
         return_as: type[ReturnSchema],
     ) -> ReturnSchema | None:
         document = await self._document.find_one(
-            {"hash": _hash}, session=session
+            {"hash": hash_string}, session=session
         )
         if document is None:
             return None
@@ -51,9 +50,9 @@ class GetByHashMixin(BaseRepository):
 
 
 class GetByIDsMixin(BaseRepository):
-    async def get_by_ids[ReturnSchema: BaseModel](
+    async def get_by_ids[ReturnSchema](
         self,
-        ids: Set[str],
+        document_ids: Set[str],
         *,
         session: AsyncClientSession | None = None,
         return_as: type[ReturnSchema],
@@ -68,16 +67,20 @@ class GetByIDsMixin(BaseRepository):
                     {KeyEnum.id: {KeyEnum.in_: to_poids(batche)}},
                     session=session,
                 ).to_list()
+                if not documents:
+                    return []
                 return to_dtos(documents, return_as, replace_links=True)
 
         async with asyncio.TaskGroup() as tg:
             tasks = [
                 tg.create_task(process(b))
-                for b in as_batches(list(ids), batch_size)
+                for b in as_batches(list(document_ids), batch_size)
             ]
 
-        result = []
+        results = []
         for t in tasks:
-            result.extend(t.result())
+            r = t.result()
+            if r:
+                results.extend(r)
 
-        return result
+        return results if results else None

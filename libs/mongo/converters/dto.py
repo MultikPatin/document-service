@@ -5,36 +5,43 @@ from beanie import BackLink, Link
 
 if TYPE_CHECKING:
     from beanie import Document
-    from pydantic import BaseModel
 
 
-def link_replacer(obj: MutableMapping[str, Any] | Sequence[Any]) -> None:
-    if isinstance(obj, dict):
+def link_replacer(dump: MutableMapping[str, Any] | Sequence[Any]) -> None:
+    if isinstance(dump, dict):
         to_delete = []
-        for k in obj:
-            if isinstance(obj[k], Link):  # ty:ignore[invalid-argument-type]
-                obj[k] = str(obj[k].ref.id)  # ty:ignore[invalid-assignment, invalid-argument-type]
-            elif isinstance(obj[k], BackLink):  # ty:ignore[invalid-argument-type]
+        for k in dump:
+            if isinstance(dump[k], Link):  # ty:ignore[invalid-argument-type]
+                dump[k] = str(dump[k].ref.id)  # ty:ignore[invalid-assignment, invalid-argument-type]
+            elif isinstance(dump[k], BackLink):  # ty:ignore[invalid-argument-type]
                 to_delete.append(k)
             else:
-                link_replacer(obj[k])  # ty:ignore[invalid-argument-type]
+                link_replacer(dump[k])  # ty:ignore[invalid-argument-type]
         for k in to_delete:
-            del obj[k]
-    elif isinstance(obj, list):
-        for item in obj:
-            link_replacer(item)
+            del dump[k]
+    elif isinstance(dump, list):
+        for i in dump:
+            link_replacer(i)
 
 
-def to_dto[DocType: Document, DTO: BaseModel](
-    document: DocType, dto: type[DTO], *, replace_links: bool = False
-) -> DTO:
+def to_dto[DocType: Document, ReturnSchema](
+    document: DocType,
+    return_as: type[ReturnSchema],
+    *,
+    replace_links: bool = False,
+) -> ReturnSchema:
     dump = document.model_dump()
     if replace_links:
         link_replacer(dump)
-    return dto.model_validate(dump)
+    return return_as(**dump)
 
 
-def to_dtos[DocType: Document, DTO: BaseModel](
-    documents: Iterable[DocType], dto: type[DTO], *, replace_links: bool = False
-) -> list[DTO]:
-    return [to_dto(d, dto, replace_links=replace_links) for d in documents]
+def to_dtos[DocType: Document, ReturnSchema](
+    documents: Iterable[DocType],
+    return_as: type[ReturnSchema],
+    *,
+    replace_links: bool = False,
+) -> list[ReturnSchema]:
+    return [
+        to_dto(d, return_as, replace_links=replace_links) for d in documents
+    ]

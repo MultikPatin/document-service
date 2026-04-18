@@ -17,33 +17,27 @@ from libs.mongo.settings import (
     TLSSettings,
     WriteConcernSettings,
 )
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class Settings(ConnectionSettings):
     model_config = SettingsConfigDict(**BaseDefaults.model_config())
 
-    def __init__(
-        self,
-        *args: Any,  # noqa: ANN401
-        logger: Logger | None = None,
-        **kwargs: Any,  # noqa: ANN401
-    ) -> None:
+    def __init__(self, logger: Logger | None = None) -> None:
         if logger is None:
-            super().__init__(*args, **kwargs)
+            super().__init__()
         else:
             logger.info("loading the settings...")
-            super().__init__(*args, **kwargs)
+            super().__init__()
             logger.info("settings was loaded successfully")
             logger.debug(f"settings parameters: {self._parameters()}")
 
     def _parameters(self) -> dict[str, Any]:
         p = self.client_kwargs
         p.update({"database": self.database})
-        p.update({"connection": self.connection.dsn().encoded_string()})
+        p.update({"connection": self.dsn().encoded_string()})
         return p
 
-    connection: ConnectionSettings = ConnectionSettings()
     pool: PoolSettings = PoolSettings()
     timeouts: TimeoutsSettings = TimeoutsSettings()
     retry_behavior: RetryBehaviorSettings = RetryBehaviorSettings()
@@ -60,12 +54,12 @@ class Settings(BaseSettings):
     @property
     def database(self) -> str:
         """Returns the name of the MongoDB database"""
-        return self.connection.DB_NAME
+        return self.DB_NAME
 
     @property
     def connection_string(self) -> str:
         """Returns the MongoDB connection string"""
-        return self.connection.dsn(with_secret=True).encoded_string()
+        return self.dsn(with_secret=True).encoded_string()
 
     @property
     def client_kwargs(self) -> dict[str, Any]:
@@ -85,9 +79,9 @@ class Settings(BaseSettings):
         d.update(self.read_concern.client_kwargs)
         d.update(self.error_handling.client_kwargs)
 
-        if self.connection.use_authentication:
+        if self.use_authentication:
             d.update(self.authentication.client_kwargs)
-        if self.connection.use_srv:
+        if self.use_srv:
             d.update(self.srv.client_kwargs)
 
         return d
