@@ -1,7 +1,7 @@
-from .single import ReportSingleRepository
-from .table import ReportTableRepository
+from .single import ReportBlockSingleRepository
+from .table import ReportBlockTableRepository
 
 __all__ = [
-    "ReportSingleRepository",
-    "ReportTableRepository",
+    "ReportBlockSingleRepository",
+    "ReportBlockTableRepository",
 ]

@@ -1,5 +1,5 @@
 from .base import _Repository
 
 
-class LayoutValidationRepository(_Repository):
+class LayoutLayerValidationRepository(_Repository):
     pass

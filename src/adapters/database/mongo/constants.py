@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
 from enum import StrEnum, auto
-from typing import Final, Self, final
+from typing import Final, final
 
 
 class _CollectionNames(ABC):
@@ -102,16 +101,3 @@ class LayoutDataTypeEnum(StrEnum):
     time = auto()
     datetime = auto()
     integer = auto()
-
-
-class LifeStatusEnum(StrEnum):
-    created = auto()
-    draft = auto()
-    published = auto()
-    archived = auto()
-    deleted = auto()
-
-    @classmethod
-    def values(cls, exclude: Sequence[Self] | None = None) -> list[Self]:
-        exs = set(exclude) if exclude else set()
-        return [m for m in cls if m not in exs]

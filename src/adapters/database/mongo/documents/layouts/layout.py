@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Any
 
 from beanie import Link
+from libs.core.enums import LifeStatusEnum
 from libs.mongo.mixins.document_fields import (
     CreatedAtField,
     KeyField,
@@ -9,10 +10,7 @@ from libs.mongo.mixins.document_fields import (
 )
 from pydantic import Field
 
-from src.adapters.database.mongo.constants import (
-    LayoutCollections,
-    LifeStatusEnum,
-)
+from src.adapters.database.mongo.constants import LayoutCollections
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:

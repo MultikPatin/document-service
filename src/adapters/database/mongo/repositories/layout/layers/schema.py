@@ -1,5 +1,5 @@
 from .base import _Repository
 
 
-class LayoutSchemaRepository(_Repository):
+class LayoutLayerSchemaRepository(_Repository):
     pass
