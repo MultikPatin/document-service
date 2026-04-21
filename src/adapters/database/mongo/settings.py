@@ -1,6 +1,8 @@
 from logging import Logger
 from typing import Any
 
+from pydantic_settings import SettingsConfigDict
+
 from libs.mongo.constants.settings import BaseDefaults
 from libs.mongo.settings import (
     AuthenticationSettings,
@@ -17,7 +19,6 @@ from libs.mongo.settings import (
     TLSSettings,
     WriteConcernSettings,
 )
-from pydantic_settings import SettingsConfigDict
 
 
 class Settings(ConnectionSettings):

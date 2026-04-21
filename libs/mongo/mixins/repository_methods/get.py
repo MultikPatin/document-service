@@ -18,13 +18,13 @@ if TYPE_CHECKING:
 
 
 class GetMixin(BaseRepository):
-    async def get[ReturnSchema](
+    async def get[R](
         self,
         document_id: str,
         *,
-        session: AsyncClientSession | None = None,
-        return_as: type[ReturnSchema],
-    ) -> ReturnSchema | None:
+        session: AsyncClientSession,
+        return_as: type[R],
+    ) -> R | None:
         document = await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)}, session=session
         )
@@ -34,13 +34,13 @@ class GetMixin(BaseRepository):
 
 
 class GetByHashMixin(BaseRepository):
-    async def get_by_hash[ReturnSchema](
+    async def get_by_hash[R](
         self,
         hash_string: str,
         *,
-        session: AsyncClientSession | None = None,
-        return_as: type[ReturnSchema],
-    ) -> ReturnSchema | None:
+        session: AsyncClientSession,
+        return_as: type[R],
+    ) -> R | None:
         document = await self._document.find_one(
             {"hash": hash_string}, session=session
         )
@@ -50,18 +50,18 @@ class GetByHashMixin(BaseRepository):
 
 
 class GetByIDsMixin(BaseRepository):
-    async def get_by_ids[ReturnSchema](
+    async def get_by_ids[R](
         self,
         document_ids: Set[str],
         *,
-        session: AsyncClientSession | None = None,
-        return_as: type[ReturnSchema],
+        session: AsyncClientSession,
+        return_as: type[R],
         batch_size: int | None = None,
         max_concurrent: int = 10,
-    ) -> list[ReturnSchema] | None:
+    ) -> list[R] | None:
         semaphore = asyncio.Semaphore(max_concurrent)
 
-        async def process(batche: Sequence[str]) -> list[ReturnSchema]:
+        async def process(batche: Sequence[str]) -> list[R]:
             async with semaphore:
                 documents = await self._document.find_many(
                     {KeyEnum.id: {KeyEnum.in_: to_poids(batche)}},

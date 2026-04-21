@@ -1,11 +1,12 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     ErrorHandlingDefaults as D,
 )
 from libs.mongo.settings.erro_handling import (
     ErrorHandlingSettings,
 )
-from pydantic import ValidationError
 
 
 def test_error_handling_settings_default(

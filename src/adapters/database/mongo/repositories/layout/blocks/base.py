@@ -5,14 +5,9 @@ from libs.mongo.mixins.repository_methods import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from pydantic import BaseModel
 
 
-class ModelWithHash(BaseModel):
-    hash: str | None = None
-
-
-class _Repository(
+class LayoutBlockRepository(
     GetMixin,
     AddMixin,
     PaginationCursorMixin,

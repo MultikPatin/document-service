@@ -1,11 +1,12 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     CompressionDefaults as D,
 )
 from libs.mongo.settings.compression import (
     CompressionSettings,
 )
-from pydantic import ValidationError
 
 
 def test_compression_settings_default(

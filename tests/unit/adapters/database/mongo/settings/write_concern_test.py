@@ -1,4 +1,5 @@
 import pytest
+
 from libs.mongo.constants.settings import (
     WriteConcernDefaults as D,
 )

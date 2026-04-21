@@ -1,15 +1,13 @@
 from typing import TYPE_CHECKING
 
 from beanie import Link
+from pydantic import Field
+
 from libs.mongo.mixins.document_fields import (
     CreatedAtField,
     UpdatedAtField,
 )
-from pydantic import Field
-
-from src.adapters.database.mongo.constants import (
-    ReportCollections,
-)
+from src.adapters.database.mongo.constants import ReportCollections
 
 if TYPE_CHECKING:
     from src.adapters.database.mongo.documents import LayoutDocument

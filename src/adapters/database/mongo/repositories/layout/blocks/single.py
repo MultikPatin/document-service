@@ -1,9 +1,11 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from .base import _Repository
+from .base import LayoutBlockRepository
 
 if TYPE_CHECKING:
+    from pymongo.asynchronous.client_session import AsyncClientSession
+
     from libs.core.dtos.pagination import (
         CursorResultDTO,
         LimitOffsetResultDTO,
@@ -14,70 +16,62 @@ if TYPE_CHECKING:
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
-    from pymongo.asynchronous.client_session import AsyncClientSession
-
-    from src.application.protocols.layout.pagination import (
+    from src.application.protocols.pagination import (
         LayoutBlockSinglePaginationFiltersProtocol,
     )
 
-type Session = AsyncClientSession
 
-
-class LayoutBlockSingleRepository(_Repository):
-    async def get_all_pages[ReturnSchema](
+class LayoutBlockSingleRepository(LayoutBlockRepository):
+    async def get_all_pages[R](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
             PagesParamsProtocol
         ],
         *,
-        session: Session,
-        return_as: type[ReturnSchema],
-    ) -> PagesResultDTO[ReturnSchema] | None:
-        conditions = self._pagination_conditions(filters)
+        session: AsyncClientSession,
+        return_as: type[R],
+    ) -> PagesResultDTO[R] | None:
         return await self._get_all_pages(
-            conditions,
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
         )
 
-    async def get_all_limit_offset[ReturnSchema](
+    async def get_all_limit_offset[R](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
             LimitOffsetParamsProtocol
         ],
         *,
-        session: Session,
-        return_as: type[ReturnSchema],
-    ) -> LimitOffsetResultDTO[ReturnSchema] | None:
-        conditions = self._pagination_conditions(filters)
+        session: AsyncClientSession,
+        return_as: type[R],
+    ) -> LimitOffsetResultDTO[R] | None:
         return await self._get_all_limit_offset(
-            conditions,
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
         )
 
-    async def get_all_cursor[ReturnSchema](
+    async def get_all_cursor[R](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
             CursorParamsProtocol
         ],
         *,
-        session: Session,
-        return_as: type[ReturnSchema],
-    ) -> CursorResultDTO[ReturnSchema] | None:
-        conditions = self._pagination_conditions(filters)
+        session: AsyncClientSession,
+        return_as: type[R],
+    ) -> CursorResultDTO[R] | None:
         return await self._get_all_cursor(
-            conditions,
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
         )
 
     def _pagination_conditions(
-        self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol,
+        self, filters: LayoutBlockSinglePaginationFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 

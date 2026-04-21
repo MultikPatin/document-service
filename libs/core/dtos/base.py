@@ -1,10 +1,12 @@
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, NegativeInt, field_validator
+
+from libs.core.utils import get_md5hash
 
 
 class IdDTO(BaseModel):
-    id: str
+    id: str = Field(min_length=1)
 
     @field_validator("id", mode="before")
     @classmethod
@@ -31,11 +33,22 @@ class DescriptionDTO(BaseModel):
 
 
 class RefCountDTO(BaseModel):
-    ref_count: int = Field(default=0)
+    ref_count: NegativeInt = Field(default=0)
+
+    def can_be_deleted(self) -> bool:
+        return self.ref_count == 0
 
 
 class HashDTO(RefCountDTO):
-    hash: str = Field(min_length=8, max_length=255)
+    hash: str = Field(default="", min_length=8, max_length=255)
+
+    def refresh_hash(self) -> None:
+        exclude = {"hash", "id", "ref_count"}
+        self.hash = get_md5hash(self.model_dump(exclude=exclude))
+
+    def get_hash(self) -> str:
+        self.refresh_hash()
+        return self.hash
 
 
 class RequiredDTO(BaseModel):

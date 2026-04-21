@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
+
 from libs.mongo.constants.settings import (
     TimeoutsDefaults as D,
 )

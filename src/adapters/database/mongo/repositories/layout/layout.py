@@ -8,10 +8,11 @@ from libs.mongo.mixins.repository_methods import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-
 from src.adapters.database.mongo.projections import LayoutShortProjection
 
 if TYPE_CHECKING:
+    from pymongo.asynchronous.client_session import AsyncClientSession
+
     from libs.core.dtos.pagination import (
         CursorResultDTO,
         LimitOffsetResultDTO,
@@ -22,9 +23,7 @@ if TYPE_CHECKING:
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
-    from pymongo.asynchronous.client_session import AsyncClientSession
-
-    from src.application.protocols.layout.pagination import (
+    from src.application.protocols.pagination import (
         LayoutPaginationFiltersProtocol,
     )
 
@@ -43,7 +42,7 @@ class LayoutRepository(
         return_as: type[R],
     ) -> PagesResultDTO[R] | None:
         return await self._get_all_pages(
-            self._pagination_conditions(filters),
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
@@ -58,7 +57,7 @@ class LayoutRepository(
         return_as: type[R],
     ) -> LimitOffsetResultDTO[R] | None:
         return await self._get_all_limit_offset(
-            self._pagination_conditions(filters),
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
@@ -73,7 +72,7 @@ class LayoutRepository(
         return_as: type[R],
     ) -> CursorResultDTO[R] | None:
         return await self._get_all_cursor(
-            self._pagination_conditions(filters),
+            conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
@@ -81,8 +80,7 @@ class LayoutRepository(
         )
 
     def _pagination_conditions(
-        self,
-        filters: LayoutPaginationFiltersProtocol,
+        self, filters: LayoutPaginationFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 

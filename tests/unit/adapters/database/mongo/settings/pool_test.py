@@ -1,11 +1,12 @@
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     PoolDefaults as D,
 )
 from libs.mongo.settings.pool import PoolSettings
-from pydantic import ValidationError
 
 
 def test_pool_settings_default(

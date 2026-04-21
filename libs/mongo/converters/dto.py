@@ -24,24 +24,18 @@ def link_replacer(dump: MutableMapping[str, Any] | Sequence[Any]) -> None:
             link_replacer(i)
 
 
-def to_dto[DocType: Document, ReturnSchema](
-    document: DocType,
-    return_as: type[ReturnSchema],
-    *,
-    replace_links: bool = False,
-) -> ReturnSchema:
+def to_dto[D: Document, R](
+    document: D, return_as: type[R], *, replace_links: bool = False
+) -> R:
     dump = document.model_dump()
     if replace_links:
         link_replacer(dump)
     return return_as(**dump)
 
 
-def to_dtos[DocType: Document, ReturnSchema](
-    documents: Iterable[DocType],
-    return_as: type[ReturnSchema],
-    *,
-    replace_links: bool = False,
-) -> list[ReturnSchema]:
+def to_dtos[D: Document, R](
+    documents: Iterable[D], return_as: type[R], *, replace_links: bool = False
+) -> list[R]:
     return [
         to_dto(d, return_as, replace_links=replace_links) for d in documents
     ]

@@ -1,5 +1,5 @@
-from .base import _Repository
+from .base import LayoutLayerRepository
 
 
-class LayoutLayerValidationRepository(_Repository):
+class LayoutLayerValidationRepository(LayoutLayerRepository):
     pass

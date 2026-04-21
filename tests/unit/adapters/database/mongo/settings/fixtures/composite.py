@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
+
 from libs.mongo.constants.settings import (
     ConnectionSchemaEnum,
 )

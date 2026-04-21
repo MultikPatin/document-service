@@ -3,6 +3,21 @@ from enum import StrEnum, auto
 from typing import Self
 
 
+class ComponentsEnum(StrEnum):
+    redis = auto()
+    mongo = auto()
+    elasticsearch = auto()
+    postgres = auto()
+    clickhouse = auto()
+    minio = auto()
+    faststream = auto()
+    rabbitmq = auto()
+    kafka = auto()
+    fastapi = auto()
+    litestar = auto()
+    falcon = auto()
+
+
 class LifeStatusEnum(StrEnum):
     created = auto()
     draft = auto()

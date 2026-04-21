@@ -1,39 +1,23 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from beanie import Link
-from bson import DBRef
 from libs.mongo.converters import to_dto, to_poid
 from libs.mongo.mixins.repository_methods import AddMixin, GetMixin
-from pydantic import field_validator
+from src.adapters.database.mongo.projections import ReportLayoutIDProjection
 
 if TYPE_CHECKING:
-    from libs.mongo.enums import KeyEnum
-    from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-
-# TODO Перенести
-class ReportLayoutIDProjection(BaseModel):
-    layout: str
-
-    @field_validator("layout", mode="before")
-    @classmethod
-    def convert_layout(cls, value: Any) -> str:  # noqa: ANN401
-        if isinstance(value, DBRef):
-            return str(value.id)
-        if isinstance(value, Link):
-            return str(value.ref.id)
-        return str(value)
+    from libs.mongo.enums import KeyEnum
 
 
 class ReportRepository(GetMixin, AddMixin):
-    async def get_full_links[ReturnSchema: BaseModel](
+    async def get_full_links[R](
         self,
         document_id: str,
         *,
         session: AsyncClientSession,
-        return_as: type[ReturnSchema],
-    ) -> ReturnSchema | None:
+        return_as: type[R],
+    ) -> R | None:
         document = await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)},
             session=session,

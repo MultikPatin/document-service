@@ -1,13 +1,14 @@
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     ReadConcernDefaults as D,
 )
 from libs.mongo.settings.read_concern import (
     ReadConcernSettings,
 )
-from pydantic import ValidationError
 
 
 def test_read_concern_settings_default(

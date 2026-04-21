@@ -2,13 +2,14 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
+from pydantic import MongoDsn
+
 from libs.mongo.constants.settings import (
     ConnectionDefaults as Defaults,
 )
 from libs.mongo.settings import (
     ConnectionSettings,
 )
-from pydantic import MongoDsn
 
 
 @pytest.fixture(name="default_connection_settings")

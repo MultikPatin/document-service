@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
+
 from libs.mongo.settings.compression import (
     CompressionSettings,
 )

@@ -1,6 +1,8 @@
 from typing import TYPE_CHECKING, Any
 
 from beanie import Link
+from pydantic import Field
+
 from libs.core.enums import LifeStatusEnum
 from libs.mongo.mixins.document_fields import (
     CreatedAtField,
@@ -8,8 +10,6 @@ from libs.mongo.mixins.document_fields import (
     RefCountField,
     UpdatedAtField,
 )
-from pydantic import Field
-
 from src.adapters.database.mongo.constants import LayoutCollections
 
 # from pymongo import DESCENDING, IndexModel

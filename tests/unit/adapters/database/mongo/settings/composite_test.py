@@ -1,10 +1,10 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     BaseDefaults,
     ConnectionSchemaEnum,
 )
-from pydantic import ValidationError
-
 from src.adapters.database.mongo.settings import Settings
 
 

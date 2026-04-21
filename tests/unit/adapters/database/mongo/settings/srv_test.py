@@ -1,11 +1,12 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     SRVDefaults as D,
 )
 from libs.mongo.settings.srv import (
     SRVSettings,
 )
-from pydantic import ValidationError
 
 
 def test_srv_settings_default(

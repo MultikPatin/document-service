@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class MongoIDProjection(BaseModel):
-    id: str = Field(validation_alias="_id")
+    id: str = Field(validation_alias="_id", min_length=1)
 
     @field_validator("id", mode="before")
     @classmethod

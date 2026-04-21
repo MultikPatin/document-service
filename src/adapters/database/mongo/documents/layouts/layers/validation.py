@@ -1,10 +1,8 @@
-from libs.mongo.mixins.document_fields import HashField, RefCountField
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
-from src.adapters.database.mongo.constants import (
-    LayoutCollections,
-)
+from libs.mongo.mixins.document_fields import HashField, RefCountField
+from src.adapters.database.mongo.constants import LayoutCollections
 
 
 class LayoutLayerValidationDocument(RefCountField, HashField):

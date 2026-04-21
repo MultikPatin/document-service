@@ -1,9 +1,7 @@
-from libs.mongo.mixins.document_fields import KeyField
 from pydantic import Field
 
-from src.adapters.database.mongo.constants import (
-    LayoutCollections,
-)
+from libs.mongo.mixins.document_fields import KeyField
+from src.adapters.database.mongo.constants import LayoutCollections
 
 
 class LayoutBlockTableDocument(KeyField):

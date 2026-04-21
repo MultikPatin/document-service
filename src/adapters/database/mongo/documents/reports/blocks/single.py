@@ -1,10 +1,7 @@
 from typing import Any
 
 from libs.mongo.mixins.document_fields import KeyField
-
-from src.adapters.database.mongo.constants import (
-    ReportCollections,
-)
+from src.adapters.database.mongo.constants import ReportCollections
 
 
 class ReportBlockSingleDocument(KeyField):

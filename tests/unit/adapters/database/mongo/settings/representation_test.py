@@ -1,13 +1,14 @@
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     RepresentationDefaults as D,
 )
 from libs.mongo.settings.representation import (
     RepresentationSettings,
 )
-from pydantic import ValidationError
 
 
 def test_representation_settings_default(

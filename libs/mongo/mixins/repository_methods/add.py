@@ -12,24 +12,17 @@ if TYPE_CHECKING:
 
 
 class AddMixin(BaseRepository):
-    async def add[ReturnSchema, CreateSchema: BaseModel](
-        self,
-        condition: CreateSchema,
-        *,
-        session: AsyncClientSession | None = None,
-        return_as: type[ReturnSchema],
-    ) -> ReturnSchema:
+    async def add[R, C: BaseModel](
+        self, condition: C, *, session: AsyncClientSession, return_as: type[R]
+    ) -> R:
         document = self._document(**condition.model_dump(exclude_none=True))
         await document.create(session=session)
         return to_dto(document, return_as, replace_links=True)
 
 
 class BulkAddWithReturnIdMixin(BaseRepository):
-    async def bulk_add_with_return_id[CreateSchema: BaseModel](
-        self,
-        conditions: Iterable[CreateSchema],
-        *,
-        session: AsyncClientSession | None = None,
+    async def bulk_add_with_return_id[C: BaseModel](
+        self, conditions: Iterable[C], *, session: AsyncClientSession
     ) -> list[str]:
         documents = (
             self._document(**c.model_dump(exclude_none=True))
@@ -40,20 +33,20 @@ class BulkAddWithReturnIdMixin(BaseRepository):
 
 
 class BulkAddMixin(BaseRepository):
-    async def bulk_add[ReturnSchema, CreateSchema: BaseModel](
+    async def bulk_add[R, C: BaseModel](
         self,
-        conditions: Iterable[CreateSchema],
+        conditions: Iterable[C],
         *,
-        session: AsyncClientSession | None = None,
-        return_as: type[ReturnSchema],
+        session: AsyncClientSession,
+        return_as: type[R],
         max_concurrent: int = 10,
-    ) -> list[ReturnSchema]:
+    ) -> list[R]:
         if not conditions:
             return []
 
         semaphore = asyncio.Semaphore(max_concurrent)
 
-        async def process(condition: CreateSchema) -> ReturnSchema:
+        async def process(condition: C) -> R:
             async with semaphore:
                 document = self._document(
                     **condition.model_dump(exclude_none=True)

@@ -1,13 +1,14 @@
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     ConnectionModeDefaults as Defaults,
 )
 from libs.mongo.settings import (
     ConnectionModeSettings,
 )
-from pydantic import ValidationError
 
 
 def test_connection_mode_settings_default(

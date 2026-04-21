@@ -1,9 +1,10 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     TimeoutsDefaults as D,
 )
 from libs.mongo.settings.timeouts import TimeoutsSettings
-from pydantic import ValidationError
 
 
 def test_timeouts_settings_default(

@@ -1,4 +1,6 @@
 import pytest
+from pydantic import SecretStr, ValidationError
+
 from libs.mongo.constants.settings import (
     ConnectionDefaults as Defaults,
 )
@@ -8,7 +10,6 @@ from libs.mongo.constants.settings import (
 from libs.mongo.settings import (
     ConnectionSettings,
 )
-from pydantic import SecretStr, ValidationError
 
 
 def test_connection_settings_default(

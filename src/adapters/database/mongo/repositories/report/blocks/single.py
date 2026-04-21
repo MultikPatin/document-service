@@ -1,5 +1,5 @@
-from libs.mongo.mixins.repository_methods import BulkAddMixin
+from .base import ReportBlockRepository
 
 
-class ReportBlockSingleRepository(BulkAddMixin):
+class ReportBlockSingleRepository(ReportBlockRepository):
     pass

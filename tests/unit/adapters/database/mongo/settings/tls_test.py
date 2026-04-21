@@ -1,11 +1,12 @@
 from typing import Any
 
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     TLSDefaults as D,
 )
 from libs.mongo.settings.tls import TLSSettings
-from pydantic import ValidationError
 
 
 def test_tls_settings_default(

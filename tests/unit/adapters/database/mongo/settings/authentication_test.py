@@ -1,11 +1,12 @@
 import pytest
+from pydantic import ValidationError
+
 from libs.mongo.constants.settings import (
     AuthenticationDefaults as D,
 )
 from libs.mongo.constants.settings import (
     AuthenticationKeys as K,
 )
-from pydantic import ValidationError
 
 
 def test_authentication_settings_default(

@@ -1,7 +1,7 @@
 import inspect
 import logging
 from collections.abc import Callable, Mapping, Sequence
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 from beanie import init_beanie
 from bson.codec_options import DatetimeConversion
@@ -28,7 +28,6 @@ if TYPE_CHECKING:
         CollectedDocumentsType,
     )
 
-    from .protocols.settings import SettingsProtocol
 
 type ServerSelectorType = (
     Callable[[list[ServerDescription]], list[ServerDescription]] | None
@@ -43,6 +42,15 @@ type EventListenerType = (
     ]
     | None
 )
+
+
+class SettingsProtocol(Protocol):
+    @property
+    def database(self) -> str: ...
+    @property
+    def connection_string(self) -> str: ...
+    @property
+    def client_kwargs(self) -> dict[str, Any]: ...
 
 
 class Client:

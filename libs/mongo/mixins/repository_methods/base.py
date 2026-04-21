@@ -15,7 +15,7 @@ class BaseRepository:
 
 class ExistsMixin(BaseRepository):
     async def exists(
-        self, document_id: str, *, session: AsyncClientSession | None = None
+        self, document_id: str, *, session: AsyncClientSession
     ) -> bool:
         return await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)}, session=session
@@ -24,7 +24,7 @@ class ExistsMixin(BaseRepository):
 
 class CountMixin(BaseRepository):
     async def count(
-        self, document_id: str, *, session: AsyncClientSession | None = None
+        self, document_id: str, *, session: AsyncClientSession
     ) -> int:
         return await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)}, session=session
@@ -33,7 +33,7 @@ class CountMixin(BaseRepository):
 
 class IncRefCountMixin(BaseRepository):
     async def inc_ref(
-        self, document_id: str, *, session: AsyncClientSession | None = None
+        self, document_id: str, *, session: AsyncClientSession
     ) -> bool:
         result = await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)}, session=session
@@ -44,7 +44,7 @@ class IncRefCountMixin(BaseRepository):
 
 class DecRefCountMixin(BaseRepository):
     async def dec_ref(
-        self, document_id: str, *, session: AsyncClientSession | None = None
+        self, document_id: str, *, session: AsyncClientSession
     ) -> bool:
         result = await self._document.find_one(
             {KeyEnum.id: to_poid(document_id)}, session=session

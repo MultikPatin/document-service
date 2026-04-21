@@ -1,5 +1,6 @@
 import pytest
 from beanie import PydanticObjectId
+
 from libs.mongo.converters import (
     CURSOR_SEPARATOR,
     to_poid,
