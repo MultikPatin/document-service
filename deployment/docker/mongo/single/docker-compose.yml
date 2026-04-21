@@ -7,7 +7,7 @@ services:
       - mongo_volume:/data/db
     environment:
       MONGODB_HOST: ${MONGODB_CONNECTION__HOST}
-      MONGODB_DB_NAME: ${MONGODB_DB_NAME}
+      MONGODB_DB_NAME: ${MONGODB_CONNECTION__DB_NAME}
 
 volumes:
   mongo_volume:

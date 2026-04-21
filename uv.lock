@@ -109,6 +109,15 @@ wheels = [
 ]
 
 [[package]]
+name = "dishka"
+version = "1.10.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b3/82/f0b47d43ed57a071b86122c941769f9a822dfbd0ba01448a0b5da1a2f2a6/dishka-1.10.0.tar.gz", hash = "sha256:cb4f2603e05195f352a8d2f0eff1ea726a3b51a6310586d5d6d8fd55e9b02ef4", size = 281742, upload-time = "2026-04-18T21:27:04.829Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/34/15/75f92305d907677d56b337589e11e1897259a1f9f61ff4b1eeebfff98492/dishka-1.10.0-py3-none-any.whl", hash = "sha256:a490fee102ee52123058f52c65b78d240fa1d95533ad7dbc271bf3eba394ebeb", size = 119836, upload-time = "2026-04-18T21:27:03.354Z" },
+]
+
+[[package]]
 name = "dnspython"
 version = "2.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -122,6 +131,7 @@ name = "document-service"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "dishka" },
     { name = "fastapi" },
     { name = "pydantic-settings" },
 ]
@@ -142,6 +152,7 @@ tests = [
 [package.metadata]
 requires-dist = [
     { name = "beanie", marker = "extra == 'mongo'", specifier = ">=2.1.0" },
+    { name = "dishka", specifier = ">=1.10.0" },
     { name = "fastapi", specifier = ">=0.135.2" },
     { name = "pydantic-settings", specifier = ">=2.13.1" },
 ]

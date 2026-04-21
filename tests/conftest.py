@@ -1,6 +1,6 @@
 from typing import Final
 
-MONGODB: Final[str] = "tests.unit.infrastructure.database.mongo."
+MONGODB: Final[str] = "tests.unit.adapters.database.mongo."
 MONGODB_SETTINGS: Final[str] = MONGODB + "settings.fixtures."
 MONGODB_CONVERTERS: Final[str] = MONGODB + "converters.fixtures."
 

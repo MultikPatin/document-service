@@ -1,22 +1,30 @@
 import asyncio
 import logging
 
-from src.infrastructure.database.mongo.client import Client
-from src.infrastructure.database.mongo.documents import collect_documents
-from src.infrastructure.database.mongo.logger import LoggerNames
-from src.infrastructure.database.mongo.settings import Settings
+from dishka import Provider, make_async_container
+
+from libs.core.enums import ComponentsEnum
+from libs.core.protocols import InitComponentProtocol
+from src.adapters.database.mongo import MongoProvider
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pymongo").setLevel(logging.INFO)
 
-init_logger = logging.getLogger(LoggerNames.init())
-
 
 async def main() -> None:
-    settings = Settings()
-    client = Client(settings, init_logger)
-    documents = collect_documents(init_logger)
-    await client.init_beanie(documents)
+    providers: list[Provider] = [
+        MongoProvider(),
+    ]
+
+    container = make_async_container(*providers)
+    try:
+        await container.get(
+            InitComponentProtocol, component=ComponentsEnum.mongo
+        )
+    except Exception as e:
+        print(e)  # noqa: T201
+    finally:
+        await container.close()
 
 
 if __name__ == "__main__":
