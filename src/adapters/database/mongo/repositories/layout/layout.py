@@ -46,7 +46,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection_model=LayoutShortProjection,
+            projection=LayoutShortProjection,
         )
 
     async def get_all_limit_offset[R](
@@ -61,7 +61,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection_model=LayoutShortProjection,
+            projection=LayoutShortProjection,
         )
 
     async def get_all_cursor[R](

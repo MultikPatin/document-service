@@ -1,16 +1,38 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, PositiveInt
+
+from libs.core.constants import CURSOR_PREVIOUS_PREFIX
 
 
-class PagesParamsDTO(BaseModel):
-    number: int = Field(default=1, ge=1)
-    size: int = Field(default=50, ge=1, le=100)
+class _ParamsDTO(BaseModel):
+    model_config = ConfigDict(frozen=True)
 
 
-class LimitOffsetParamsDTO(BaseModel):
-    limit: int = Field(default=50, ge=1, le=100)
-    offset: int = Field(default=0, ge=0)
+class PagesParamsDTO(_ParamsDTO):
+    number: PositiveInt = Field(default=1)
+    size: PositiveInt = Field(default=50, le=100)
+
+    @property
+    def limit(self) -> int:
+        return self.size
+
+    @property
+    def offset(self) -> int:
+        return (self.number - 1) * self.size
 
 
-class CursorParamsDTO(BaseModel):
-    cursor: str | None = Field(default=None)
-    size: int = Field(default=50, ge=1, le=100)
+class LimitOffsetParamsDTO(_ParamsDTO):
+    limit: PositiveInt = Field(default=50, le=100)
+    offset: NonNegativeInt = Field(default=0)
+
+
+class CursorParamsDTO(_ParamsDTO):
+    cursor: str | None = Field(default=None, min_length=1)
+    size: PositiveInt = Field(default=50, le=100)
+
+    @property
+    def is_previous_cursor(self) -> bool:
+        return (
+            self.cursor.startswith(CURSOR_PREVIOUS_PREFIX)
+            if self.cursor
+            else False
+        )

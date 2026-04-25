@@ -7,11 +7,13 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
 
 
-def convert_items[D: BaseModel, R](
-    documents: Iterable[D], return_as: type[R], is_projected: bool
+def convert_items[D: BaseModel, R, P: BaseModel](
+    documents: Iterable[D],
+    return_as: type[R],
+    projection: type[P] | None = None,
 ) -> list[R]:
     return (
         [return_as(**d.model_dump()) for d in documents]
-        if is_projected
+        if projection
         else to_dtos(documents, return_as, replace_links=True)
     )

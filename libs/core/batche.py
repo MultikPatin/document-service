@@ -1,10 +1,9 @@
 from collections.abc import Generator, Sequence
-from typing import Any
 
 
-def as_batches[Item: Any](
-    data: Sequence[Item], size: int | None = None
-) -> Generator[Sequence[Item]]:
+def as_batches[T](
+    data: Sequence[T], size: int | None = None
+) -> Generator[Sequence[T]]:
     length = len(data)
 
     middle_length = 100

@@ -21,7 +21,7 @@ class PaginationPagesMixin(BaseRepository):
         params: PagesParamsProtocol,
         session: AsyncClientSession,
         return_as: type[R],
-        projection_model: type[P] | None = None,
+        projection: type[P] | None = None,
         sort: str | Sequence[tuple[str, SortDirection]] | None = None,
         ignore_cache: bool = False,
         fetch_links: bool = False,
@@ -31,15 +31,13 @@ class PaginationPagesMixin(BaseRepository):
         nesting_depths_per_field: dict[str, int] | None = None,
         **pymongo_kwargs: Any,  # noqa: ANN401
     ) -> PagesResultDTO[R] | None:
-        skip = (params.number - 1) * params.size
-        limit = params.size
 
         documents = await self._document.find_many(
             *conditions,
-            limit=limit,
-            skip=skip,
+            limit=params.limit,
+            skip=params.offset,
             session=session,
-            projection_model=projection_model,
+            projection_model=projection,
             sort=sort,
             ignore_cache=ignore_cache,
             fetch_links=fetch_links,
@@ -53,7 +51,7 @@ class PaginationPagesMixin(BaseRepository):
         if not documents:
             return None
 
-        total = await self._document.find(
+        count = await self._document.find(
             *conditions,
             session=session,
             ignore_cache=ignore_cache,
@@ -61,25 +59,6 @@ class PaginationPagesMixin(BaseRepository):
             **pymongo_kwargs,
         ).count()
 
-        is_projected = projection_model is not None
-        items = convert_items(documents, return_as, is_projected)
-
-        total_pages = total // params.size
-        if params.size * total_pages < total:
-            total_pages += 1
-        next_page = (
-            params.number + 1
-            if total_pages > 1 and params.number < total_pages
-            else None
-        )
-        previous_page = (
-            params.number - 1 if total_pages > 1 and params.number > 1 else None
-        )
-
-        return PagesResultDTO(
-            items=items,
-            total=total_pages,
-            current_page=params.number,
-            previous_page=previous_page,
-            next_page=next_page,
+        return PagesResultDTO.from_params(
+            params, count, convert_items(documents, return_as, projection)
         )

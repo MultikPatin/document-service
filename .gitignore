@@ -182,6 +182,18 @@ cython_debug/
 .idea/
 .run/
 
+# VS Code
+#   VS Code specific template is maintained in a separate VSCode.gitignore that can
+#   be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+#   and can be added to the global gitignore or merged into this file.
+.vscode/
+
+# Zed
+#   Zed specific template is maintained in a separate Zed.gitignore that can
+#   be found at https://github.com/github/gitignore/blob/main/Global/Zed.gitignore
+#   and can be added to the global gitignore or merged into this file.
+.zed/
+
 .DS_Store
 .AppleDouble
 .LSOverride

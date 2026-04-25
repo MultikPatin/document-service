@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from beanie import PydanticObjectId
 from bson.errors import InvalidId
 
-from libs.mongo.constants.converters import CURSOR_SEPARATOR
+from libs.core.constants import CURSOR_SEPARATOR
 from libs.mongo.exceptions import InvalidMongoIDError
 
 
