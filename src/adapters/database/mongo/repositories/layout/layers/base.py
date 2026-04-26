@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.converters import to_dto
 from libs.mongo.mixins.repository_methods import (
     AddMixin,
     # UpdateMixin,
@@ -40,6 +39,6 @@ class LayoutLayerRepository(
         if result is None:
             document = self._document(**condition.model_dump(exclude_none=True))
             await document.create(session=session)
-            result = to_dto(document, return_as, replace_links=True)
+            result = self.as_dto(document, return_as, replace_links=True)
 
         return result

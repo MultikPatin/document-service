@@ -2,13 +2,7 @@ import asyncio
 from collections.abc import Sequence, Set
 from typing import TYPE_CHECKING
 
-from libs.mongo.converters import (
-    as_batches,
-    to_dto,
-    to_dtos,
-    to_poid,
-    to_poids,
-)
+from libs.core.batche import as_batches
 from libs.mongo.enums import KeyEnum
 
 from .base import BaseRepository
@@ -26,11 +20,11 @@ class GetMixin(BaseRepository):
         return_as: type[R],
     ) -> R | None:
         document = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}, session=session
+            {KeyEnum.id: self.as_id(document_id)}, session=session
         )
         if document is None:
             return None
-        return to_dto(document, return_as, replace_links=True)
+        return self.as_dto(document, return_as, replace_links=True)
 
 
 class GetByHashMixin(BaseRepository):
@@ -46,7 +40,7 @@ class GetByHashMixin(BaseRepository):
         )
         if document is None:
             return None
-        return to_dto(document, return_as, replace_links=True)
+        return self.as_dto(document, return_as, replace_links=True)
 
 
 class GetByIDsMixin(BaseRepository):
@@ -64,12 +58,12 @@ class GetByIDsMixin(BaseRepository):
         async def process(batche: Sequence[str]) -> list[R]:
             async with semaphore:
                 documents = await self._document.find_many(
-                    {KeyEnum.id: {KeyEnum.in_: to_poids(batche)}},
+                    {KeyEnum.id: {KeyEnum.in_: self.as_ids(batche)}},
                     session=session,
                 ).to_list()
                 if not documents:
                     return []
-                return to_dtos(documents, return_as, replace_links=True)
+                return self.as_dtos(documents, return_as, replace_links=True)
 
         async with asyncio.TaskGroup() as tg:
             tasks = [

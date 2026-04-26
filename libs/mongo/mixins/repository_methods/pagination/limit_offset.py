@@ -2,9 +2,8 @@ from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 from libs.core.dtos.pagination import LimitOffsetResultDTO
-from libs.mongo.mixins.repository_methods import BaseRepository
 
-from ._helpers import convert_items
+from .base import BasePaginationMixin
 
 if TYPE_CHECKING:
     from beanie.odm.enums import SortDirection
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
     from libs.core.protocols.pagination import LimitOffsetParamsProtocol
 
 
-class PaginationLimitOffsetMixin(BaseRepository):
+class PaginationLimitOffsetMixin(BasePaginationMixin):
     async def _get_all_limit_offset[R, P: BaseModel](  # noqa: PLR0913
         self,
         conditions: Sequence[Mapping[Any, Any] | bool],
@@ -60,5 +59,5 @@ class PaginationLimitOffsetMixin(BaseRepository):
         ).count()
 
         return LimitOffsetResultDTO.from_params(
-            params, count, convert_items(documents, return_as, projection)
+            params, count, self._convert_items(documents, return_as, projection)
         )

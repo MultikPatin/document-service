@@ -1,53 +1,61 @@
-from typing import TYPE_CHECKING
+from collections.abc import Iterable, MutableMapping, Sequence
+from typing import TYPE_CHECKING, Any
 
-from libs.mongo.converters import to_poid
-from libs.mongo.enums import KeyEnum
+from beanie import BackLink, Link, PydanticObjectId
+from bson.errors import InvalidId
+
+from libs.core.constants import CURSOR_SEPARATOR
+from libs.mongo.exceptions import InvalidMongoIDError
 
 if TYPE_CHECKING:
     from beanie import Document
-    from pymongo.asynchronous.client_session import AsyncClientSession
+    from pydantic import BaseModel
 
 
 class BaseRepository:
     def __init__[DocType: Document](self, document: type[DocType]) -> None:
         self._document = document
 
+    @staticmethod
+    def as_id(_id: str, /) -> PydanticObjectId:
+        s = _id.split(CURSOR_SEPARATOR, 1)
+        try:
+            if len(s) == 1:
+                return PydanticObjectId(_id)
+            return PydanticObjectId(s[-1])
+        except InvalidId as e:
+            raise InvalidMongoIDError(_id) from e
 
-class ExistsMixin(BaseRepository):
-    async def exists(
-        self, document_id: str, *, session: AsyncClientSession
-    ) -> bool:
-        return await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}, session=session
-        ).exists()
+    def as_ids(self, ids: Sequence[str], /) -> Sequence[PydanticObjectId]:
+        return [self.as_id(i) for i in ids]
 
+    @staticmethod
+    def as_dto[D: BaseModel, R](
+        doc: D, dto: type[R], *, replace_links: bool = False
+    ) -> R:
+        dump = doc.model_dump()
+        if replace_links:
+            _link_replacer(dump)
+        return dto(**dump)
 
-class CountMixin(BaseRepository):
-    async def count(
-        self, document_id: str, *, session: AsyncClientSession
-    ) -> int:
-        return await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}, session=session
-        ).count()
-
-
-class IncRefCountMixin(BaseRepository):
-    async def inc_ref(
-        self, document_id: str, *, session: AsyncClientSession
-    ) -> bool:
-        result = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}, session=session
-        ).update({KeyEnum.inc: {"ref_count": 1}}, session=session)
-
-        return result.modified_count == 1
+    def as_dtos[D: BaseModel, R](
+        self, docs: Iterable[D], dto: type[R], *, replace_links: bool = False
+    ) -> list[R]:
+        return [self.as_dto(d, dto, replace_links=replace_links) for d in docs]
 
 
-class DecRefCountMixin(BaseRepository):
-    async def dec_ref(
-        self, document_id: str, *, session: AsyncClientSession
-    ) -> bool:
-        result = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}, session=session
-        ).update({KeyEnum.inc: {"ref_count": -1}}, session=session)
-
-        return result.modified_count == 1
+def _link_replacer(dump: MutableMapping[str, Any] | Sequence[Any]) -> None:
+    if isinstance(dump, dict):
+        to_delete = []
+        for k in dump:
+            if isinstance(dump[k], Link):  # ty:ignore[invalid-argument-type]
+                dump[k] = str(dump[k].ref.id)  # ty:ignore[invalid-assignment, invalid-argument-type]
+            elif isinstance(dump[k], BackLink):  # ty:ignore[invalid-argument-type]
+                to_delete.append(k)
+            else:
+                _link_replacer(dump[k])  # ty:ignore[invalid-argument-type]
+        for k in to_delete:
+            del dump[k]
+    elif isinstance(dump, list):
+        for i in dump:
+            _link_replacer(i)
