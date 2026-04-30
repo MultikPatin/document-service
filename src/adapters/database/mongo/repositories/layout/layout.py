@@ -8,7 +8,8 @@ from libs.mongo.mixins.repository_methods import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from src.adapters.database.mongo.projections import LayoutShortProjection
+
+from .projections import _PaginatedLayoutProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
@@ -46,7 +47,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection=LayoutShortProjection,
+            projection=_PaginatedLayoutProjection,
         )
 
     async def get_all_limit_offset[R](
@@ -61,7 +62,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection=LayoutShortProjection,
+            projection=_PaginatedLayoutProjection,
         )
 
     async def get_all_cursor[R](
@@ -76,7 +77,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection_model=LayoutShortProjection,
+            projection=_PaginatedLayoutProjection,
         )
 
     def _pagination_conditions(

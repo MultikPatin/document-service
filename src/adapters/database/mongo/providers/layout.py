@@ -35,7 +35,7 @@ class LayoutProvider(Provider):
         return LayoutRepository(LayoutDocument)
 
 
-class LayoutBlcokProvider(Provider):
+class LayoutBlockProvider(Provider):
     @provide(scope=Scope.APP)
     async def __single(self) -> LayoutBlockSingleRepositoryProtocol:
         return LayoutBlockSingleRepository(LayoutBlockSingleDocument)

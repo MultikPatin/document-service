@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from enum import StrEnum, auto
+
+# from enum import StrEnum, auto
 from typing import Final, final
 
 
@@ -91,13 +92,13 @@ class LayoutCollections(_CollectionNames):
         return f"{cls._layer_prefix()}{cls._VALIDATIONS}"
 
 
-class LayoutDataTypeEnum(StrEnum):
-    local_dropdown = auto()
-    string = auto()
-    bool = auto()
-    float = auto()
-    decimal = auto()
-    date = auto()
-    time = auto()
-    datetime = auto()
-    integer = auto()
+# class LayoutDataTypeEnum(StrEnum):
+#     local_dropdown = auto()
+#     string = auto()
+#     bool = auto()
+#     float = auto()
+#     decimal = auto()
+#     date = auto()
+#     time = auto()
+#     datetime = auto()
+#     integer = auto()

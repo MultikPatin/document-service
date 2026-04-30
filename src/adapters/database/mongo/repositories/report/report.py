@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
 
 from libs.mongo.mixins.repository_methods import AddMixin, GetMixin
-from src.adapters.database.mongo.projections import ReportLayoutIDProjection
+
+from .projections import _LayoutIDProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
@@ -37,7 +38,7 @@ class ReportRepository(GetMixin, AddMixin):
         document = await self._document.find_one(
             {KeyEnum.id: self.as_id(document_id)},
             session=session,
-            projection_model=ReportLayoutIDProjection,
+            projection_model=_LayoutIDProjection,
         )
         if document is None:
             return None

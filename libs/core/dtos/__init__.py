@@ -8,7 +8,9 @@ from .base import (
     RequiredDTO,
     TitleDTO,
 )
+from .life import LifeStatusDTO
 from .time import CreatedAtDTO, UpdatedAtDTO
+from .versions import MajorVersionDTO, MinorVersionDTO, PatchVersionDTO
 
 __all__ = [
     "CreatedAtDTO",
@@ -17,6 +19,10 @@ __all__ = [
     "IdDTO",
     "KeyDTO",
     "LabelDTO",
+    "LifeStatusDTO",
+    "MajorVersionDTO",
+    "MinorVersionDTO",
+    "PatchVersionDTO",
     "RefCountDTO",
     "RequiredDTO",
     "TitleDTO",
