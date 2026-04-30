@@ -8,14 +8,10 @@ from libs.core.constants import CURSOR_SEPARATOR
 from libs.mongo.exceptions import InvalidMongoIDError
 
 if TYPE_CHECKING:
-    from beanie import Document
     from pydantic import BaseModel
 
 
-class BaseRepository:
-    def __init__[DocType: Document](self, document: type[DocType]) -> None:
-        self._document = document
-
+class BaseConverters:
     @staticmethod
     def as_id(_id: str, /) -> PydanticObjectId:
         s = _id.split(CURSOR_SEPARATOR, 1)

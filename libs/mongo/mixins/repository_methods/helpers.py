@@ -2,10 +2,10 @@ from typing import TYPE_CHECKING
 
 from libs.mongo.enums import KeyEnum
 
+from .base import BaseRepository
+
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
-
-    from .base import BaseRepository
 
 
 class ExistsMixin(BaseRepository):

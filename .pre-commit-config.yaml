@@ -47,7 +47,7 @@ repos:
     # Ruff checks & formatting
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # ruff version.
-    rev: v0.15.4
+    rev: v0.15.12
     hooks:
       - id: ruff-check
         entry: ruff check

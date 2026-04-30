@@ -19,8 +19,8 @@ class GetMixin(BaseRepository):
         session: AsyncClientSession,
         return_as: type[R],
     ) -> R | None:
-        document = await self._document.find_one(
-            {KeyEnum.id: self.as_id(document_id)}, session=session
+        document = await self._document.get(
+            self.as_id(document_id), session=session
         )
         if document is None:
             return None

@@ -18,8 +18,8 @@ class LayoutShortProjection(
     MongoIDProjection,
     KeyDTO,
     LabelDTO,
-    CreatedAtDTO,
     UpdatedAtDTO,
+    CreatedAtDTO,
     DescriptionDTO,
 ):
     pass
