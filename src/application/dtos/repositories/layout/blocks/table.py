@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from libs.core.dtos import IdDTO, KeyDTO
+from src.core.dtos import IdDTO, KeyDTO
 
 
 class _LayoutTableBase(BaseModel):

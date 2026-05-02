@@ -1,31 +1,31 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from libs.core.enums import LifeStatusEnum
 from libs.mongo.mixins.repository_methods import (
     GetMixin,
     PaginationCursorMixin,
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
+from src.core.enums import LifeStatusEnum
 
 from .projections import _PaginatedLayoutProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.core.dtos.pagination import (
+    from src.application.protocols.pagination import (
+        LayoutPaginationFiltersProtocol,
+    )
+    from src.core.dtos.pagination import (
         CursorResultDTO,
         LimitOffsetResultDTO,
         PagesResultDTO,
     )
-    from libs.core.protocols.pagination import (
+    from src.core.protocols import (
         CursorParamsProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
-    )
-    from src.application.protocols.pagination import (
-        LayoutPaginationFiltersProtocol,
     )
 
 

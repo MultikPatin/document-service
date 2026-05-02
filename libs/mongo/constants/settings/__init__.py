@@ -3,7 +3,6 @@ from .authentication import (
     AuthenticationKeys,
     AuthenticationMechanismEnum,
 )
-from .base import BaseDefaults
 from .compression import CompressionDefaults, CompressionKeys, CompressorsEnum
 from .connection import ConnectionDefaults, ConnectionSchemaEnum
 from .connection_mode import (
@@ -37,7 +36,6 @@ __all__ = [
     "AuthenticationDefaults",
     "AuthenticationKeys",
     "AuthenticationMechanismEnum",
-    "BaseDefaults",
     "CompressionDefaults",
     "CompressionKeys",
     "CompressorsEnum",

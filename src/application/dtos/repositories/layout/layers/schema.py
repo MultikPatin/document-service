@@ -1,11 +1,11 @@
-from libs.core.dtos import (
+from src.application.enums import LayoutDataTypeEnum
+from src.core.dtos import (
     HashDTO,
     IdDTO,
     KeyDTO,
     LabelDTO,
     RequiredDTO,
 )
-from src.application.enums import LayoutDataTypeEnum
 
 
 class _LayoutSchemaBase(LabelDTO, RequiredDTO):

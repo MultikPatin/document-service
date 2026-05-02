@@ -14,7 +14,7 @@ from libs.mongo.mixins.repository_methods import (
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.core.dtos import HashDTO
+    from src.core.dtos import HashDTO
 
 
 class LayoutLayerRepository(

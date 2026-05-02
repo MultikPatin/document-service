@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, NegativeInt, field_validator
 
-from libs.core.utils import get_md5hash
+from src.core.utils import get_md5hash
 
 
 class IdDTO(BaseModel):

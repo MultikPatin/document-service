@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
-from libs.core.protocols.repository_methods import (
+from src.core.protocols.repository_methods import (
     AddMixinProtocol,
     # UpdateMixinProtocol,
     # DeleteWithRefCountMixinProtocol,
@@ -12,7 +12,7 @@ from libs.core.protocols.repository_methods import (
 )
 
 if TYPE_CHECKING:
-    from libs.core.dtos import HashDTO
+    from src.core.dtos import HashDTO
 
 
 class LayerRepositoryProtocol(

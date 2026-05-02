@@ -2,8 +2,8 @@ import asyncio
 from collections.abc import Sequence, Set
 from typing import TYPE_CHECKING
 
-from libs.core.batche import as_batches
 from libs.mongo.enums import KeyEnum
+from src.core.batche import as_batches
 
 from .base import BaseRepository
 

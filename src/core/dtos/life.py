@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from libs.core.enums import LifeStatusEnum
+from src.core.enums import LifeStatusEnum
 
 
 class LifeStatusDTO(BaseModel):

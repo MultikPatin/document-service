@@ -3,7 +3,7 @@ from datetime import datetime
 from beanie import Document
 from pydantic import Field
 
-from libs.core.time import time_now
+from src.core.time import time_now
 
 
 class CreatedAtField(Document):

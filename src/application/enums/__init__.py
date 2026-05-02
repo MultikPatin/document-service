@@ -1,10 +1,4 @@
-from .layuot import (
-    LayoutBlocksEnum,
-    LayoutDataTypeEnum,
-    LayoutLayersEnum,
-    # LayoutMessageTypeEnum,
-    # LayoutStyleTypeEnum,
-)
+from .layout import LayoutBlocksEnum, LayoutDataTypeEnum, LayoutLayersEnum
 from .report import InputBlocksEnum, InputLayersEnum
 
 __all__ = [
@@ -13,6 +7,4 @@ __all__ = [
     "LayoutBlocksEnum",
     "LayoutDataTypeEnum",
     "LayoutLayersEnum",
-    # "LayoutMessageTypeEnum",
-    # "LayoutStyleTypeEnum",
 ]

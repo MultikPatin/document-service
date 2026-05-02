@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from libs.core.dtos.pagination import PagesResultDTO
+from src.core.dtos.pagination import PagesResultDTO
 
 from .base import BasePaginationMixin
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.core.protocols.pagination import PagesParamsProtocol
+    from src.core.protocols import PagesParamsProtocol
 
 
 class PaginationPagesMixin(BasePaginationMixin):

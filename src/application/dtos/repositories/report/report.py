@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from libs.core.dtos import (
+from src.core.dtos import (
     CreatedAtDTO,
     IdDTO,
     LifeStatusDTO,

@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from libs.core.dtos import IdDTO, KeyDTO
+from src.core.dtos import IdDTO, KeyDTO
 
 
 class InputSingleUpdateDTO(BaseModel):

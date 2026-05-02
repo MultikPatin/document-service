@@ -3,9 +3,9 @@ import logging
 
 from dishka import Provider, make_async_container
 
-from libs.core.enums import ComponentsEnum
-from libs.core.protocols import InitComponentProtocol
 from src.adapters.database.mongo import MongoProvider
+from src.core.enums import ComponentsEnum
+from src.core.protocols import InitComponentProtocol
 
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("pymongo").setLevel(logging.INFO)

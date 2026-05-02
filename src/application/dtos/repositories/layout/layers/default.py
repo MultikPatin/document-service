@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from libs.core.dtos import HashDTO, IdDTO
+from src.core.dtos import HashDTO, IdDTO
 
 
 class _LayoutDefaultBase(BaseModel):

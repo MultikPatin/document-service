@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import Field
 
-from libs.core.dtos import (
+from src.core.dtos import (
     CreatedAtDTO,
     DescriptionDTO,
     IdDTO,

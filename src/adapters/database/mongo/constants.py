@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-
-# from enum import StrEnum, auto
 from typing import Final, final
+
+ENV_PREFIX: Final[str] = "MONGODB_"
 
 
 class _CollectionNames(ABC):
@@ -90,15 +90,3 @@ class LayoutCollections(_CollectionNames):
     @classmethod
     def layer_validations(cls) -> str:
         return f"{cls._layer_prefix()}{cls._VALIDATIONS}"
-
-
-# class LayoutDataTypeEnum(StrEnum):
-#     local_dropdown = auto()
-#     string = auto()
-#     bool = auto()
-#     float = auto()
-#     decimal = auto()
-#     date = auto()
-#     time = auto()
-#     datetime = auto()
-#     integer = auto()
