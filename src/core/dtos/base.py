@@ -42,6 +42,9 @@ class RefCountDTO(BaseModel):
 class HashDTO(RefCountDTO):
     hash: str = Field(default="", min_length=8, max_length=255)
 
+    def calculate_hash(self) -> str:
+        return get_md5hash(self.model_dump(exclude={"hash", "id", "ref_count"}))
+
     def refresh_hash(self) -> None:
         exclude = {"hash", "id", "ref_count"}
         self.hash = get_md5hash(self.model_dump(exclude=exclude))
@@ -49,6 +52,9 @@ class HashDTO(RefCountDTO):
     def get_hash(self) -> str:
         self.refresh_hash()
         return self.hash
+
+    def set_hash(self) -> None:
+        self.hash = self.calculate_hash()
 
 
 class RequiredDTO(BaseModel):

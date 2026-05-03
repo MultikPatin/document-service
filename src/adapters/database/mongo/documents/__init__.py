@@ -36,7 +36,7 @@ __all__ = [
 type CollectedDocumentsType = Sequence[type[Document | UnionDoc | View]]
 
 _DOCUMENT_CLASSES = (Document, UnionDoc, View)
-_DOCUMENT_CLASSES_NAMES = (Document.__name__, UnionDoc.__name__, View.__name__)
+_DOCUMENT_CLASSES_NAMES = [d.__name__ for d in _DOCUMENT_CLASSES]
 
 
 def collect_documents() -> CollectedDocumentsType:

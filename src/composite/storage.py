@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import sys
 
 from dishka import Provider, make_async_container
 
@@ -7,11 +8,20 @@ from src.adapters.database.mongo import MongoProvider
 from src.core.enums import ComponentsEnum
 from src.core.protocols import InitComponentProtocol
 
-logging.basicConfig(level=logging.DEBUG)
-logging.getLogger("pymongo").setLevel(logging.INFO)
+
+def setup_logging() -> None:
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s | %(levelname)-7s | %(name)-16s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+    logging.getLogger("pymongo").setLevel(logging.INFO)
 
 
 async def main() -> None:
+    setup_logging()
+
     providers: list[Provider] = [
         MongoProvider(),
     ]

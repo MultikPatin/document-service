@@ -15,7 +15,7 @@ logger = logging.getLogger(LoggerNames.init())
 class ClientProvider(Provider):
     @provide(scope=Scope.APP)
     async def __init(self, client: Client) -> InitComponentProtocol:
-        logger.info("Mongo component initialization completed successfully")
+        logger.info("component initialization completed successfully")
         return InitComponentProtocol
 
     @provide(scope=Scope.APP)
@@ -28,13 +28,14 @@ class ClientProvider(Provider):
             "database": settings.database,
             "connection": settings.dsn().encoded_string(),
         }
-        logger.debug(f"settings parameters: {params}")
+        logger.debug("settings parameters: %s", params)
 
         logger.info("settings was loaded successfully")
         return settings
 
     @provide(scope=Scope.APP)
     async def __client(self, settings: Settings) -> AsyncGenerator[Client]:
+        logger.info("component initialization...")
         logger.info("client initialization...")
         client = Client(settings)
         logger.info("client initialization completed successfully")

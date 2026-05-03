@@ -86,7 +86,7 @@ class Client:
 
     async def init_beanie(
         self,
-        documents: CollectedDocumentsType,
+        document_models: CollectedDocumentsType,
         *,
         allow_index_dropping: bool = False,
         recreate_views: bool = False,
@@ -94,7 +94,7 @@ class Client:
     ) -> None:
         await init_beanie(
             database=self.database,
-            document_models=documents,
+            document_models=document_models,
             allow_index_dropping=allow_index_dropping,
             recreate_views=recreate_views,
             skip_indexes=skip_indexes,
