@@ -6,18 +6,18 @@ from .base import LayoutBlockRepository
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.core.dtos.pagination import (
+    from src.application.protocols.pagination import (
+        LayoutBlockMessagePaginationFiltersProtocol,
+    )
+    from src.core.dtos.pagination import (
         CursorResultDTO,
         LimitOffsetResultDTO,
         PagesResultDTO,
     )
-    from libs.core.protocols.pagination import (
+    from src.core.protocols import (
         CursorParamsProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
-    )
-    from src.application.protocols.pagination import (
-        LayoutBlockMessagePaginationFiltersProtocol,
     )
 
 

@@ -3,31 +3,57 @@ from collections.abc import AsyncGenerator
 
 from dishka import Provider, Scope, provide
 
-from libs.core.protocols import InitComponentProtocol
 from libs.mongo.client import Client
 from libs.mongo.constants.logger import LoggerNames
 from src.adapters.database.mongo.documents import collect_documents
 from src.adapters.database.mongo.settings import Settings
+from src.core.protocols import InitComponentProtocol
 
-init_logger = logging.getLogger(LoggerNames.init())
+logger = logging.getLogger(LoggerNames.init())
 
 
 class ClientProvider(Provider):
     @provide(scope=Scope.APP)
     async def __init(self, client: Client) -> InitComponentProtocol:
+        logger.info("component initialization completed successfully")
         return InitComponentProtocol
 
     @provide(scope=Scope.APP)
     async def __settings(self) -> Settings:
-        return Settings(logger=init_logger)
+        logger.info("loading the settings...")
+        settings = Settings()
+
+        params = {
+            "client_kwargs": settings.client_kwargs,
+            "database": settings.database,
+            "connection": settings.dsn().encoded_string(),
+        }
+        logger.debug("settings parameters: %s", params)
+
+        logger.info("settings was loaded successfully")
+        return settings
 
     @provide(scope=Scope.APP)
     async def __client(self, settings: Settings) -> AsyncGenerator[Client]:
-        client = Client(settings, init_logger)
-        documents = collect_documents(init_logger)
+        logger.info("component initialization...")
+        logger.info("client initialization...")
+        client = Client(settings)
+        logger.info("client initialization completed successfully")
+
+        logger.info("Collecting documents...")
+        documents = collect_documents()
+        logger.debug("Collect document: %s", [d.__name__ for d in documents])
+        logger.info("Collecting documents completed successfully")
+
+        logger.info("beanie initialization...")
         await client.init_beanie(documents)
+        logger.info("beanie initialization completed successfully")
+
         yield client
+
+        logger.info("stopping the client...")
         await client.close()
+        logger.info("stopping the client has been completed successfully")
 
     # session_alias = alias(source=AsyncClientSession, provides=SessionProtocol)
 

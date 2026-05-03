@@ -1,9 +1,5 @@
-from logging import Logger
 from typing import Any
 
-from pydantic_settings import SettingsConfigDict
-
-from libs.mongo.constants.settings import BaseDefaults
 from libs.mongo.settings import (
     AuthenticationSettings,
     CompressionSettings,
@@ -19,25 +15,13 @@ from libs.mongo.settings import (
     TLSSettings,
     WriteConcernSettings,
 )
+from src.core.constants import set_model_config
+
+from .constants import ENV_PREFIX
 
 
 class Settings(ConnectionSettings):
-    model_config = SettingsConfigDict(**BaseDefaults.model_config())
-
-    def __init__(self, logger: Logger | None = None) -> None:
-        if logger is None:
-            super().__init__()
-        else:
-            logger.info("loading the settings...")
-            super().__init__()
-            logger.info("settings was loaded successfully")
-            logger.debug(f"settings parameters: {self._parameters()}")
-
-    def _parameters(self) -> dict[str, Any]:
-        p = self.client_kwargs
-        p.update({"database": self.database})
-        p.update({"connection": self.dsn().encoded_string()})
-        return p
+    model_config = set_model_config(env_prefix=ENV_PREFIX)
 
     pool: PoolSettings = PoolSettings()
     timeouts: TimeoutsSettings = TimeoutsSettings()

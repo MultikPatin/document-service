@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.converters import to_poid
 from libs.mongo.enums import KeyEnum
 
 from .base import BaseRepository
@@ -14,7 +13,7 @@ class DeleteByIDMixin(BaseRepository):
         self, document_id: str, *, session: AsyncClientSession | None = None
     ) -> bool:
         result = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)}
+            {KeyEnum.id: self.as_id(document_id)}
         ).delete(session=session)
         if result is None:
             return False

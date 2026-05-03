@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from libs.core.protocols.repository_methods import (
+from src.core.protocols.repository_methods import (
     AddMixinProtocol,
     GetMixinProtocol,
 )

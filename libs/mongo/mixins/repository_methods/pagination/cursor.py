@@ -1,27 +1,26 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from libs.core.dtos.pagination import CursorResultDTO
-from libs.mongo.mixins.repository_methods import BaseRepository
+from src.core.dtos.pagination import CursorResultDTO
 
-# from ._helpers import convert_items
+from .base import BasePaginationMixin
 
 if TYPE_CHECKING:
     from beanie.odm.enums import SortDirection
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.core.protocols.pagination import CursorParamsProtocol
+    from src.core.protocols import CursorParamsProtocol
 
 
-class PaginationCursorMixin(BaseRepository):
+class PaginationCursorMixin(BasePaginationMixin):
     async def _get_all_cursor[R, P: BaseModel](  # noqa: PLR0913
         self,
         conditions: Sequence[Mapping[Any, Any] | bool],
         params: CursorParamsProtocol,
         session: AsyncClientSession,
         return_as: type[R],
-        projection_model: type[P] | None = None,
+        projection: type[P] | None = None,
         sort: str | Sequence[tuple[str, SortDirection]] | None = None,
         ignore_cache: bool = False,
         fetch_links: bool = False,
@@ -32,40 +31,34 @@ class PaginationCursorMixin(BaseRepository):
         **pymongo_kwargs: Any,  # noqa: ANN401
     ) -> CursorResultDTO[R] | None:
         raise NotImplementedError
-        # documents = await self._document.find_many(
-        #     *conditions,
-        #     limit=limit,
-        #     skip=skip,
-        #     session=session,
-        #     projection_model=projection_model,
-        #     sort=sort,
-        #     ignore_cache=ignore_cache,
-        #     fetch_links=fetch_links,
-        #     with_children=with_children,
-        #     nesting_depth=nesting_depth,
-        #     nesting_depths_per_field=nesting_depths_per_field,
-        #     lazy_parse=lazy_parse,
-        #     **pymongo_kwargs,
-        # ).to_list()
 
-        # if not documents:
-        #     return None
+        documents = await self._document.find_many(
+            *conditions,
+            # limit=limit,
+            # skip=skip,
+            session=session,
+            projection_model=projection,
+            sort=sort,
+            ignore_cache=ignore_cache,
+            fetch_links=fetch_links,
+            with_children=with_children,
+            nesting_depth=nesting_depth,
+            nesting_depths_per_field=nesting_depths_per_field,
+            lazy_parse=lazy_parse,
+            **pymongo_kwargs,
+        ).to_list()
 
-        # total = await self._document.find(
-        #     *conditions,
-        #     session=session,
-        #     ignore_cache=ignore_cache,
-        #     fetch_links=fetch_links,
-        #     **pymongo_kwargs,
-        # ).count()
+        if not documents:
+            return None
 
-        # is_projected = projection_model is not None
-        # items = convert_items(documents, return_as, is_projected)
+        count = await self._document.find(
+            *conditions,
+            session=session,
+            ignore_cache=ignore_cache,
+            fetch_links=fetch_links,
+            **pymongo_kwargs,
+        ).count()
 
-        # return CursorResultDTO(
-        #     items=items,
-        #     total=total,
-        #     current_page=cursor,
-        #     previous_page=previous_page,
-        #     next_page=next_page,
-        # )
+        return CursorResultDTO.from_params(
+            params, count, self._convert_items(documents, return_as, projection)
+        )

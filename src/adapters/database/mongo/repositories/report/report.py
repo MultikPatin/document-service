@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.converters import to_dto, to_poid
 from libs.mongo.mixins.repository_methods import AddMixin, GetMixin
-from src.adapters.database.mongo.projections import ReportLayoutIDProjection
+
+from .projections import _LayoutIDProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
@@ -19,7 +19,7 @@ class ReportRepository(GetMixin, AddMixin):
         return_as: type[R],
     ) -> R | None:
         document = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)},
+            {KeyEnum.id: self.as_id(document_id)},
             session=session,
             fetch_links=True,
             nesting_depths_per_field={
@@ -30,15 +30,15 @@ class ReportRepository(GetMixin, AddMixin):
         )
         if document is None:
             return None
-        return to_dto(document, return_as, replace_links=True)
+        return self.as_dto(document, return_as, replace_links=True)
 
     async def get_layout_id(
         self, document_id: str, *, session: AsyncClientSession
     ) -> str | None:
         document = await self._document.find_one(
-            {KeyEnum.id: to_poid(document_id)},
+            {KeyEnum.id: self.as_id(document_id)},
             session=session,
-            projection_model=ReportLayoutIDProjection,
+            projection_model=_LayoutIDProjection,
         )
         if document is None:
             return None

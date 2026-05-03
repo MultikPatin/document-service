@@ -2,8 +2,6 @@ import asyncio
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
-from libs.mongo.converters import to_dto
-
 from .base import BaseRepository
 
 if TYPE_CHECKING:
@@ -17,7 +15,7 @@ class AddMixin(BaseRepository):
     ) -> R:
         document = self._document(**condition.model_dump(exclude_none=True))
         await document.create(session=session)
-        return to_dto(document, return_as, replace_links=True)
+        return self.as_dto(document, return_as, replace_links=True)
 
 
 class BulkAddWithReturnIdMixin(BaseRepository):
@@ -52,7 +50,7 @@ class BulkAddMixin(BaseRepository):
                     **condition.model_dump(exclude_none=True)
                 )
                 await document.create(session=session)
-                return to_dto(document, return_as, replace_links=True)
+                return self.as_dto(document, return_as, replace_links=True)
 
         async with asyncio.TaskGroup() as tg:
             tasks = [tg.create_task(process(b)) for b in conditions]

@@ -1,25 +1,25 @@
 from typing import TYPE_CHECKING, Protocol
 
-from libs.core.protocols.repository_methods import (
+from src.core.protocols.repository_methods import (
     AddMixinProtocol,
     GetMixinProtocol,
 )
 
 if TYPE_CHECKING:
-    from libs.core.dtos.pagination import (
-        CursorResultDTO,
-        LimitOffsetResultDTO,
-        PagesResultDTO,
-    )
-    from libs.core.protocols.pagination import (
-        CursorParamsProtocol,
-        LimitOffsetParamsProtocol,
-        PagesParamsProtocol,
-    )
     from src.application.protocols.pagination import (
         LayoutBlockMessagePaginationFiltersProtocol,
         LayoutBlockSinglePaginationFiltersProtocol,
         LayoutBlockTablePaginationFiltersProtocol,
+    )
+    from src.core.dtos.pagination import (
+        CursorResultDTO,
+        LimitOffsetResultDTO,
+        PagesResultDTO,
+    )
+    from src.core.protocols import (
+        CursorParamsProtocol,
+        LimitOffsetParamsProtocol,
+        PagesParamsProtocol,
     )
 
 

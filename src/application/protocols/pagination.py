@@ -1,7 +1,7 @@
 from typing import Protocol
 
-from libs.core.enums import LifeStatusEnum
-from libs.core.protocols.pagination import (
+from src.core.enums import LifeStatusEnum
+from src.core.protocols import (
     CursorParamsProtocol,
     LimitOffsetParamsProtocol,
     PagesParamsProtocol,
