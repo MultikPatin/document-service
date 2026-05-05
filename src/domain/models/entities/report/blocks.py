@@ -1,9 +1,10 @@
 from src.domain.models.mixins import ID
+from src.domain.models.vo import report
 
 
-class Single(ID):
+class Single(ID, report.Single):
     pass
 
 
-class Table(ID):
+class Table(ID, report.Table):
     pass
