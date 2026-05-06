@@ -4,8 +4,8 @@ import sys
 
 from dishka import Provider, make_async_container
 
-from src.adapters.database.mongo import MongoProvider
 from src.assembly import ComponentsEnum, InitComponentProtocol
+from src.assembly.mongo import MongoProvider
 
 
 def setup_logging() -> None:
