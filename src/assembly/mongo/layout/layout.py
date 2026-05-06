@@ -2,7 +2,7 @@ from dishka import Scope, provide
 
 from src.adapters.database.mongo.documents import LayoutDocument
 from src.adapters.database.mongo.repositories import LayoutRepository
-from src.application.protocols.repositories import LayoutRepositoryProtocol
+from src.domain.protocols.repositories import LayoutRepositoryProtocol
 
 from .blocks import _BlocksProvider
 from .layers import _LayersProvider

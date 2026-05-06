@@ -10,7 +10,7 @@ from src.adapters.database.mongo.repositories import (
     LayoutBlockSingleRepository,
     LayoutBlockTableRepository,
 )
-from src.application.protocols.repositories import (
+from src.domain.protocols.repositories import (
     LayoutBlockMessageRepositoryProtocol,
     LayoutBlockSingleRepositoryProtocol,
     LayoutBlockTableRepositoryProtocol,

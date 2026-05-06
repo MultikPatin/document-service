@@ -6,9 +6,6 @@ from .base import LayoutBlockRepository
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.application.protocols.pagination import (
-        LayoutBlockSinglePaginationFiltersProtocol,
-    )
     from src.domain.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
@@ -17,6 +14,7 @@ if TYPE_CHECKING:
     )
     from src.domain.protocols.pagination import (
         CursorParamsProtocol,
+        LayoutBlockSingleFiltersProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
@@ -25,9 +23,7 @@ if TYPE_CHECKING:
 class LayoutBlockSingleRepository(LayoutBlockRepository):
     async def get_all_pages[R](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            PagesParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[PagesParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -41,9 +37,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -57,9 +51,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[CursorParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -72,7 +64,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
         )
 
     def _pagination_conditions(
-        self, filters: LayoutBlockSinglePaginationFiltersProtocol
+        self, filters: LayoutBlockSingleFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 

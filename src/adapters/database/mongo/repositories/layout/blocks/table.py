@@ -6,9 +6,6 @@ from .base import LayoutBlockRepository
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.application.protocols.pagination import (
-        LayoutBlockTablePaginationFiltersProtocol,
-    )
     from src.domain.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
@@ -17,6 +14,7 @@ if TYPE_CHECKING:
     )
     from src.domain.protocols.pagination import (
         CursorParamsProtocol,
+        LayoutBlockTableFiltersProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
@@ -25,7 +23,7 @@ if TYPE_CHECKING:
 class LayoutBlockTableRepository(LayoutBlockRepository):
     async def get_all_pages[R](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[PagesParamsProtocol],
+        filters: LayoutBlockTableFiltersProtocol[PagesParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -39,9 +37,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockTableFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -55,9 +51,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockTableFiltersProtocol[CursorParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -70,7 +64,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
         )
 
     def _pagination_conditions(
-        self, filters: LayoutBlockTablePaginationFiltersProtocol
+        self, filters: LayoutBlockTableFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 

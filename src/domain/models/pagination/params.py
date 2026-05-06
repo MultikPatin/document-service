@@ -1,10 +1,11 @@
-from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, PositiveInt
+from pydantic import BaseModel, Field, NonNegativeInt, PositiveInt
 
 from src.domain.constants import CURSOR_PREVIOUS_PREFIX
+from src.domain.utils import vo_model_config
 
 
 class _Params(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = vo_model_config()
 
 
 class PagesParams(_Params):

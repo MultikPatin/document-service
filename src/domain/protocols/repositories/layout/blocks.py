@@ -6,11 +6,6 @@ from src.core.protocols.repository_methods import (
 )
 
 if TYPE_CHECKING:
-    from src.application.protocols.pagination import (
-        LayoutBlockMessagePaginationFiltersProtocol,
-        LayoutBlockSinglePaginationFiltersProtocol,
-        LayoutBlockTablePaginationFiltersProtocol,
-    )
     from src.domain.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
@@ -19,6 +14,9 @@ if TYPE_CHECKING:
     )
     from src.domain.protocols.pagination import (
         CursorParamsProtocol,
+        LayoutBlockMessageFiltersProtocol,
+        LayoutBlockSingleFiltersProtocol,
+        LayoutBlockTableFiltersProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
@@ -30,27 +28,21 @@ class BlockRepositoryProtocol(GetMixinProtocol, AddMixinProtocol, Protocol): ...
 class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
     async def get_all_pages[R, S](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            PagesParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[PagesParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
     async def get_all_cursor[R: BaseEntity, S](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[CursorParamsProtocol],
         *,
         session: S,
         return_as: type[R],
@@ -60,27 +52,21 @@ class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
 class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
     async def get_all_pages[R, S](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            PagesParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[PagesParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
     async def get_all_cursor[R: BaseEntity, S](
         self,
-        filters: LayoutBlockSinglePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockSingleFiltersProtocol[CursorParamsProtocol],
         *,
         session: S,
         return_as: type[R],
@@ -90,25 +76,21 @@ class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
 class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
     async def get_all_pages[R, S](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[PagesParamsProtocol],
+        filters: LayoutBlockTableFiltersProtocol[PagesParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockTableFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
     async def get_all_cursor[R: BaseEntity, S](
         self,
-        filters: LayoutBlockTablePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockTableFiltersProtocol[CursorParamsProtocol],
         *,
         session: S,
         return_as: type[R],

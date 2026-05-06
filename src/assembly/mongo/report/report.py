@@ -2,7 +2,7 @@ from dishka import Scope, provide
 
 from src.adapters.database.mongo.documents import ReportDocument
 from src.adapters.database.mongo.repositories import ReportRepository
-from src.application.protocols.repositories import ReportRepositoryProtocol
+from src.domain.protocols.repositories import ReportRepositoryProtocol
 
 from .blocks import _BlocksProvider
 

@@ -6,9 +6,6 @@ from .base import LayoutBlockRepository
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.application.protocols.pagination import (
-        LayoutBlockMessagePaginationFiltersProtocol,
-    )
     from src.domain.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
@@ -17,6 +14,7 @@ if TYPE_CHECKING:
     )
     from src.domain.protocols.pagination import (
         CursorParamsProtocol,
+        LayoutBlockMessageFiltersProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
@@ -25,9 +23,7 @@ if TYPE_CHECKING:
 class LayoutBlockMessageRepository(LayoutBlockRepository):
     async def get_all_pages[R](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            PagesParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[PagesParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -41,9 +37,7 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            LimitOffsetParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -57,9 +51,7 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutBlockMessagePaginationFiltersProtocol[
-            CursorParamsProtocol
-        ],
+        filters: LayoutBlockMessageFiltersProtocol[CursorParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -72,7 +64,7 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
         )
 
     def _pagination_conditions(
-        self, filters: LayoutBlockMessagePaginationFiltersProtocol
+        self, filters: LayoutBlockMessageFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 

@@ -10,18 +10,18 @@ from src.domain.protocols.pagination import (
 type _P = CursorParamsProtocol | LimitOffsetParamsProtocol | PagesParamsProtocol
 
 
-class LayoutPaginationFiltersProtocol[P: _P](Protocol):
+class LayoutFiltersProtocol[P: _P](Protocol):
     pagination_params: P
     status: LifeStatusEnum | None
 
 
-class LayoutBlockMessagePaginationFiltersProtocol[P: _P](Protocol):
+class LayoutBlockMessageFiltersProtocol[P: _P](Protocol):
     pagination_params: P
 
 
-class LayoutBlockSinglePaginationFiltersProtocol[P: _P](Protocol):
+class LayoutBlockSingleFiltersProtocol[P: _P](Protocol):
     pagination_params: P
 
 
-class LayoutBlockTablePaginationFiltersProtocol[P: _P](Protocol):
+class LayoutBlockTableFiltersProtocol[P: _P](Protocol):
     pagination_params: P

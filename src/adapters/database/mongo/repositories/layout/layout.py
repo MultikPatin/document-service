@@ -14,9 +14,6 @@ from .projections import _PaginatedLayoutProjection
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.application.protocols.pagination import (
-        LayoutPaginationFiltersProtocol,
-    )
     from src.domain.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
@@ -25,6 +22,7 @@ if TYPE_CHECKING:
     )
     from src.domain.protocols.pagination import (
         CursorParamsProtocol,
+        LayoutFiltersProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
     )
@@ -38,7 +36,7 @@ class LayoutRepository(
 ):
     async def get_all_pages[R](
         self,
-        filters: LayoutPaginationFiltersProtocol[PagesParamsProtocol],
+        filters: LayoutFiltersProtocol[PagesParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -53,7 +51,7 @@ class LayoutRepository(
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutPaginationFiltersProtocol[LimitOffsetParamsProtocol],
+        filters: LayoutFiltersProtocol[LimitOffsetParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -68,7 +66,7 @@ class LayoutRepository(
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutPaginationFiltersProtocol[CursorParamsProtocol],
+        filters: LayoutFiltersProtocol[CursorParamsProtocol],
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -82,7 +80,7 @@ class LayoutRepository(
         )
 
     def _pagination_conditions(
-        self, filters: LayoutPaginationFiltersProtocol
+        self, filters: LayoutFiltersProtocol
     ) -> Sequence[Mapping[Any, Any] | bool]:
         conditions = []
 
