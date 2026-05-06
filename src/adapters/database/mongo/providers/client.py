@@ -7,7 +7,7 @@ from libs.mongo.client import Client
 from libs.mongo.constants.logger import LoggerNames
 from src.adapters.database.mongo.documents import collect_documents
 from src.adapters.database.mongo.settings import Settings
-from src.container import InitComponentProtocol
+from src.assembly import InitComponentProtocol
 
 logger = logging.getLogger(LoggerNames.init())
 
