@@ -7,8 +7,7 @@ from libs.mongo.mixins.repository_methods import (
     PaginationPagesMixin,
 )
 from src.domain.enums import LifeStatusEnum
-
-from .projections import _PaginatedLayoutProjection
+from src.infrastructure.mongo.projections import PaginatedLayoutProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
@@ -46,7 +45,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection=_PaginatedLayoutProjection,
+            projection=PaginatedLayoutProjection,
         )
 
     async def get_all_limit_offset[R](
@@ -61,7 +60,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection=_PaginatedLayoutProjection,
+            projection=PaginatedLayoutProjection,
         )
 
     async def get_all_cursor[R: BaseEntity](
@@ -76,7 +75,7 @@ class LayoutRepository(
             params=filters.pagination_params,
             session=session,
             return_as=return_as,
-            projection=_PaginatedLayoutProjection,
+            projection=PaginatedLayoutProjection,
         )
 
     def _pagination_conditions(

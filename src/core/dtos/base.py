@@ -1,35 +1,6 @@
-from typing import Any
-
-from pydantic import BaseModel, Field, NegativeInt, field_validator
+from pydantic import BaseModel, Field, NegativeInt
 
 from src.domain.utils import hash_md5
-
-
-class IdDTO(BaseModel):
-    id: str = Field(min_length=1)
-
-    @field_validator("id", mode="before")
-    @classmethod
-    def convert_id(cls, value: Any) -> str:  # noqa: ANN401
-        if isinstance(value, str):
-            return value
-        return str(value)
-
-
-class KeyDTO(BaseModel):
-    key: str = Field(min_length=1, max_length=64)
-
-
-class LabelDTO(BaseModel):
-    label: str = Field(min_length=1, max_length=255)
-
-
-class TitleDTO(BaseModel):
-    title: str = Field(min_length=1, max_length=255)
-
-
-class DescriptionDTO(BaseModel):
-    description: str | None = Field(default=None)
 
 
 class RefCountDTO(BaseModel):
@@ -55,7 +26,3 @@ class HashDTO(RefCountDTO):
 
     def set_hash(self) -> None:
         self.hash = self.calculate_hash()
-
-
-class RequiredDTO(BaseModel):
-    required: bool = Field(default=False)
