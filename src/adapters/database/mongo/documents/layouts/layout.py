@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
 class LayoutDocument(KeyField, RefCountField, CreatedAtField, UpdatedAtField):
     label: str = Field(min_length=1, max_length=255)
-    description: str | None = Field(default=None)
 
     major_version: int = Field(ge=0, default=0)
     minor_version: int = Field(ge=0, default=0)

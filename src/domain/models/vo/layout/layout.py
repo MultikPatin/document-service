@@ -11,17 +11,15 @@ class Layout(BaseModel):
 
     ref_count: int
 
-    created_at: datetime
-    updated_at: datetime | None
-    deleted_at: datetime | None
-
     key: str
     label: str
-    description: str | None
+    status: LifeStatusEnum
 
     major_version: int
     minor_version: int
 
-    status: LifeStatusEnum
-
     skeleton: LayoutSkeletonType
+
+    created_at: datetime
+    updated_at: datetime | None
+    deleted_at: datetime | None

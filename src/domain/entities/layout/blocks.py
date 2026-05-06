@@ -6,7 +6,7 @@ from src.domain.annotations import (
     LayoutTableSchemeLayerType,
     LayoutTableValidationLayerType,
 )
-from src.domain.models.mixins import ID
+from src.domain.entities.mixins import ID
 from src.domain.models.vo import layout
 
 
