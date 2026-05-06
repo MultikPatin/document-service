@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from src.core.time import time_now
+from src.domain.utils import time_now
 
 
 class CreatedAtDTO(BaseModel):

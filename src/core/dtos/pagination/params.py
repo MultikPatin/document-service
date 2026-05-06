@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, PositiveInt
 
-from src.core.constants import CURSOR_PREVIOUS_PREFIX
+from src.domain.constants import CURSOR_PREVIOUS_PREFIX
 
 
 class _ParamsDTO(BaseModel):

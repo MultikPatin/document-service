@@ -1,7 +1,7 @@
 from collections.abc import Generator, Sequence
 
 
-def as_batches[T](
+def batche_generator[T](
     data: Sequence[T], size: int | None = None
 ) -> Generator[Sequence[T]]:
     length = len(data)

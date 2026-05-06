@@ -1,4 +1,4 @@
-from src.core.enums import ComponentsEnum
+from src.domain.constants import ComponentsEnum
 
 from .client import ClientProvider
 from .layout import LayoutProvider

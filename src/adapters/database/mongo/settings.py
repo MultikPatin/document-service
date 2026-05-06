@@ -15,13 +15,13 @@ from libs.mongo.settings import (
     TLSSettings,
     WriteConcernSettings,
 )
-from src.core.constants import set_model_config
+from src.domain.utils import settings_model_config
 
 from .constants import ENV_PREFIX
 
 
 class Settings(ConnectionSettings):
-    model_config = set_model_config(env_prefix=ENV_PREFIX)
+    model_config = settings_model_config(env_prefix=ENV_PREFIX)
 
     pool: PoolSettings = PoolSettings()
     timeouts: TimeoutsSettings = TimeoutsSettings()

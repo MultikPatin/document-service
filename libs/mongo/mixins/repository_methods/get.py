@@ -3,7 +3,7 @@ from collections.abc import Sequence, Set
 from typing import TYPE_CHECKING
 
 from libs.mongo.enums import KeyEnum
-from src.core.batche import as_batches
+from src.domain.utils import batche_generator
 
 from .base import BaseRepository
 
@@ -68,7 +68,7 @@ class GetByIDsMixin(BaseRepository):
         async with asyncio.TaskGroup() as tg:
             tasks = [
                 tg.create_task(process(b))
-                for b in as_batches(list(document_ids), batch_size)
+                for b in batche_generator(list(document_ids), batch_size)
             ]
 
         results = []

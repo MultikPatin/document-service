@@ -2,7 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, NegativeInt, field_validator
 
-from src.core.utils import get_md5hash
+from src.domain.utils import hash_md5
 
 
 class IdDTO(BaseModel):
@@ -43,11 +43,11 @@ class HashDTO(RefCountDTO):
     hash: str = Field(default="", min_length=8, max_length=255)
 
     def calculate_hash(self) -> str:
-        return get_md5hash(self.model_dump(exclude={"hash", "id", "ref_count"}))
+        return hash_md5(self.model_dump(exclude={"hash", "id", "ref_count"}))
 
     def refresh_hash(self) -> None:
         exclude = {"hash", "id", "ref_count"}
-        self.hash = get_md5hash(self.model_dump(exclude=exclude))
+        self.hash = hash_md5(self.model_dump(exclude=exclude))
 
     def get_hash(self) -> str:
         self.refresh_hash()

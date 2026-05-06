@@ -1,13 +1,14 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from src.domain.annotations import LayoutSkeletonType
 from src.domain.constants import LifeStatusEnum
+from src.domain.utils import vo_model_config
 
 
 class Layout(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = vo_model_config()
 
     ref_count: int
 

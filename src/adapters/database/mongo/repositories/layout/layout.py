@@ -7,7 +7,7 @@ from libs.mongo.mixins.repository_methods import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from src.core.enums import LifeStatusEnum
+from src.domain.constants import LifeStatusEnum
 
 from .projections import _PaginatedLayoutProjection
 

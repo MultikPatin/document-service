@@ -1,6 +1,10 @@
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+type AnySequence = Sequence[Any]
+type AnyMatrix = Sequence[Sequence[str]]
+type AnyMapping = Mapping[str, Any]
+
 type LayoutSkeletonType = Sequence[Mapping[str, Any]]
 
 type LayoutSingleSchemeLayerType = Sequence[str]

@@ -1,10 +1,11 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from src.domain.annotations import ReportSingleValuesType, ReportTableValuesType
+from src.domain.utils import vo_model_config
 
 
 class _Base(BaseModel):
-    model_config = ConfigDict(frozen=True)
+    model_config = vo_model_config()
 
     key: str
 

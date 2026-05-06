@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, ConfigDict, Field, NonNegativeInt, PositiveInt
 
-from src.core.constants import CURSOR_PREVIOUS_PREFIX
+from src.domain.constants import CURSOR_PREVIOUS_PREFIX
 
 if TYPE_CHECKING:
     from src.core.protocols.pagination import (
