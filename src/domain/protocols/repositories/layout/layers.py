@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
-from src.core.protocols.repository_methods import (
+from src.domain.protocols.methods import (
     AddMixinProtocol,
     # UpdateMixinProtocol,
     # DeleteWithRefCountMixinProtocol,

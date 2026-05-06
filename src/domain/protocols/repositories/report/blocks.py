@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from src.core.protocols.repository_methods import BulkAddMixinProtocol
+from src.domain.protocols.methods import BulkAddMixinProtocol
 
 
 class BlockRepositoryProtocol(BulkAddMixinProtocol, Protocol): ...

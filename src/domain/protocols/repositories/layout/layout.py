@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, Protocol
 
-from src.core.protocols.repository_methods import GetMixinProtocol
+from src.domain.protocols.methods import GetMixinProtocol
 
 if TYPE_CHECKING:
     from src.domain.annotations import (

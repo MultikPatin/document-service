@@ -1,9 +1,6 @@
 from typing import Protocol
 
-from src.core.protocols.repository_methods import (
-    AddMixinProtocol,
-    GetMixinProtocol,
-)
+from src.domain.protocols.methods import AddMixinProtocol, GetMixinProtocol
 
 
 class ReportRepositoryProtocol(GetMixinProtocol, AddMixinProtocol, Protocol):
