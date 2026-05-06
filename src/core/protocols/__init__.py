@@ -1,4 +1,3 @@
-from .initialization import InitComponentProtocol, InitComponentsProtocol
 from .pagination import (
     CursorParamsProtocol,
     LimitOffsetParamsProtocol,
@@ -7,8 +6,6 @@ from .pagination import (
 
 __all__ = [
     "CursorParamsProtocol",
-    "InitComponentProtocol",
-    "InitComponentsProtocol",
     "LimitOffsetParamsProtocol",
     "PagesParamsProtocol",
 ]
