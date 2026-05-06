@@ -3,14 +3,14 @@ from pymongo import HASHED, IndexModel
 
 from libs.mongo.mixins.document_fields import HashField, RefCountField
 from src.adapters.database.mongo.constants import LayoutCollections
-from src.application.enums import LayoutDataTypeEnum
+from src.domain.enums import DataTypesEnum
 
 
 class LayoutLayerSchemaDocument(RefCountField, HashField):
     key: str = Field(min_length=1, max_length=64)
     label: str = Field(min_length=1, max_length=255)
     required: bool = Field(default=False)
-    type: LayoutDataTypeEnum
+    type: DataTypesEnum
 
     class Settings:
         name = LayoutCollections.layer_schemas()

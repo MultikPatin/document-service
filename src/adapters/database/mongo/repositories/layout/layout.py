@@ -1,5 +1,4 @@
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from libs.mongo.mixins.repository_methods import (
     GetMixin,
@@ -7,25 +6,26 @@ from libs.mongo.mixins.repository_methods import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from src.domain.constants import LifeStatusEnum
+from src.domain.enums import LifeStatusEnum
 
 from .projections import _PaginatedLayoutProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.domain.entities import BaseEntity
+    from src.domain.annotations import (
+        LayoutCursorFiltersType,
+        LayoutLimitOffsetFiltersType,
+        LayoutPageFiltersType,
+    )
+    from src.domain.models.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,
         PagesResult,
     )
-    from src.domain.protocols.pagination import (
-        CursorParamsProtocol,
-        LayoutFiltersProtocol,
-        LimitOffsetParamsProtocol,
-        PagesParamsProtocol,
-    )
+    from src.domain.protocols.pagination import LayoutFiltersProtocol
+    from src.infrastructure.mongo.annotations import QueryConditionsType
 
 
 class LayoutRepository(
@@ -36,7 +36,7 @@ class LayoutRepository(
 ):
     async def get_all_pages[R](
         self,
-        filters: LayoutFiltersProtocol[PagesParamsProtocol],
+        filters: LayoutPageFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -51,7 +51,7 @@ class LayoutRepository(
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutFiltersProtocol[LimitOffsetParamsProtocol],
+        filters: LayoutLimitOffsetFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -66,7 +66,7 @@ class LayoutRepository(
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutFiltersProtocol[CursorParamsProtocol],
+        filters: LayoutCursorFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -81,7 +81,7 @@ class LayoutRepository(
 
     def _pagination_conditions(
         self, filters: LayoutFiltersProtocol
-    ) -> Sequence[Mapping[Any, Any] | bool]:
+    ) -> QueryConditionsType:
         conditions = []
 
         if filters.status:

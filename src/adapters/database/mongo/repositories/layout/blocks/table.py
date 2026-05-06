@@ -1,29 +1,31 @@
-from collections.abc import Mapping, Sequence
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from .base import LayoutBlockRepository
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.domain.entities import BaseEntity
+    from src.domain.annotations import (
+        LayoutTableCursorFiltersType,
+        LayoutTableLimitOffsetFiltersType,
+        LayoutTablePageFiltersType,
+    )
+    from src.domain.models.entities import BaseEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,
         PagesResult,
     )
     from src.domain.protocols.pagination import (
-        CursorParamsProtocol,
         LayoutBlockTableFiltersProtocol,
-        LimitOffsetParamsProtocol,
-        PagesParamsProtocol,
     )
+    from src.infrastructure.mongo.annotations import QueryConditionsType
 
 
 class LayoutBlockTableRepository(LayoutBlockRepository):
     async def get_all_pages[R](
         self,
-        filters: LayoutBlockTableFiltersProtocol[PagesParamsProtocol],
+        filters: LayoutTablePageFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -37,7 +39,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
 
     async def get_all_limit_offset[R](
         self,
-        filters: LayoutBlockTableFiltersProtocol[LimitOffsetParamsProtocol],
+        filters: LayoutTableLimitOffsetFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -51,7 +53,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
 
     async def get_all_cursor[R: BaseEntity](
         self,
-        filters: LayoutBlockTableFiltersProtocol[CursorParamsProtocol],
+        filters: LayoutTableCursorFiltersType,
         *,
         session: AsyncClientSession,
         return_as: type[R],
@@ -65,7 +67,7 @@ class LayoutBlockTableRepository(LayoutBlockRepository):
 
     def _pagination_conditions(
         self, filters: LayoutBlockTableFiltersProtocol
-    ) -> Sequence[Mapping[Any, Any] | bool]:
+    ) -> QueryConditionsType:
         conditions = []
 
         return conditions  # noqa: RET504

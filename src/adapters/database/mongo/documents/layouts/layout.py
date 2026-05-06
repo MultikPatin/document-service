@@ -10,7 +10,7 @@ from libs.mongo.mixins.document_fields import (
     UpdatedAtField,
 )
 from src.adapters.database.mongo.constants import LayoutCollections
-from src.domain.constants import LifeStatusEnum
+from src.domain.enums import LifeStatusEnum
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:

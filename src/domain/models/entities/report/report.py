@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
-from src.domain.entities.base import BaseEntity
-from src.domain.entities.layout import Layout
+from src.domain.models.entities.base import BaseEntity
+from src.domain.models.entities.layout import Layout
 from src.domain.models.vo import report
 
 from .blocks import Single, Table

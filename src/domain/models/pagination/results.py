@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel
 
 from src.domain.constants import CURSOR_PREVIOUS_PREFIX
-from src.domain.entities import BaseEntity
+from src.domain.models.entities import BaseEntity
 from src.domain.utils import vo_model_config
 
 if TYPE_CHECKING:

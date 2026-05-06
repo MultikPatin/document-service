@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from src.domain.constants import LifeStatusEnum
+from src.domain.enums import LifeStatusEnum
 
 
 class LifeStatusDTO(BaseModel):

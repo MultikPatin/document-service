@@ -1,4 +1,3 @@
-from src.application.enums import LayoutDataTypeEnum
 from src.core.dtos import (
     HashDTO,
     IdDTO,
@@ -6,6 +5,7 @@ from src.core.dtos import (
     LabelDTO,
     RequiredDTO,
 )
+from src.domain.enums import DataTypesEnum
 
 
 class _LayoutSchemaBase(LabelDTO, RequiredDTO):
@@ -17,7 +17,7 @@ class LayoutSchemaUpdateDTO(HashDTO, _LayoutSchemaBase):
 
 
 class LayoutSchemaBase(HashDTO, KeyDTO, _LayoutSchemaBase):
-    type: LayoutDataTypeEnum
+    type: DataTypesEnum
 
 
 class LayoutSchemaDB(IdDTO, LayoutSchemaBase):
@@ -25,4 +25,4 @@ class LayoutSchemaDB(IdDTO, LayoutSchemaBase):
 
 
 class LayoutSchemaCreateDTO(HashDTO, KeyDTO, _LayoutSchemaBase):
-    type: LayoutDataTypeEnum
+    type: DataTypesEnum

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from src.domain.constants import DataTypesEnum
+from src.domain.enums import DataTypesEnum
 from src.domain.utils import vo_model_config
 
 

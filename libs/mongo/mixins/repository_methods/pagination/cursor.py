@@ -1,4 +1,4 @@
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 from src.domain.models.pagination import CursorResult
@@ -10,14 +10,15 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.domain.entities import BaseEntity
+    from src.domain.models.entities import BaseEntity
     from src.domain.protocols.pagination import CursorParamsProtocol
+    from src.infrastructure.mongo.annotations import QueryConditionsType
 
 
 class PaginationCursorMixin(BasePaginationMixin):
     async def _get_all_cursor[R: BaseEntity, P: BaseModel](  # noqa: PLR0913
         self,
-        conditions: Sequence[Mapping[Any, Any] | bool],
+        conditions: QueryConditionsType,
         params: CursorParamsProtocol,
         session: AsyncClientSession,
         return_as: type[R],

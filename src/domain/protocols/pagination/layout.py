@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from src.domain.constants import LifeStatusEnum
+from src.domain.enums import LifeStatusEnum
 from src.domain.protocols.pagination import (
     CursorParamsProtocol,
     LimitOffsetParamsProtocol,
@@ -10,18 +10,18 @@ from src.domain.protocols.pagination import (
 type _P = CursorParamsProtocol | LimitOffsetParamsProtocol | PagesParamsProtocol
 
 
-class LayoutFiltersProtocol[P: _P](Protocol):
+class ParamsProtocol[P: _P](Protocol):
     pagination_params: P
+
+
+class LayoutFiltersProtocol[P: _P](ParamsProtocol[P], Protocol):
     status: LifeStatusEnum | None
 
 
-class LayoutBlockMessageFiltersProtocol[P: _P](Protocol):
-    pagination_params: P
+class LayoutBlockMessageFiltersProtocol[P: _P](ParamsProtocol[P], Protocol): ...
 
 
-class LayoutBlockSingleFiltersProtocol[P: _P](Protocol):
-    pagination_params: P
+class LayoutBlockSingleFiltersProtocol[P: _P](ParamsProtocol[P], Protocol): ...
 
 
-class LayoutBlockTableFiltersProtocol[P: _P](Protocol):
-    pagination_params: P
+class LayoutBlockTableFiltersProtocol[P: _P](ParamsProtocol[P], Protocol): ...

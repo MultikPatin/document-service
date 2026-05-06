@@ -1,4 +1,4 @@
-from src.domain.entities.base import BaseEntity
+from src.domain.models.entities.base import BaseEntity
 from src.domain.models.vo import layout
 
 

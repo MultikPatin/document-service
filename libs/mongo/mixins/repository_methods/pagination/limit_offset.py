@@ -1,4 +1,4 @@
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 from src.domain.models.pagination import LimitOffsetResult
@@ -11,12 +11,13 @@ if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
     from src.domain.protocols.pagination import LimitOffsetParamsProtocol
+    from src.infrastructure.mongo.annotations import QueryConditionsType
 
 
 class PaginationLimitOffsetMixin(BasePaginationMixin):
     async def _get_all_limit_offset[R, P: BaseModel](  # noqa: PLR0913
         self,
-        conditions: Sequence[Mapping[Any, Any] | bool],
+        conditions: QueryConditionsType,
         params: LimitOffsetParamsProtocol,
         session: AsyncClientSession,
         return_as: type[R],

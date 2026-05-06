@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from src.domain.annotations import LayoutSkeletonType
-from src.domain.constants import LifeStatusEnum
+from src.domain.enums import LifeStatusEnum
 from src.domain.utils import vo_model_config
 
 
