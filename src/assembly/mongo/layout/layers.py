@@ -1,10 +1,5 @@
 from dishka import Provider, Scope, provide
 
-from src.adapters.database.mongo.documents import (
-    LayoutLayerDefaultDocument,
-    LayoutLayerSchemaDocument,
-    LayoutLayerValidationDocument,
-)
 from src.adapters.database.mongo.repositories import (
     LayoutLayerDefaultRepository,
     LayoutLayerSchemaRepository,
@@ -14,6 +9,11 @@ from src.domain.protocols.repositories import (
     LayoutLayerDefaultRepositoryProtocol,
     LayoutLayerSchemaRepositoryProtocol,
     LayoutLayerValidationRepositoryProtocol,
+)
+from src.infrastructure.mongo.documents import (
+    LayoutLayerDefaultDocument,
+    LayoutLayerSchemaDocument,
+    LayoutLayerValidationDocument,
 )
 
 

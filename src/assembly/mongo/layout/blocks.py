@@ -1,10 +1,5 @@
 from dishka import Provider, Scope, provide
 
-from src.adapters.database.mongo.documents import (
-    LayoutBlockMessageDocument,
-    LayoutBlockSingleDocument,
-    LayoutBlockTableDocument,
-)
 from src.adapters.database.mongo.repositories import (
     LayoutBlockMessageRepository,
     LayoutBlockSingleRepository,
@@ -14,6 +9,11 @@ from src.domain.protocols.repositories import (
     LayoutBlockMessageRepositoryProtocol,
     LayoutBlockSingleRepositoryProtocol,
     LayoutBlockTableRepositoryProtocol,
+)
+from src.infrastructure.mongo.documents import (
+    LayoutBlockMessageDocument,
+    LayoutBlockSingleDocument,
+    LayoutBlockTableDocument,
 )
 
 

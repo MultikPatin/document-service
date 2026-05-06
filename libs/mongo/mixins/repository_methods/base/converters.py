@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Any
 from beanie import BackLink, Link, PydanticObjectId
 from bson.errors import InvalidId
 
-from libs.mongo.exceptions import InvalidMongoIDError
 from src.domain.constants import CURSOR_SEPARATOR
+from src.infrastructure.mongo.errors import InvalidMongoIDError
 
 if TYPE_CHECKING:
     from pydantic import BaseModel

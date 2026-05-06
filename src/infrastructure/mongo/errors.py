@@ -1,9 +1,11 @@
-class MongoAdapterError(Exception):
-    def __init__(self, message: str, /) -> None:
-        super().__init__(message)
+from src.infrastructure.errors import InfrastructureError
 
 
-class InvalidMongoIDError(MongoAdapterError):
+class MongoError(InfrastructureError):
+    pass
+
+
+class InvalidMongoIDError(MongoError):
     def __init__(self, value: str, /) -> None:
         message = (
             f"Invalid ID value: {value}, type: {type(value)}"

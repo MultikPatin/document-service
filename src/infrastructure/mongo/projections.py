@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 
-class MongoIDProjection(BaseModel):
+class IDProjection(BaseModel):
     id: str = Field(validation_alias="_id", min_length=1)
 
     @field_validator("id", mode="before")

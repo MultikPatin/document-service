@@ -10,7 +10,7 @@ from libs.mongo.mixins.document_fields import (
 from src.adapters.database.mongo.constants import ReportCollections
 
 if TYPE_CHECKING:
-    from src.adapters.database.mongo.documents import LayoutDocument
+    from src.infrastructure.mongo.documents import LayoutDocument
 
     from .blocks import ReportBlockSingleDocument, ReportBlockTableDocument
 

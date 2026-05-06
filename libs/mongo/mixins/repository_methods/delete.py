@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.enums import KeyEnum
+from src.infrastructure.mongo.enums import KeyEnum
 
 from .base import BaseRepository
 

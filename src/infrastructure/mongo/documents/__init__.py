@@ -1,6 +1,6 @@
 import sys
-from collections.abc import Sequence
 from inspect import getmembers, isclass
+from typing import TYPE_CHECKING
 
 from beanie import Document, UnionDoc, View
 
@@ -19,6 +19,9 @@ from .reports import (
     ReportDocument,
 )
 
+if TYPE_CHECKING:
+    from src.infrastructure.mongo.annotations import CollectedDocumentsType
+
 __all__ = [
     "LayoutBlockMessageDocument",
     "LayoutBlockSingleDocument",
@@ -33,7 +36,6 @@ __all__ = [
     "collect_documents",
 ]
 
-type CollectedDocumentsType = Sequence[type[Document | UnionDoc | View]]
 
 _DOCUMENT_CLASSES = (Document, UnionDoc, View)
 _DOCUMENT_CLASSES_NAMES = [d.__name__ for d in _DOCUMENT_CLASSES]

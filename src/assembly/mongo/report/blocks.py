@@ -1,9 +1,5 @@
 from dishka import Provider, Scope, provide
 
-from src.adapters.database.mongo.documents import (
-    ReportBlockSingleDocument,
-    ReportBlockTableDocument,
-)
 from src.adapters.database.mongo.repositories import (
     ReportBlockSingleRepository,
     ReportBlockTableRepository,
@@ -11,6 +7,10 @@ from src.adapters.database.mongo.repositories import (
 from src.domain.protocols.repositories import (
     ReportSingleRepositoryProtocol,
     ReportTableRepositoryProtocol,
+)
+from src.infrastructure.mongo.documents import (
+    ReportBlockSingleDocument,
+    ReportBlockTableDocument,
 )
 
 

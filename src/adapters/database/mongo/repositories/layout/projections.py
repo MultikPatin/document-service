@@ -1,4 +1,3 @@
-from libs.mongo.projections import MongoIDProjection
 from src.core.dtos import (
     CreatedAtDTO,
     DescriptionDTO,
@@ -6,10 +5,11 @@ from src.core.dtos import (
     LabelDTO,
     UpdatedAtDTO,
 )
+from src.infrastructure.mongo.projections import IDProjection
 
 
 class _PaginatedLayoutProjection(
-    MongoIDProjection,
+    IDProjection,
     KeyDTO,
     LabelDTO,
     UpdatedAtDTO,

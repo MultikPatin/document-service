@@ -7,7 +7,7 @@ from .projections import _LayoutIDProjection
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from libs.mongo.enums import KeyEnum
+    from src.infrastructure.mongo.enums import KeyEnum
 
 
 class ReportRepository(GetMixin, AddMixin):
