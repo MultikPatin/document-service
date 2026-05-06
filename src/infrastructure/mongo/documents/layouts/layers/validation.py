@@ -2,7 +2,9 @@ from pydantic import Field
 from pymongo import HASHED, IndexModel
 
 from libs.mongo.mixins.document_fields import HashField, RefCountField
-from src.adapters.database.mongo.constants import LayoutCollections
+from src.infrastructure.mongo.constants import (
+    LAYOUT_LAYER_VALIDATION_COLLECTION,
+)
 
 
 class LayoutLayerValidationDocument(RefCountField, HashField):
@@ -16,7 +18,7 @@ class LayoutLayerValidationDocument(RefCountField, HashField):
     max_length: int | None = Field(default=None)
 
     class Settings:
-        name = LayoutCollections.layer_validations()
+        name = LAYOUT_LAYER_VALIDATION_COLLECTION
         max_nesting_depth = 0
         indexes = [  # noqa: RUF012
             IndexModel(

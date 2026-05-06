@@ -1,7 +1,7 @@
 from pydantic import Field
 
 from libs.mongo.mixins.document_fields import KeyField
-from src.adapters.database.mongo.constants import LayoutCollections
+from src.infrastructure.mongo.constants import LAYOUT_BLOCK_SINGLE_COLLECTION
 
 
 class LayoutBlockSingleDocument(KeyField):
@@ -10,5 +10,5 @@ class LayoutBlockSingleDocument(KeyField):
     defaults: list[str | None] | None = Field(default=None)
 
     class Settings:
-        name = LayoutCollections.block_singles()
+        name = LAYOUT_BLOCK_SINGLE_COLLECTION
         max_nesting_depth = 0

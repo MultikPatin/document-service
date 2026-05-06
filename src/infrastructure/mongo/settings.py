@@ -15,8 +15,8 @@ from libs.mongo.settings import (
     TLSSettings,
     WriteConcernSettings,
 )
-from src.adapters.database.mongo.constants import ENV_PREFIX
 from src.domain.utils import settings_model_config
+from src.infrastructure.mongo.constants import ENV_PREFIX
 
 
 class Settings(ConnectionSettings):

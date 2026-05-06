@@ -2,8 +2,8 @@ from pydantic import Field
 from pymongo import HASHED, IndexModel
 
 from libs.mongo.mixins.document_fields import HashField, RefCountField
-from src.adapters.database.mongo.constants import LayoutCollections
 from src.domain.enums import DataTypesEnum
+from src.infrastructure.mongo.constants import LAYOUT_LAYER_SCHEMA_COLLECTION
 
 
 class LayoutLayerSchemaDocument(RefCountField, HashField):
@@ -13,7 +13,7 @@ class LayoutLayerSchemaDocument(RefCountField, HashField):
     type: DataTypesEnum
 
     class Settings:
-        name = LayoutCollections.layer_schemas()
+        name = LAYOUT_LAYER_SCHEMA_COLLECTION
         max_nesting_depth = 0
         indexes = [  # noqa: RUF012
             IndexModel(

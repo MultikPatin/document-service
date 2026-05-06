@@ -9,8 +9,8 @@ from libs.mongo.mixins.document_fields import (
     RefCountField,
     UpdatedAtField,
 )
-from src.adapters.database.mongo.constants import LayoutCollections
 from src.domain.enums import LifeStatusEnum
+from src.infrastructure.mongo.constants import LAYOUT_COLLECTION
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
@@ -37,7 +37,7 @@ class LayoutDocument(KeyField, RefCountField, CreatedAtField, UpdatedAtField):
     )
 
     class Settings:
-        name = LayoutCollections.layouts()
+        name = LAYOUT_COLLECTION
         max_nesting_depth = 1
         use_state_management = True
         # indexes = [

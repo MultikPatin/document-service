@@ -7,7 +7,7 @@ from libs.mongo.mixins.document_fields import (
     CreatedAtField,
     UpdatedAtField,
 )
-from src.adapters.database.mongo.constants import ReportCollections
+from src.infrastructure.mongo.constants import REPORT_COLLECTION
 
 if TYPE_CHECKING:
     from src.infrastructure.mongo.documents import LayoutDocument
@@ -21,6 +21,6 @@ class ReportDocument(CreatedAtField, UpdatedAtField):
     layout: Link[LayoutDocument]
 
     class Settings:
-        name = ReportCollections.reports()
+        name = REPORT_COLLECTION
         max_nesting_depth = 1
         use_state_management = True
