@@ -1,14 +1,14 @@
-from src.domain.entities.mixins import ID
+from src.domain.entities.base import BaseEntity
 from src.domain.models.vo import layout
 
 
-class Schema(ID, layout.Schema):
+class Schema(BaseEntity, layout.Schema):
     pass
 
 
-class Default(ID, layout.Default):
+class Default(BaseEntity, layout.Default):
     pass
 
 
-class Validation(ID, layout.Validation):
+class Validation(BaseEntity, layout.Validation):
     pass

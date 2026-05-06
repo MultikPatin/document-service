@@ -1,12 +1,12 @@
 from collections.abc import Sequence
 
-from src.domain.entities.mixins import ID
+from src.domain.entities.base import BaseEntity
 from src.domain.models.vo import layout
 
 from .blocks import Message, Single, Table
 
 
-class Layout(ID, layout.Layout):
+class Layout(BaseEntity, layout.Layout):
     singles: Sequence[Message] | None
     tables: Sequence[Single] | None
     messages: Sequence[Table] | None

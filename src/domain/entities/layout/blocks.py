@@ -6,21 +6,21 @@ from src.domain.annotations import (
     LayoutTableSchemeLayerType,
     LayoutTableValidationLayerType,
 )
-from src.domain.entities.mixins import ID
+from src.domain.entities.base import BaseEntity
 from src.domain.models.vo import layout
 
 
-class Message(ID, layout.Message):
+class Message(BaseEntity, layout.Message):
     pass
 
 
-class Single(ID, layout.Single):
+class Single(BaseEntity, layout.Single):
     schemas: LayoutSingleSchemeLayerType
     defaults: LayoutSingleDefaultLayerType
     validations: LayoutSingleValidationLayerType
 
 
-class Table(ID, layout.Table):
+class Table(BaseEntity, layout.Table):
     schemas: LayoutTableSchemeLayerType
     defaults: LayoutTableDefaultLayerType
     validations: LayoutTableValidationLayerType

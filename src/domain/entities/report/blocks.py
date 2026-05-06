@@ -1,10 +1,10 @@
-from src.domain.entities.mixins import ID
+from src.domain.entities.base import BaseEntity
 from src.domain.models.vo import report
 
 
-class Single(ID, report.Single):
+class Single(BaseEntity, report.Single):
     pass
 
 
-class Table(ID, report.Table):
+class Table(BaseEntity, report.Table):
     pass

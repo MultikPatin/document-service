@@ -4,19 +4,20 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, ConfigDict
 
 from src.domain.constants import CURSOR_PREVIOUS_PREFIX
+from src.domain.entities import BaseEntity
 
 if TYPE_CHECKING:
     from .params import CursorParams, LimitOffsetParams, PagesParams
 
 
-class _ResultDTO[T](BaseModel):
+class _ResultDTO[T: BaseEntity](BaseModel):
     model_config = ConfigDict(frozen=True)
 
     items: Sequence[T]
     total: int
 
 
-class PagesResult[T](_ResultDTO[T]):
+class PagesResult[T: BaseEntity](_ResultDTO[T]):
     current_page: int
     previous_page: int | None
     next_page: int | None
@@ -43,7 +44,7 @@ class PagesResult[T](_ResultDTO[T]):
         )
 
 
-class LimitOffsetResult[T](_ResultDTO[T]):
+class LimitOffsetResult[T: BaseEntity](_ResultDTO[T]):
     limit: int
     offset: int
 
@@ -59,7 +60,7 @@ class LimitOffsetResult[T](_ResultDTO[T]):
         )
 
 
-class CursorResult[T](_ResultDTO[T]):
+class CursorResult[T: BaseEntity](_ResultDTO[T]):
     current_page: str | None
     previous_page: str | None
     next_page: str | None
@@ -70,10 +71,6 @@ class CursorResult[T](_ResultDTO[T]):
     ) -> CursorResult[T]:
         if params.is_previous_cursor:
             items = list(reversed(items[: params.size]))
-
-        if not hasattr(items[0], "id") or not hasattr(items[-1], "id"):
-            msg = "The items return model must have an id attribute"
-            raise AttributeError(msg)
 
         next_page = str(items[-1].id) if len(items) > params.size else None
         previous_page = f"{CURSOR_PREVIOUS_PREFIX}{items[0].id}"
