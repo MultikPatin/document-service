@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from src.core.dtos.pagination import LimitOffsetResultDTO
+from src.domain.models.pagination import LimitOffsetResult
 
 from .base import BasePaginationMixin
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.core.protocols import LimitOffsetParamsProtocol
+    from src.domain.protocols.pagination import LimitOffsetParamsProtocol
 
 
 class PaginationLimitOffsetMixin(BasePaginationMixin):
@@ -29,7 +29,7 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
         nesting_depth: int | None = None,
         nesting_depths_per_field: dict[str, int] | None = None,
         **pymongo_kwargs: Any,  # noqa: ANN401
-    ) -> LimitOffsetResultDTO[R] | None:
+    ) -> LimitOffsetResult[R] | None:
 
         documents = await self._document.find_many(
             *conditions,
@@ -58,6 +58,6 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
             **pymongo_kwargs,
         ).count()
 
-        return LimitOffsetResultDTO.from_params(
+        return LimitOffsetResult.from_params(
             params, count, self._convert_items(documents, return_as, projection)
         )

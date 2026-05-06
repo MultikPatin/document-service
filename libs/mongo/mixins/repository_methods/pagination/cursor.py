@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from src.core.dtos.pagination import CursorResultDTO
+from src.domain.models.pagination import CursorResult
 
 from .base import BasePaginationMixin
 
@@ -10,11 +10,12 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.core.protocols import CursorParamsProtocol
+    from src.domain.entities import BaseEntity
+    from src.domain.protocols.pagination import CursorParamsProtocol
 
 
 class PaginationCursorMixin(BasePaginationMixin):
-    async def _get_all_cursor[R, P: BaseModel](  # noqa: PLR0913
+    async def _get_all_cursor[R: BaseEntity, P: BaseModel](  # noqa: PLR0913
         self,
         conditions: Sequence[Mapping[Any, Any] | bool],
         params: CursorParamsProtocol,
@@ -29,7 +30,7 @@ class PaginationCursorMixin(BasePaginationMixin):
         nesting_depth: int | None = None,
         nesting_depths_per_field: dict[str, int] | None = None,
         **pymongo_kwargs: Any,  # noqa: ANN401
-    ) -> CursorResultDTO[R] | None:
+    ) -> CursorResult[R] | None:
         raise NotImplementedError
 
         documents = await self._document.find_many(
@@ -59,6 +60,6 @@ class PaginationCursorMixin(BasePaginationMixin):
             **pymongo_kwargs,
         ).count()
 
-        return CursorResultDTO.from_params(
+        return CursorResult.from_params(
             params, count, self._convert_items(documents, return_as, projection)
         )

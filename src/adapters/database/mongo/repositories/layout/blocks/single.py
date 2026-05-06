@@ -9,12 +9,13 @@ if TYPE_CHECKING:
     from src.application.protocols.pagination import (
         LayoutBlockSinglePaginationFiltersProtocol,
     )
-    from src.core.dtos.pagination import (
-        CursorResultDTO,
-        LimitOffsetResultDTO,
-        PagesResultDTO,
+    from src.domain.entities import BaseEntity
+    from src.domain.models.pagination import (
+        CursorResult,
+        LimitOffsetResult,
+        PagesResult,
     )
-    from src.core.protocols import (
+    from src.domain.protocols.pagination import (
         CursorParamsProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
@@ -30,7 +31,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
         *,
         session: AsyncClientSession,
         return_as: type[R],
-    ) -> PagesResultDTO[R] | None:
+    ) -> PagesResult[R] | None:
         return await self._get_all_pages(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
@@ -46,7 +47,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
         *,
         session: AsyncClientSession,
         return_as: type[R],
-    ) -> LimitOffsetResultDTO[R] | None:
+    ) -> LimitOffsetResult[R] | None:
         return await self._get_all_limit_offset(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
@@ -54,7 +55,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
             return_as=return_as,
         )
 
-    async def get_all_cursor[R](
+    async def get_all_cursor[R: BaseEntity](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
             CursorParamsProtocol
@@ -62,7 +63,7 @@ class LayoutBlockSingleRepository(LayoutBlockRepository):
         *,
         session: AsyncClientSession,
         return_as: type[R],
-    ) -> CursorResultDTO[R] | None:
+    ) -> CursorResult[R] | None:
         return await self._get_all_cursor(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,

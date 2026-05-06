@@ -11,12 +11,13 @@ if TYPE_CHECKING:
         LayoutBlockSinglePaginationFiltersProtocol,
         LayoutBlockTablePaginationFiltersProtocol,
     )
-    from src.core.dtos.pagination import (
-        CursorResultDTO,
-        LimitOffsetResultDTO,
-        PagesResultDTO,
+    from src.domain.entities import BaseEntity
+    from src.domain.models.pagination import (
+        CursorResult,
+        LimitOffsetResult,
+        PagesResult,
     )
-    from src.core.protocols import (
+    from src.domain.protocols.pagination import (
         CursorParamsProtocol,
         LimitOffsetParamsProtocol,
         PagesParamsProtocol,
@@ -35,7 +36,7 @@ class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> PagesResultDTO[R] | None: ...
+    ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
         filters: LayoutBlockMessagePaginationFiltersProtocol[
@@ -44,8 +45,8 @@ class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> LimitOffsetResultDTO[R] | None: ...
-    async def get_all_cursor[R, S](
+    ) -> LimitOffsetResult[R] | None: ...
+    async def get_all_cursor[R: BaseEntity, S](
         self,
         filters: LayoutBlockMessagePaginationFiltersProtocol[
             CursorParamsProtocol
@@ -53,7 +54,7 @@ class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> CursorResultDTO[R] | None: ...
+    ) -> CursorResult[R] | None: ...
 
 
 class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
@@ -65,7 +66,7 @@ class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> PagesResultDTO[R] | None: ...
+    ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
@@ -74,8 +75,8 @@ class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> LimitOffsetResultDTO[R] | None: ...
-    async def get_all_cursor[R, S](
+    ) -> LimitOffsetResult[R] | None: ...
+    async def get_all_cursor[R: BaseEntity, S](
         self,
         filters: LayoutBlockSinglePaginationFiltersProtocol[
             CursorParamsProtocol
@@ -83,7 +84,7 @@ class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> CursorResultDTO[R] | None: ...
+    ) -> CursorResult[R] | None: ...
 
 
 class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
@@ -93,7 +94,7 @@ class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> PagesResultDTO[R] | None: ...
+    ) -> PagesResult[R] | None: ...
     async def get_all_limit_offset[R, S](
         self,
         filters: LayoutBlockTablePaginationFiltersProtocol[
@@ -102,8 +103,8 @@ class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> LimitOffsetResultDTO[R] | None: ...
-    async def get_all_cursor[R, S](
+    ) -> LimitOffsetResult[R] | None: ...
+    async def get_all_cursor[R: BaseEntity, S](
         self,
         filters: LayoutBlockTablePaginationFiltersProtocol[
             CursorParamsProtocol
@@ -111,4 +112,4 @@ class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
         *,
         session: S,
         return_as: type[R],
-    ) -> CursorResultDTO[R] | None: ...
+    ) -> CursorResult[R] | None: ...

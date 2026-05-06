@@ -1,7 +1,7 @@
 from collections.abc import Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from src.core.dtos.pagination import PagesResultDTO
+from src.domain.models.pagination import PagesResult
 
 from .base import BasePaginationMixin
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from pydantic import BaseModel
     from pymongo.asynchronous.client_session import AsyncClientSession
 
-    from src.core.protocols import PagesParamsProtocol
+    from src.domain.protocols.pagination import PagesParamsProtocol
 
 
 class PaginationPagesMixin(BasePaginationMixin):
@@ -29,7 +29,7 @@ class PaginationPagesMixin(BasePaginationMixin):
         nesting_depth: int | None = None,
         nesting_depths_per_field: dict[str, int] | None = None,
         **pymongo_kwargs: Any,  # noqa: ANN401
-    ) -> PagesResultDTO[R] | None:
+    ) -> PagesResult[R] | None:
 
         documents = await self._document.find_many(
             *conditions,
@@ -58,6 +58,6 @@ class PaginationPagesMixin(BasePaginationMixin):
             **pymongo_kwargs,
         ).count()
 
-        return PagesResultDTO.from_params(
+        return PagesResult.from_params(
             params, count, self._convert_items(documents, return_as, projection)
         )

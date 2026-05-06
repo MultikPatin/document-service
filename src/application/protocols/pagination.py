@@ -1,11 +1,11 @@
 from typing import Protocol
 
-from src.core.protocols import (
+from src.domain.constants import LifeStatusEnum
+from src.domain.protocols.pagination import (
     CursorParamsProtocol,
     LimitOffsetParamsProtocol,
     PagesParamsProtocol,
 )
-from src.domain.constants import LifeStatusEnum
 
 type _P = CursorParamsProtocol | LimitOffsetParamsProtocol | PagesParamsProtocol
 
