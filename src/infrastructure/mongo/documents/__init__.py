@@ -20,7 +20,7 @@ from .reports import (
 )
 
 if TYPE_CHECKING:
-    from src.infrastructure.mongo.annotations import CollectedDocumentsType
+    from src.infrastructure.mongo.annotations import DocumentsType
 
 __all__ = [
     "LayoutBlockMessageDocument",
@@ -41,7 +41,7 @@ _DOCUMENT_CLASSES = (Document, UnionDoc, View)
 _DOCUMENT_CLASSES_NAMES = [d.__name__ for d in _DOCUMENT_CLASSES]
 
 
-def collect_documents() -> CollectedDocumentsType:
+def collect_documents() -> DocumentsType:
     documents = []
     for _, doc in getmembers(sys.modules[__name__], isclass):
         if (

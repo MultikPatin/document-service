@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import Field, NonNegativeInt, PositiveInt
 from pydantic_settings import BaseSettings
 
@@ -8,6 +6,7 @@ from libs.mongo.constants.settings import (
     PoolKeys,
     PoolServerMonitoringModEenum,
 )
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class PoolSettings(BaseSettings):
@@ -45,11 +44,11 @@ class PoolSettings(BaseSettings):
     )
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
+        d: ClientKwargsType = {}
 
         if self.MAX_SIZE is not None:
             d[PoolKeys.MAX_SIZE] = self.MAX_SIZE

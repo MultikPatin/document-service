@@ -1,4 +1,4 @@
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -13,7 +13,8 @@ if TYPE_CHECKING:
     from pymongo.server_description import ServerDescription
 
 
-type CollectedDocumentsType = Sequence[type[Document | UnionDoc | View]]
+type ClientKwargsType = MutableMapping[str, Any]
+type DocumentsType = Sequence[type[Document | UnionDoc | View]]
 type QueryConditionsType = Sequence[Mapping[Any, Any] | bool]
 type ServerSelectorType = (
     Callable[[list[ServerDescription]], list[ServerDescription]] | None

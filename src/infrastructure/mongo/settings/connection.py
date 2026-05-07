@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -8,9 +6,10 @@ from libs.mongo.constants.settings import (
     ConnectionModeKeys,
     ConnectionModeReadPreferenceEnum,
 )
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
-class ConnectionModeSettings(BaseSettings):
+class ConnectionSettings(BaseSettings):
     DIRECT_CONNECTION: bool | None = Field(
         default=ConnectionModeDefaults.DIRECT_CONNECTION,
         description="Direct connection to single server",
@@ -46,11 +45,11 @@ class ConnectionModeSettings(BaseSettings):
     )
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
+        d: ClientKwargsType = {}
 
         if self.DIRECT_CONNECTION is not None:
             d[ConnectionModeKeys.DIRECT_CONNECTION] = self.DIRECT_CONNECTION

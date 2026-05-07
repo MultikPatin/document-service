@@ -8,6 +8,7 @@ from libs.mongo.constants.settings import (
     CompressionKeys,
     CompressorsEnum,
 )
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class CompressionSettings(BaseSettings):
@@ -41,7 +42,8 @@ class CompressionSettings(BaseSettings):
             return CompressorsEnum(items[0])
         return [CompressorsEnum(item) for item in items]
 
-    def get_compressors_string(self) -> str | None:
+    @property
+    def compressors_string(self) -> str | None:
         if isinstance(self.COMPRESSORS, CompressorsEnum):
             return str(self.COMPRESSORS)
         if isinstance(self.COMPRESSORS, list):
@@ -49,14 +51,14 @@ class CompressionSettings(BaseSettings):
         return None
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
+        d: ClientKwargsType = {}
 
         if self.COMPRESSORS:
-            d[CompressionKeys.COMPRESSORS] = self.get_compressors_string()
+            d[CompressionKeys.COMPRESSORS] = self.compressors_string
         if self.ZLIB_COMPRESSION_LEVEL:
             d[CompressionKeys.ZLIB_COMPRESSION_LEVEL] = (
                 self.ZLIB_COMPRESSION_LEVEL

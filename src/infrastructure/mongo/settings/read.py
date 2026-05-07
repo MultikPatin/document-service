@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -8,9 +6,10 @@ from libs.mongo.constants.settings import (
     ReadConcernKeys,
     ReadConcernLevelEnum,
 )
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
-class ReadConcernSettings(BaseSettings):
+class ReadSettings(BaseSettings):
     LEVEL: ReadConcernLevelEnum = Field(
         default=ReadConcernDefaults.LEVEL,
         description="Read concern level: local, majority, linearizable",
@@ -18,12 +17,10 @@ class ReadConcernSettings(BaseSettings):
     )
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
-
-        d[ReadConcernKeys.LEVEL] = self.LEVEL.value
+        d: ClientKwargsType = {ReadConcernKeys.LEVEL: self.LEVEL.value}
 
         return d

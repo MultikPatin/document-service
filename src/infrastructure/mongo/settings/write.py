@@ -1,12 +1,11 @@
-from typing import Any
-
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
 from libs.mongo.constants.settings import WriteConcernDefaults, WriteConcernKeys
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
-class WriteConcernSettings(BaseSettings):
+class WriteSettings(BaseSettings):
     W: int | str | None = Field(
         default=WriteConcernDefaults.W,
         description="Write concern: number of replicas or 'majority'",
@@ -21,14 +20,14 @@ class WriteConcernSettings(BaseSettings):
     )
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
-
-        d[WriteConcernKeys.JOURNAL] = self.JOURNAL
-        d[WriteConcernKeys.FSYNC] = self.FSYNC
+        d: ClientKwargsType = {
+            WriteConcernKeys.JOURNAL: self.JOURNAL,
+            WriteConcernKeys.FSYNC: self.FSYNC,
+        }
 
         if self.W:
             d[WriteConcernKeys.W] = self.W

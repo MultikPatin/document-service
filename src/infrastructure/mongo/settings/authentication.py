@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
@@ -8,6 +6,7 @@ from libs.mongo.constants.settings import (
     AuthenticationKeys,
     AuthenticationMechanismEnum,
 )
+from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class AuthenticationSettings(BaseSettings):
@@ -27,16 +26,15 @@ class AuthenticationSettings(BaseSettings):
     # )
 
     @property
-    def client_kwargs(self) -> dict[str, Any]:
+    def client_kwargs(self) -> ClientKwargsType:
         """Returns a dictionary with parameters for creating an AsyncMongoClient
         instance.
         """
-        d: dict[str, Any] = {}
-
-        d[AuthenticationKeys.SOURCE] = self.SOURCE
-        d[AuthenticationKeys.MECHANISM] = self.MECHANISM.value
-        # result[AuthenticationKeys.MECHANISM_PROPERTIES] = (
-        #     self.MECHANISM_PROPERTIES
-        # )
+        d: ClientKwargsType = {
+            AuthenticationKeys.SOURCE: self.SOURCE,
+            AuthenticationKeys.MECHANISM: self.MECHANISM.value,
+            # AuthenticationKeys.MECHANISM_PROPERTIES:
+            # self.MECHANISM_PROPERTIES,
+        }
 
         return d

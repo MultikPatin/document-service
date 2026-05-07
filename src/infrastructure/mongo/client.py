@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from pymongo.asynchronous.collection import AsyncCollection
     from pymongo.asynchronous.database import AsyncDatabase
 
-    from .annotations import CollectedDocumentsType
+    from .annotations import DocumentsType
     from .settings import Settings
 
 
@@ -30,17 +30,14 @@ class Client:
         )
 
     async def init_beanie(
-        self,
-        document_models: CollectedDocumentsType,
-        *,
-        ctx: InitBeanieContex | None = None,
+        self, documents: DocumentsType, *, ctx: InitBeanieContex | None = None
     ) -> None:
         if ctx is None:
             ctx = InitBeanieContex()
 
         await init_beanie(
             database=self.database,
-            document_models=document_models,
+            document_models=documents,
             **asdict(ctx),
         )
 
