@@ -1,8 +1,11 @@
 from pydantic import Field, NonNegativeInt
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import TimeoutsDefaults, TimeoutsKeys
 from src.infrastructure.mongo.annotations import ClientKwargsType
+from src.infrastructure.mongo.constants.settings import (
+    TimeoutsDefaults,
+    TimeoutsKeys,
+)
 
 
 class TimeoutsSettings(BaseSettings):

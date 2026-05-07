@@ -1,12 +1,12 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import (
+from src.infrastructure.mongo.annotations import ClientKwargsType
+from src.infrastructure.mongo.constants.settings import (
     ReadConcernDefaults,
     ReadConcernKeys,
     ReadConcernLevelEnum,
 )
-from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class ReadSettings(BaseSettings):

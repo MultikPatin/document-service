@@ -1,8 +1,11 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import WriteConcernDefaults, WriteConcernKeys
 from src.infrastructure.mongo.annotations import ClientKwargsType
+from src.infrastructure.mongo.constants.settings import (
+    WriteConcernDefaults,
+    WriteConcernKeys,
+)
 
 
 class WriteSettings(BaseSettings):

@@ -1,18 +1,15 @@
 from pydantic import Field, MongoDsn, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import (
-    ConnectionDefaults,
-    ConnectionSchemaEnum,
-)
 from src.domain.utils import settings_model_config
 from src.infrastructure.mongo.annotations import ClientKwargsType
 from src.infrastructure.mongo.constants import ENV_PREFIX
+from src.infrastructure.mongo.constants.settings import BaseDefaults, SchemaEnum
 
 from .authentication import AuthenticationSettings
 from .compression import CompressionSettings
 from .connection import ConnectionSettings
-from .erro_handling import ErrorHandlingSettings
+from .error_handling import ErrorHandlingSettings
 from .pool import PoolSettings
 from .read import ReadSettings
 from .representation import RepresentationSettings
@@ -27,34 +24,34 @@ class Settings(BaseSettings):
     model_config = settings_model_config(env_prefix=ENV_PREFIX)
 
     DB_NAME: str = Field(
-        default=ConnectionDefaults.DB_NAME,
+        default=BaseDefaults.DB_NAME,
         description="Database name",
         min_length=1,
         max_length=32,
     )
     HOST: str = Field(
-        default=ConnectionDefaults.HOST,
+        default=BaseDefaults.HOST,
         description="Host address",
         min_length=1,
         max_length=255,
     )
     PORT: PositiveInt = Field(
-        default=ConnectionDefaults.PORT,
+        default=BaseDefaults.PORT,
         description="Port number",
         lt=65536,
     )
     USERNAME: str = Field(
-        default=ConnectionDefaults.USERNAME,
+        default=BaseDefaults.USERNAME,
         description="Authentication username",
         max_length=255,
     )
     PASSWORD: SecretStr = Field(
-        default=SecretStr(ConnectionDefaults.PASSWORD),
+        default=SecretStr(BaseDefaults.PASSWORD),
         description="Authentication password",
         max_length=255,
     )
-    SCHEMA: ConnectionSchemaEnum = Field(
-        default=ConnectionSchemaEnum.mongodb,
+    SCHEMA: SchemaEnum = Field(
+        default=SchemaEnum.mongodb,
         description="Connection scheme: mongodb or mongodb+srv",
     )
 
@@ -90,7 +87,7 @@ class Settings(BaseSettings):
 
     @property
     def use_srv(self) -> bool:
-        return ConnectionSchemaEnum.mongodb_srv == self.SCHEMA
+        return SchemaEnum.mongodb_srv == self.SCHEMA
 
     @property
     def use_authentication(self) -> bool:

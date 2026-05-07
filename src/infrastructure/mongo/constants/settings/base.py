@@ -2,17 +2,17 @@ from enum import StrEnum
 from typing import Final, final
 
 
-class ConnectionSchemaEnum(StrEnum):
+class SchemaEnum(StrEnum):
     mongodb = "mongodb"
     mongodb_srv = "mongodb+srv"
 
 
 @final
-class ConnectionDefaults:
+class BaseDefaults:
     DB_NAME: Final[str] = "default-db"
     HOST: Final[str] = "localhost"
     PORT: Final[int] = 27017
     USERNAME: Final[str] = ""
     PASSWORD: Final[str] = ""
-    SCHEMA: Final[ConnectionSchemaEnum] = ConnectionSchemaEnum.mongodb
+    SCHEMA: Final[SchemaEnum] = SchemaEnum.mongodb
     DATABASE: Final[str] = "default-database"

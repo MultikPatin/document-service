@@ -1,12 +1,12 @@
 from pydantic import Field, NonNegativeInt, PositiveInt
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import (
+from src.infrastructure.mongo.annotations import ClientKwargsType
+from src.infrastructure.mongo.constants.settings import (
     PoolDefaults,
     PoolKeys,
     PoolServerMonitoringModEenum,
 )
-from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class PoolSettings(BaseSettings):

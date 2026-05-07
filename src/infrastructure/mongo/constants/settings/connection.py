@@ -11,7 +11,7 @@ class ConnectionModeReadPreferenceEnum(StrEnum):
 
 
 @final
-class ConnectionModeDefaults:
+class ConnectionDefaults:
     DIRECT_CONNECTION: Final[bool | None] = None
     APPNAME: Final[str | None] = None
     READ_PREFERENCE: Final[ConnectionModeReadPreferenceEnum | None] = None
@@ -21,7 +21,7 @@ class ConnectionModeDefaults:
 
 
 @final
-class ConnectionModeKeys:
+class ConnectionKeys:
     DIRECT_CONNECTION = "directConnection"
     APPNAME = "appname"
     READ_PREFERENCE = "readPreference"

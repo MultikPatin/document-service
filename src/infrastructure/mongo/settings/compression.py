@@ -3,12 +3,12 @@ from typing import Any
 from pydantic import Field, NonNegativeInt, ValidationError, field_validator
 from pydantic_settings import BaseSettings
 
-from libs.mongo.constants.settings import (
+from src.infrastructure.mongo.annotations import ClientKwargsType
+from src.infrastructure.mongo.constants.settings import (
     CompressionDefaults,
     CompressionKeys,
     CompressorsEnum,
 )
-from src.infrastructure.mongo.annotations import ClientKwargsType
 
 
 class CompressionSettings(BaseSettings):
