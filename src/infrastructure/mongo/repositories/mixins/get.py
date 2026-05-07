@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from src.domain.utils import batche_generator
 from src.infrastructure.mongo.enums import KeyEnum
 
-from .base import BaseRepository
+from .repository import BaseRepository
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession

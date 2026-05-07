@@ -1,5 +1,4 @@
 from .add import AddMixin, BulkAddMixin, BulkAddWithReturnIdMixin
-from .base import BaseRepository
 from .delete import DeleteByIDMixin
 from .get import GetByHashMixin, GetByIDsMixin, GetMixin
 from .helpers import (
@@ -13,6 +12,7 @@ from .pagination import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
+from .repository import BaseRepository
 
 __all__ = [
     "AddMixin",
