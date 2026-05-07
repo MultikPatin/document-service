@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.mixins.repository_methods import (
+from src.infrastructure.mongo.repositories.mixins import (
     AddMixin,
     # UpdateMixin,
     # DeleteWithRefCountMixin,

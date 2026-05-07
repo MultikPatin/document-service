@@ -1,11 +1,11 @@
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
-from libs.mongo.mixins.document_fields import HashField, RefCountField
 from src.infrastructure.mongo.constants import LAYOUT_LAYER_DEFAULT_COLLECTION
+from src.infrastructure.mongo.documents.mixins import Hash, RefCount
 
 
-class LayoutLayerDefaultDocument(RefCountField, HashField):
+class LayoutLayerDefaultDocument(RefCount, Hash):
     value: str | None = Field(default=None)
 
     class Settings:

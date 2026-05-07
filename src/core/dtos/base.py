@@ -3,15 +3,12 @@ from pydantic import BaseModel, Field, NegativeInt
 from src.domain.utils import hash_md5
 
 
-class RefCountDTO(BaseModel):
+class HashDTO(BaseModel):
+    hash: str = Field(default="", min_length=8, max_length=255)
     ref_count: NegativeInt = Field(default=0)
 
     def can_be_deleted(self) -> bool:
         return self.ref_count == 0
-
-
-class HashDTO(RefCountDTO):
-    hash: str = Field(default="", min_length=8, max_length=255)
 
     def calculate_hash(self) -> str:
         return hash_md5(self.model_dump(exclude={"hash", "id", "ref_count"}))

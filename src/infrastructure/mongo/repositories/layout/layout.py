@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.mixins.repository_methods import (
+from src.domain.enums import LifeStatusEnum
+from src.infrastructure.mongo.projections import PaginatedLayoutProjection
+from src.infrastructure.mongo.repositories.mixins import (
     GetMixin,
     PaginationCursorMixin,
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from src.domain.enums import LifeStatusEnum
-from src.infrastructure.mongo.projections import PaginatedLayoutProjection
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession

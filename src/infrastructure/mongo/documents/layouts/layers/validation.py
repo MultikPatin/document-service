@@ -1,13 +1,13 @@
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
-from libs.mongo.mixins.document_fields import HashField, RefCountField
 from src.infrastructure.mongo.constants import (
     LAYOUT_LAYER_VALIDATION_COLLECTION,
 )
+from src.infrastructure.mongo.documents.mixins import Hash, RefCount
 
 
-class LayoutLayerValidationDocument(RefCountField, HashField):
+class LayoutLayerValidationDocument(RefCount, Hash):
     gt: int | None = Field(default=None)
     ge: int | None = Field(default=None)
     lt: int | None = Field(default=None)

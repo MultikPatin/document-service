@@ -1,10 +1,10 @@
 from pydantic import Field
 
-from libs.mongo.mixins.document_fields import KeyField
 from src.infrastructure.mongo.constants import LAYOUT_BLOCK_MESSAGE_COLLECTION
+from src.infrastructure.mongo.documents.mixins import Key
 
 
-class LayoutBlockMessageDocument(KeyField):
+class LayoutBlockMessageDocument(Key):
     text: str = Field(min_length=1, max_length=512)
 
     class Settings:

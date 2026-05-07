@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from libs.mongo.mixins.repository_methods import AddMixin, GetMixin
 from src.infrastructure.mongo.projections import LayoutIDProjection
+from src.infrastructure.mongo.repositories.mixins import AddMixin, GetMixin
 
 if TYPE_CHECKING:
     from pymongo.asynchronous.client_session import AsyncClientSession

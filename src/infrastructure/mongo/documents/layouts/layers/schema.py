@@ -1,12 +1,12 @@
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
-from libs.mongo.mixins.document_fields import HashField, RefCountField
 from src.domain.enums import DataTypesEnum
 from src.infrastructure.mongo.constants import LAYOUT_LAYER_SCHEMA_COLLECTION
+from src.infrastructure.mongo.documents.mixins import Hash, RefCount
 
 
-class LayoutLayerSchemaDocument(RefCountField, HashField):
+class LayoutLayerSchemaDocument(RefCount, Hash):
     key: str = Field(min_length=1, max_length=64)
     label: str = Field(min_length=1, max_length=255)
     required: bool = Field(default=False)

@@ -1,4 +1,4 @@
-from libs.mongo.mixins.repository_methods import (
+from src.infrastructure.mongo.repositories.mixins import (
     AddMixin,
     GetMixin,
     PaginationCursorMixin,

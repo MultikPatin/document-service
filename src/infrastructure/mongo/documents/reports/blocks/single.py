@@ -1,10 +1,10 @@
 from typing import Any
 
-from libs.mongo.mixins.document_fields import KeyField
 from src.infrastructure.mongo.constants import REPORT_BLOCK_SINGLE_COLLECTION
+from src.infrastructure.mongo.documents.mixins import Key
 
 
-class ReportBlockSingleDocument(KeyField):
+class ReportBlockSingleDocument(Key):
     values: dict[str, Any]
 
     class Settings:

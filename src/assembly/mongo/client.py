@@ -3,9 +3,9 @@ from collections.abc import AsyncGenerator
 
 from dishka import Provider, Scope, provide
 
-from libs.mongo.constants.logger import LoggerNames
 from src.assembly import InitComponentProtocol
 from src.infrastructure.mongo import Client, Settings, collect_documents
+from src.infrastructure.mongo.logger import LoggerNames
 
 logger = logging.getLogger(LoggerNames.init())
 

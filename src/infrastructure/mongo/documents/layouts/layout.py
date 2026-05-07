@@ -3,14 +3,14 @@ from typing import TYPE_CHECKING, Any
 from beanie import Link
 from pydantic import Field
 
-from libs.mongo.mixins.document_fields import (
-    CreatedAtField,
-    KeyField,
-    RefCountField,
-    UpdatedAtField,
-)
 from src.domain.enums import LifeStatusEnum
 from src.infrastructure.mongo.constants import LAYOUT_COLLECTION
+from src.infrastructure.mongo.documents.mixins import (
+    CreatedAt,
+    Key,
+    RefCount,
+    UpdatedAt,
+)
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     )
 
 
-class LayoutDocument(KeyField, RefCountField, CreatedAtField, UpdatedAtField):
+class LayoutDocument(Key, RefCount, CreatedAt, UpdatedAt):
     label: str = Field(min_length=1, max_length=255)
 
     major_version: int = Field(ge=0, default=0)

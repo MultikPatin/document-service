@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
-from libs.mongo.mixins.repository_methods import BaseRepository
+from src.infrastructure.mongo.repositories.mixins import BaseRepository
 
 if TYPE_CHECKING:
     from pydantic import BaseModel
