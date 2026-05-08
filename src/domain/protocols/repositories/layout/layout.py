@@ -17,24 +17,21 @@ if TYPE_CHECKING:
 
 
 class LayoutRepositoryProtocol(GetMixinProtocol, Protocol):
-    async def get_all_pages[R, S](
+    async def get_all_pages[R](
         self,
         filters: LayoutPageFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R, S](
+    async def get_all_limit_offset[R](
         self,
         filters: LayoutLimitOffsetFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity, S](
+    async def get_all_cursor[R: BaseEntity](
         self,
         filters: LayoutCursorFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> CursorResult[R] | None: ...

@@ -6,23 +6,22 @@ if TYPE_CHECKING:
 
 
 class AddMixinProtocol(Protocol):
-    async def add[R, S, C: BaseModel](
-        self, condition: C, *, session: S, return_as: type[R]
+    async def add[R, C: BaseModel](
+        self, condition: C, *, return_as: type[R]
     ) -> R: ...
 
 
 class BulkAddWithReturnIdMixinProtocol(Protocol):
-    async def bulk_add_with_return_id[S, C: BaseModel](
-        self, conditions: Iterable[C], *, session: S
+    async def bulk_add_with_return_id[C: BaseModel](
+        self, conditions: Iterable[C]
     ) -> list[str]: ...
 
 
 class BulkAddMixinProtocol(Protocol):
-    async def bulk_add[R, S, C: BaseModel](
+    async def bulk_add[R, C: BaseModel](
         self,
         conditions: Iterable[C],
         *,
-        session: S,
         return_as: type[R],
         max_concurrent: int = 10,
     ) -> list[R]: ...

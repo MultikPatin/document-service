@@ -12,8 +12,6 @@ from src.infrastructure.mongo.repositories.mixins import (
 )
 
 if TYPE_CHECKING:
-    from pymongo.asynchronous.client_session import AsyncClientSession
-
     from src.core.dtos import HashDTO
 
 
@@ -28,17 +26,16 @@ class LayoutLayerRepository(
     IncRefCountMixin,
 ):
     async def add_by_hash[R, C: HashDTO](
-        self, condition: C, *, session: AsyncClientSession, return_as: type[R]
+        self, condition: C, *, return_as: type[R]
     ) -> R:
         result = await self.get_by_hash(
             hash_string=condition.get_hash(),
-            session=session,
             return_as=return_as,
         )
 
         if result is None:
             document = self._document(**condition.model_dump(exclude_none=True))
-            await document.create(session=session)
+            await document.create(session=self._session)
             result = self.as_dto(document, return_as, replace_links=True)
 
         return result

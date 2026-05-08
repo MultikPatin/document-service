@@ -8,7 +8,6 @@ from .base import BasePaginationMixin
 if TYPE_CHECKING:
     from beanie.odm.enums import SortDirection
     from pydantic import BaseModel
-    from pymongo.asynchronous.client_session import AsyncClientSession
 
     from src.domain.models.entities import BaseEntity
     from src.domain.protocols.pagination import CursorParamsProtocol
@@ -19,9 +18,9 @@ class PaginationCursorMixin(BasePaginationMixin):
     async def _get_all_cursor[R: BaseEntity, P: BaseModel](  # noqa: PLR0913
         self,
         conditions: QueryConditionsType,
-        params: CursorParamsProtocol,
-        session: AsyncClientSession,
+        *,
         return_as: type[R],
+        params: CursorParamsProtocol,
         projection: type[P] | None = None,
         sort: str | Sequence[tuple[str, SortDirection]] | None = None,
         ignore_cache: bool = False,
@@ -38,7 +37,7 @@ class PaginationCursorMixin(BasePaginationMixin):
             *conditions,
             # limit=limit,
             # skip=skip,
-            session=session,
+            session=self._session,
             projection_model=projection,
             sort=sort,
             ignore_cache=ignore_cache,
@@ -55,7 +54,7 @@ class PaginationCursorMixin(BasePaginationMixin):
 
         count = await self._document.find(
             *conditions,
-            session=session,
+            session=self._session,
             ignore_cache=ignore_cache,
             fetch_links=fetch_links,
             **pymongo_kwargs,
