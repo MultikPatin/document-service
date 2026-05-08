@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
 
+from src.domain.models.entities import LayoutLayerSchemaEntity
+
 if TYPE_CHECKING:
-    from src.domain.models.entities import LayoutLayerSchemaEntity
     from src.domain.protocols.repositories import (
         LayoutLayerSchemaRepositoryProtocol,
     )

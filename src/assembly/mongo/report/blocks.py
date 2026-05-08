@@ -8,6 +8,7 @@ from src.infrastructure.mongo.documents import (
     ReportBlockSingleDocument,
     ReportBlockTableDocument,
 )
+from src.infrastructure.mongo.protocols import ConverterProtocol
 from src.infrastructure.mongo.repositories import (
     ReportBlockSingleRepository,
     ReportBlockTableRepository,
@@ -16,9 +17,17 @@ from src.infrastructure.mongo.repositories import (
 
 class _BlocksProvider(Provider):
     @provide(scope=Scope.APP)
-    async def __single(self) -> ReportSingleRepositoryProtocol:
-        return ReportBlockSingleRepository(ReportBlockSingleDocument)
+    async def __single(
+        self, converter: ConverterProtocol
+    ) -> ReportSingleRepositoryProtocol:
+        return ReportBlockSingleRepository(
+            ReportBlockSingleDocument, converter=converter
+        )
 
     @provide(scope=Scope.APP)
-    async def __table(self) -> ReportTableRepositoryProtocol:
-        return ReportBlockTableRepository(ReportBlockTableDocument)
+    async def __table(
+        self, converter: ConverterProtocol
+    ) -> ReportTableRepositoryProtocol:
+        return ReportBlockTableRepository(
+            ReportBlockTableDocument, converter=converter
+        )

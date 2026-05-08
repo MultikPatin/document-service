@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
 
+from src.domain.models.entities import LayoutBlockSingleEntity
+
 if TYPE_CHECKING:
     from src.domain.annotations import (
         LayoutSingleCursorFiltersType,
         LayoutSingleLimitOffsetFiltersType,
         LayoutSinglePageFiltersType,
     )
-    from src.domain.models.entities import LayoutBlockSingleEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,
@@ -56,7 +57,7 @@ class LayoutBlockSingleService:
     #     obj = instance.model_dump()
     #
     #     await self._fetcher.fetch_block(
-    #         obj,  # type: ignore
+    #         obj,
     #         session=session,
     #         layers=filters.layers,
     #         in_place=True,

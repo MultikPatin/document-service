@@ -3,7 +3,7 @@ from collections.abc import Sequence, Set
 
 from src.domain.utils import batche_generator
 from src.infrastructure.mongo.enums import KeyEnum
-from src.infrastructure.mongo.repositories.mixins.repository import (
+from src.infrastructure.mongo.repositories.mixins.base import (
     BaseRepository,
 )
 
@@ -11,11 +11,11 @@ from src.infrastructure.mongo.repositories.mixins.repository import (
 class GetMixin(BaseRepository):
     async def get[R](self, id_: str, *, return_as: type[R]) -> R | None:
         document = await self._document.get(
-            self.as_id(id_), session=self._session
+            self.converter.as_id(id_), session=self._session
         )
         if document is None:
             return None
-        return self.as_dto(document, return_as, replace_links=True)
+        return self.converter.as_dto(document, return_as, replace_links=True)
 
 
 class GetByHashMixin(BaseRepository):
@@ -27,7 +27,7 @@ class GetByHashMixin(BaseRepository):
         )
         if document is None:
             return None
-        return self.as_dto(document, return_as, replace_links=True)
+        return self.converter.as_dto(document, return_as, replace_links=True)
 
 
 class GetByIDsMixin(BaseRepository):
@@ -44,12 +44,14 @@ class GetByIDsMixin(BaseRepository):
         async def process(batche: Sequence[str]) -> list[R]:
             async with semaphore:
                 documents = await self._document.find_many(
-                    {KeyEnum.id: {KeyEnum.in_: self.as_ids(batche)}},
+                    {KeyEnum.id: {KeyEnum.in_: self.converter.as_ids(batche)}},
                     session=self._session,
                 ).to_list()
                 if not documents:
                     return []
-                return self.as_dtos(documents, return_as, replace_links=True)
+                return self.converter.as_dtos(
+                    documents, return_as, replace_links=True
+                )
 
         async with asyncio.TaskGroup() as tg:
             tasks = [

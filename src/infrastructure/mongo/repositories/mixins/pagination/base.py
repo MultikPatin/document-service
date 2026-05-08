@@ -14,5 +14,5 @@ class BasePaginationMixin(BaseRepository):
         return (
             [dto(**d.model_dump()) for d in docs]
             if projection
-            else self.as_dtos(docs, dto, replace_links=True)
+            else self.converter.as_dtos(docs, dto, replace_links=True)
         )

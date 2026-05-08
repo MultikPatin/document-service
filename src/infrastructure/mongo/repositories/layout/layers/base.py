@@ -36,6 +36,8 @@ class LayoutLayerRepository(
         if result is None:
             document = self._document(**condition.model_dump(exclude_none=True))
             await document.create(session=self._session)
-            result = self.as_dto(document, return_as, replace_links=True)
+            result = self.converter.as_dto(
+                document, return_as, replace_links=True
+            )
 
         return result

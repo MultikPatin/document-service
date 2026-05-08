@@ -1,3 +1,4 @@
+from .base import BaseRepository
 from .methods import (
     AddMixin,
     BulkAddMixin,
@@ -16,7 +17,6 @@ from .pagination import (
     PaginationLimitOffsetMixin,
     PaginationPagesMixin,
 )
-from .repository import BaseRepository
 
 __all__ = [
     "AddMixin",

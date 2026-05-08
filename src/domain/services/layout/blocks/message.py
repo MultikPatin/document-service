@@ -1,12 +1,13 @@
 from typing import TYPE_CHECKING
 
+from src.domain.models.entities import LayoutBlockMessageEntity
+
 if TYPE_CHECKING:
     from src.domain.annotations import (
         LayoutMessageCursorFiltersType,
         LayoutMessageLimitOffsetFiltersType,
         LayoutMessagePageFiltersType,
     )
-    from src.domain.models.entities import LayoutBlockMessageEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,

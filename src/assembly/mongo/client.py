@@ -5,7 +5,9 @@ from dishka import Provider, Scope, provide
 
 from src.assembly import InitComponentProtocol
 from src.infrastructure.mongo import Client, Settings, collect_documents
+from src.infrastructure.mongo.converter import Converter
 from src.infrastructure.mongo.logger import LoggerNames
+from src.infrastructure.mongo.protocols import ConverterProtocol
 
 logger = logging.getLogger(LoggerNames.init())
 
@@ -52,6 +54,10 @@ class ClientProvider(Provider):
         logger.info("stopping the client...")
         await client.close()
         logger.info("stopping the client has been completed successfully")
+
+    @provide(scope=Scope.APP)
+    def __converter(self) -> ConverterProtocol:
+        return Converter()
 
     # session_alias = alias(source=AsyncClientSession, provides=SessionProtocol)
 

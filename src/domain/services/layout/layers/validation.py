@@ -1,7 +1,8 @@
 from typing import TYPE_CHECKING
 
+from src.domain.models.entities import LayoutLayerValidationEntity
+
 if TYPE_CHECKING:
-    from src.domain.models.entities import LayoutLayerValidationEntity
     from src.domain.protocols.repositories import (
         LayoutLayerValidationRepositoryProtocol,
     )
