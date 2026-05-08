@@ -5,6 +5,12 @@ class MongoError(InfrastructureError):
     pass
 
 
+class StartSessionError(InfrastructureError):
+    def __init__(self) -> None:
+        message = "Couldn't start session"
+        super().__init__(message)
+
+
 class InvalidMongoIDError(MongoError):
     def __init__(self, value: str, /) -> None:
         message = (

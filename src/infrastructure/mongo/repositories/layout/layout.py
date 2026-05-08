@@ -10,8 +10,6 @@ from src.infrastructure.mongo.repositories.mixins import (
 )
 
 if TYPE_CHECKING:
-    from pymongo.asynchronous.client_session import AsyncClientSession
-
     from src.domain.annotations import (
         LayoutCursorFiltersType,
         LayoutLimitOffsetFiltersType,
@@ -37,13 +35,11 @@ class LayoutRepository(
         self,
         filters: LayoutPageFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> PagesResult[R] | None:
         return await self._get_all_pages(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
             projection=PaginatedLayoutProjection,
         )
@@ -52,13 +48,11 @@ class LayoutRepository(
         self,
         filters: LayoutLimitOffsetFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None:
         return await self._get_all_limit_offset(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
             projection=PaginatedLayoutProjection,
         )
@@ -67,13 +61,11 @@ class LayoutRepository(
         self,
         filters: LayoutCursorFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> CursorResult[R] | None:
         return await self._get_all_cursor(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
             projection=PaginatedLayoutProjection,
         )

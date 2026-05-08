@@ -8,7 +8,6 @@ from .base import BasePaginationMixin
 if TYPE_CHECKING:
     from beanie.odm.enums import SortDirection
     from pydantic import BaseModel
-    from pymongo.asynchronous.client_session import AsyncClientSession
 
     from src.domain.protocols.pagination import LimitOffsetParamsProtocol
     from src.infrastructure.mongo.annotations import QueryConditionsType
@@ -18,9 +17,9 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
     async def _get_all_limit_offset[R, P: BaseModel](  # noqa: PLR0913
         self,
         conditions: QueryConditionsType,
-        params: LimitOffsetParamsProtocol,
-        session: AsyncClientSession,
+        *,
         return_as: type[R],
+        params: LimitOffsetParamsProtocol,
         projection: type[P] | None = None,
         sort: str | Sequence[tuple[str, SortDirection]] | None = None,
         ignore_cache: bool = False,
@@ -36,7 +35,7 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
             *conditions,
             limit=params.limit,
             skip=params.offset,
-            session=session,
+            session=self._session,
             projection_model=projection,
             sort=sort,
             ignore_cache=ignore_cache,
@@ -53,7 +52,7 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
 
         count = await self._document.find(
             *conditions,
-            session=session,
+            session=self._session,
             ignore_cache=ignore_cache,
             fetch_links=fetch_links,
             **pymongo_kwargs,

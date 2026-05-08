@@ -7,17 +7,17 @@ from pymongo import AsyncMongoClient
 from .contexts import ClientContex, InitBeanieContex
 
 if TYPE_CHECKING:
-    from pymongo.asynchronous.client_session import AsyncClientSession
-    from pymongo.asynchronous.collection import AsyncCollection
+    # from pymongo.asynchronous.client_session import AsyncClientSession
+    # from pymongo.asynchronous.collection import AsyncCollection
     from pymongo.asynchronous.database import AsyncDatabase
 
     from .annotations import DocumentsType
-    from .settings import Settings
+    from .protocols import SettingsProtocol
 
 
 class Client:
     def __init__(
-        self, settings: Settings, *, ctx: ClientContex | None = None
+        self, settings: SettingsProtocol, *, ctx: ClientContex | None = None
     ) -> None:
         if ctx is None:
             ctx = ClientContex()
@@ -44,27 +44,27 @@ class Client:
     async def close(self) -> None:
         await self._client.aclose()
 
-    def start_session(self) -> AsyncClientSession:
-        return self._client.start_session()
+    # def start_session(self) -> AsyncClientSession:
+    #     return self._client.start_session()
 
-    @property
-    def client(self) -> AsyncMongoClient:
-        return self._client
+    # @property
+    # def client(self) -> AsyncMongoClient:
+    #     return self._client
 
     @property
     def database(self) -> AsyncDatabase:
         return self._client[self._database]
 
-    def collection(self, name: str, /) -> AsyncCollection:
-        return self.database[name]
+    # @property
+    # async def collections(self) -> list[str]:
+    #     return await self.database.list_collection_names()
 
-    @property
-    async def collections(self) -> list[str]:
-        return await self.database.list_collection_names()
+    # def collection(self, name: str, /) -> AsyncCollection:
+    #     return self.database[name]
 
     async def drop_database(self) -> None:
         await self._client.drop_database(self._database)
 
     async def drop_collection(self, name: str, /) -> None:
-        collection = self.collection(name)
+        collection = self.database[name]
         await collection.drop()

@@ -1,26 +1,17 @@
 import asyncio
 from collections.abc import Sequence, Set
-from typing import TYPE_CHECKING
 
 from src.domain.utils import batche_generator
 from src.infrastructure.mongo.enums import KeyEnum
-
-from .base import BaseRepository
-
-if TYPE_CHECKING:
-    from pymongo.asynchronous.client_session import AsyncClientSession
+from src.infrastructure.mongo.repositories.mixins.repository import (
+    BaseRepository,
+)
 
 
 class GetMixin(BaseRepository):
-    async def get[R](
-        self,
-        document_id: str,
-        *,
-        session: AsyncClientSession,
-        return_as: type[R],
-    ) -> R | None:
+    async def get[R](self, id_: str, *, return_as: type[R]) -> R | None:
         document = await self._document.get(
-            self.as_id(document_id), session=session
+            self.as_id(id_), session=self._session
         )
         if document is None:
             return None
@@ -29,14 +20,10 @@ class GetMixin(BaseRepository):
 
 class GetByHashMixin(BaseRepository):
     async def get_by_hash[R](
-        self,
-        hash_string: str,
-        *,
-        session: AsyncClientSession,
-        return_as: type[R],
+        self, hash_string: str, *, return_as: type[R]
     ) -> R | None:
         document = await self._document.find_one(
-            {"hash": hash_string}, session=session
+            {"hash": hash_string}, session=self._session
         )
         if document is None:
             return None
@@ -46,9 +33,8 @@ class GetByHashMixin(BaseRepository):
 class GetByIDsMixin(BaseRepository):
     async def get_by_ids[R](
         self,
-        document_ids: Set[str],
+        ids: Set[str],
         *,
-        session: AsyncClientSession,
         return_as: type[R],
         batch_size: int | None = None,
         max_concurrent: int = 10,
@@ -59,7 +45,7 @@ class GetByIDsMixin(BaseRepository):
             async with semaphore:
                 documents = await self._document.find_many(
                     {KeyEnum.id: {KeyEnum.in_: self.as_ids(batche)}},
-                    session=session,
+                    session=self._session,
                 ).to_list()
                 if not documents:
                     return []
@@ -68,7 +54,7 @@ class GetByIDsMixin(BaseRepository):
         async with asyncio.TaskGroup() as tg:
             tasks = [
                 tg.create_task(process(b))
-                for b in batche_generator(list(document_ids), batch_size)
+                for b in batche_generator(list(ids), batch_size)
             ]
 
         results = []

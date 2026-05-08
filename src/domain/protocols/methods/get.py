@@ -3,23 +3,20 @@ from typing import Protocol
 
 
 class GetMixinProtocol(Protocol):
-    async def get[R, S](
-        self, document_id: str, *, session: S, return_as: type[R]
-    ) -> R | None: ...
+    async def get[R](self, id_: str, *, return_as: type[R]) -> R | None: ...
 
 
 class GetByHashMixinProtocol(Protocol):
-    async def get_by_hash[R, S](
-        self, hash_string: str, *, session: S, return_as: type[R]
+    async def get_by_hash[R](
+        self, hash_string: str, *, return_as: type[R]
     ) -> R | None: ...
 
 
 class GetByIDsMixinProtocol(Protocol):
-    async def get_by_ids[R, S](
+    async def get_by_ids[R](
         self,
-        document_ids: Set[str],
+        ids: Set[str],
         *,
-        session: S,
         return_as: type[R],
         batch_size: int | None = None,
         max_concurrent: int = 10,

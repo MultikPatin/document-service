@@ -26,8 +26,8 @@ class LayerRepositoryProtocol(
     IncRefCountMixinProtocol,
     Protocol,
 ):
-    async def add_by_hash[R, S, C: HashDTO](
-        self, condition: C, *, session: S, return_as: type[R]
+    async def add_by_hash[R, C: HashDTO](
+        self, condition: C, *, return_as: type[R]
     ) -> R: ...
 
 

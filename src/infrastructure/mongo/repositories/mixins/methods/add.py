@@ -2,31 +2,34 @@ import asyncio
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 
-from .base import BaseRepository
+from src.infrastructure.mongo.repositories.mixins.repository import (
+    BaseRepository,
+)
 
 if TYPE_CHECKING:
     from pydantic import BaseModel
-    from pymongo.asynchronous.client_session import AsyncClientSession
 
 
 class AddMixin(BaseRepository):
     async def add[R, C: BaseModel](
-        self, condition: C, *, session: AsyncClientSession, return_as: type[R]
+        self, condition: C, *, return_as: type[R]
     ) -> R:
         document = self._document(**condition.model_dump(exclude_none=True))
-        await document.create(session=session)
+        await document.create(session=self._session)
         return self.as_dto(document, return_as, replace_links=True)
 
 
 class BulkAddWithReturnIdMixin(BaseRepository):
     async def bulk_add_with_return_id[C: BaseModel](
-        self, conditions: Iterable[C], *, session: AsyncClientSession
+        self, conditions: Iterable[C]
     ) -> list[str]:
         documents = (
             self._document(**c.model_dump(exclude_none=True))
             for c in conditions
         )
-        result = await self._document.insert_many(documents, session=session)
+        result = await self._document.insert_many(
+            documents, session=self._session
+        )
         return [str(_id) for _id in result.inserted_ids if _id is not None]
 
 
@@ -35,7 +38,6 @@ class BulkAddMixin(BaseRepository):
         self,
         conditions: Iterable[C],
         *,
-        session: AsyncClientSession,
         return_as: type[R],
         max_concurrent: int = 10,
     ) -> list[R]:
@@ -49,7 +51,7 @@ class BulkAddMixin(BaseRepository):
                 document = self._document(
                     **condition.model_dump(exclude_none=True)
                 )
-                await document.create(session=session)
+                await document.create(session=self._session)
                 return self.as_dto(document, return_as, replace_links=True)
 
         async with asyncio.TaskGroup() as tg:

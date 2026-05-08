@@ -26,72 +26,63 @@ class BlockRepositoryProtocol(GetMixinProtocol, AddMixinProtocol, Protocol): ...
 
 
 class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R, S](
+    async def get_all_pages[R](
         self,
         filters: LayoutMessagePageFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R, S](
+    async def get_all_limit_offset[R](
         self,
         filters: LayoutMessageLimitOffsetFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity, S](
+    async def get_all_cursor[R: BaseEntity](
         self,
         filters: LayoutMessageCursorFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> CursorResult[R] | None: ...
 
 
 class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R, S](
+    async def get_all_pages[R](
         self,
         filters: LayoutSinglePageFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R, S](
+    async def get_all_limit_offset[R](
         self,
         filters: LayoutSingleLimitOffsetFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity, S](
+    async def get_all_cursor[R: BaseEntity](
         self,
         filters: LayoutSingleCursorFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> CursorResult[R] | None: ...
 
 
 class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R, S](
+    async def get_all_pages[R](
         self,
         filters: LayoutTablePageFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R, S](
+    async def get_all_limit_offset[R](
         self,
         filters: LayoutTableLimitOffsetFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity, S](
+    async def get_all_cursor[R: BaseEntity](
         self,
         filters: LayoutTableCursorFiltersType,
         *,
-        session: S,
         return_as: type[R],
     ) -> CursorResult[R] | None: ...

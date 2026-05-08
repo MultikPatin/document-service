@@ -3,8 +3,6 @@ from typing import TYPE_CHECKING
 from .base import LayoutBlockRepository
 
 if TYPE_CHECKING:
-    from pymongo.asynchronous.client_session import AsyncClientSession
-
     from src.domain.annotations import (
         LayoutMessageCursorFiltersType,
         LayoutMessageLimitOffsetFiltersType,
@@ -27,13 +25,11 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
         self,
         filters: LayoutMessagePageFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> PagesResult[R] | None:
         return await self._get_all_pages(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
         )
 
@@ -41,13 +37,11 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
         self,
         filters: LayoutMessageLimitOffsetFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> LimitOffsetResult[R] | None:
         return await self._get_all_limit_offset(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
         )
 
@@ -55,13 +49,11 @@ class LayoutBlockMessageRepository(LayoutBlockRepository):
         self,
         filters: LayoutMessageCursorFiltersType,
         *,
-        session: AsyncClientSession,
         return_as: type[R],
     ) -> CursorResult[R] | None:
         return await self._get_all_cursor(
             conditions=self._pagination_conditions(filters),
             params=filters.pagination_params,
-            session=session,
             return_as=return_as,
         )
 

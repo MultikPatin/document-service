@@ -8,10 +8,32 @@ from src.domain.constants import CURSOR_SEPARATOR
 from src.infrastructure.mongo.errors import InvalidMongoIDError
 
 if TYPE_CHECKING:
+    from beanie import Document
     from pydantic import BaseModel
+    from pymongo.asynchronous.client_session import AsyncClientSession
+    from pymongo.asynchronous.collection import AsyncCollection
 
 
-class BaseConverters:
+class BaseRepository:
+    _session: AsyncClientSession | None
+
+    def __init__[D: Document](self, document: type[D]) -> None:
+        self._document = document
+        self._session = None
+
+    @property
+    def collection(self) -> AsyncCollection:
+        return self._document.get_pymongo_collection()
+
+    def start_session(self) -> AsyncClientSession:
+        return self.collection.database.client.start_session()
+
+    def set_session(self, session: AsyncClientSession | None) -> None:
+        self._session = session
+
+    def as_ids(self, ids: Sequence[str], /) -> Sequence[PydanticObjectId]:
+        return [self.as_id(i) for i in ids]
+
     @staticmethod
     def as_id(_id: str, /) -> PydanticObjectId:
         s = _id.split(CURSOR_SEPARATOR, 1)
@@ -22,8 +44,10 @@ class BaseConverters:
         except InvalidId as e:
             raise InvalidMongoIDError(_id) from e
 
-    def as_ids(self, ids: Sequence[str], /) -> Sequence[PydanticObjectId]:
-        return [self.as_id(i) for i in ids]
+    def as_dtos[D: BaseModel, R](
+        self, docs: Iterable[D], dto: type[R], *, replace_links: bool = False
+    ) -> list[R]:
+        return [self.as_dto(d, dto, replace_links=replace_links) for d in docs]
 
     @staticmethod
     def as_dto[D: BaseModel, R](
@@ -33,11 +57,6 @@ class BaseConverters:
         if replace_links:
             _link_replacer(dump)
         return dto(**dump)
-
-    def as_dtos[D: BaseModel, R](
-        self, docs: Iterable[D], dto: type[R], *, replace_links: bool = False
-    ) -> list[R]:
-        return [self.as_dto(d, dto, replace_links=replace_links) for d in docs]
 
 
 def _link_replacer(dump: MutableMapping[str, Any] | Sequence[Any]) -> None:
