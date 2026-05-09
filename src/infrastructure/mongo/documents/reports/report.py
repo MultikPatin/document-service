@@ -1,9 +1,9 @@
-from datetime import datetime
 from typing import TYPE_CHECKING
 
-from beanie import DocumentWithSoftDelete, Link
+from beanie import Link
 
 from src.infrastructure.mongo.constants import REPORT_COLLECTION
+from src.infrastructure.mongo.documents.base import WithSoftDeleteDocument
 
 if TYPE_CHECKING:
     from src.infrastructure.mongo.documents import LayoutDocument
@@ -11,10 +11,7 @@ if TYPE_CHECKING:
     from .blocks import ReportBlockSingleDocument, ReportBlockTableDocument
 
 
-class ReportDocument(DocumentWithSoftDelete):
-    created_at: datetime
-    updated_at: datetime | None = None
-
+class ReportDocument(WithSoftDeleteDocument):
     singles: list[Link[ReportBlockSingleDocument]] | None = None
     tables: list[Link[ReportBlockTableDocument]] | None = None
     layout: Link[LayoutDocument]

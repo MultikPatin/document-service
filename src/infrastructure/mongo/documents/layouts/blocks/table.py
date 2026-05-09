@@ -1,15 +1,15 @@
-from beanie import Document
 from pydantic import Field
 
 from src.infrastructure.mongo.constants import LAYOUT_BLOCK_TABLE_COLLECTION
+from src.infrastructure.mongo.documents.base import WithKeyLabelDocument
 
 
-class LayoutBlockTableDocument(Document):
-    key: str = Field(min_length=1, max_length=64)
+class LayoutBlockTableDocument(WithKeyLabelDocument):
+    ref_count: int = Field(default=0)
 
     schemas: list[list[str]]
-    validations: list[str | None] | None = Field(default=None)
-    defaults: list[list[str | None] | None] | None = Field(default=None)
+    validations: list[str | None] | None = None
+    defaults: list[list[str | None] | None] | None = None
 
     class Settings:
         name = LAYOUT_BLOCK_TABLE_COLLECTION

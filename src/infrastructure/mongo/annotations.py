@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from beanie import Document, UnionDoc, View
+    from beanie.odm.enums import SortDirection
     from pymongo.monitoring import (
         CommandListener,
         ConnectionPoolListener,
@@ -26,3 +27,5 @@ type EventListenerType = Sequence[
     | TopologyListener
     | ServerListener
 ]
+
+type QuerySortType = str | Sequence[tuple[str, SortDirection]] | None

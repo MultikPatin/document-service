@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 from src.domain.models.pagination import CursorResult
@@ -6,12 +5,14 @@ from src.domain.models.pagination import CursorResult
 from .base import BasePaginationMixin
 
 if TYPE_CHECKING:
-    from beanie.odm.enums import SortDirection
     from pydantic import BaseModel
 
     from src.domain.models.entities import BaseEntity
     from src.domain.protocols.pagination import CursorParamsProtocol
-    from src.infrastructure.mongo.annotations import QueryConditionsType
+    from src.infrastructure.mongo.annotations import (
+        QueryConditionsType,
+        QuerySortType,
+    )
 
 
 class PaginationCursorMixin(BasePaginationMixin):
@@ -22,7 +23,7 @@ class PaginationCursorMixin(BasePaginationMixin):
         return_as: type[R],
         params: CursorParamsProtocol,
         projection: type[P] | None = None,
-        sort: str | Sequence[tuple[str, SortDirection]] | None = None,
+        sort: QuerySortType = None,
         ignore_cache: bool = False,
         fetch_links: bool = False,
         with_children: bool = False,

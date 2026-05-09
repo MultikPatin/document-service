@@ -1,11 +1,15 @@
-from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from beanie import DocumentWithSoftDelete, Link
+from beanie import Link
 from pydantic import Field
 
 from src.domain.enums import LifeStatusEnum
 from src.infrastructure.mongo.constants import LAYOUT_COLLECTION
+from src.infrastructure.mongo.documents.base import (
+    WithKeyLabelDocument,
+    WithSoftDeleteDocument,
+    WithVersionDocument,
+)
 
 # from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
@@ -16,22 +20,20 @@ if TYPE_CHECKING:
     )
 
 
-class LayoutDocument(DocumentWithSoftDelete):
-    created_at: datetime
-    updated_at: datetime | None = None
-
+class LayoutDocument(
+    WithKeyLabelDocument, WithVersionDocument, WithSoftDeleteDocument
+):
     ref_count: int = Field(default=0)
 
-    key: str = Field(min_length=1, max_length=64)
-    label: str = Field(min_length=1, max_length=255)
-    major_version: int = Field(ge=0, default=0)
-    minor_version: int = Field(ge=0, default=0)
     status: LifeStatusEnum = Field(default=LifeStatusEnum.created)
     skeleton: list[dict[str, Any]]
 
     singles: list[Link[LayoutBlockSingleDocument]] | None = None
     tables: list[Link[LayoutBlockTableDocument]] | None = None
     messages: list[Link[LayoutBlockMessageDocument]] | None = None
+
+    def version(self) -> str:
+        return f"{self.major_version}.{self.minor_version}"
 
     class Settings:
         name = LAYOUT_COLLECTION

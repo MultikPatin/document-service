@@ -1,11 +1,12 @@
-from beanie import Document
 from pydantic import Field
 
 from src.infrastructure.mongo.constants import LAYOUT_BLOCK_MESSAGE_COLLECTION
+from src.infrastructure.mongo.documents.base import WithKeyLabelDocument
 
 
-class LayoutBlockMessageDocument(Document):
-    key: str = Field(min_length=1, max_length=64)
+class LayoutBlockMessageDocument(WithKeyLabelDocument):
+    ref_count: int = Field(default=0)
+
     text: str = Field(min_length=1, max_length=512)
 
     class Settings:

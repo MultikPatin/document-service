@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any
 
 from src.domain.models.pagination import LimitOffsetResult
@@ -6,11 +5,13 @@ from src.domain.models.pagination import LimitOffsetResult
 from .base import BasePaginationMixin
 
 if TYPE_CHECKING:
-    from beanie.odm.enums import SortDirection
     from pydantic import BaseModel
 
     from src.domain.protocols.pagination import LimitOffsetParamsProtocol
-    from src.infrastructure.mongo.annotations import QueryConditionsType
+    from src.infrastructure.mongo.annotations import (
+        QueryConditionsType,
+        QuerySortType,
+    )
 
 
 class PaginationLimitOffsetMixin(BasePaginationMixin):
@@ -21,7 +22,7 @@ class PaginationLimitOffsetMixin(BasePaginationMixin):
         return_as: type[R],
         params: LimitOffsetParamsProtocol,
         projection: type[P] | None = None,
-        sort: str | Sequence[tuple[str, SortDirection]] | None = None,
+        sort: QuerySortType = None,
         ignore_cache: bool = False,
         fetch_links: bool = False,
         with_children: bool = False,

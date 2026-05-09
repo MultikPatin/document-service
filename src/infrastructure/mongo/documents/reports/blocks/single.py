@@ -1,13 +1,10 @@
 from typing import Any
 
-from beanie import Document
-from pydantic import Field
-
 from src.infrastructure.mongo.constants import REPORT_BLOCK_SINGLE_COLLECTION
+from src.infrastructure.mongo.documents.base import WithKeyDocument
 
 
-class ReportBlockSingleDocument(Document):
-    key: str = Field(min_length=1, max_length=64)
+class ReportBlockSingleDocument(WithKeyDocument):
     values: dict[str, Any]
 
     class Settings:

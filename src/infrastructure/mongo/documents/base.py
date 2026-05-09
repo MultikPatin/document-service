@@ -1,0 +1,64 @@
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
+
+from beanie import Document, DocumentWithSoftDelete
+from pydantic import Field
+
+from src.domain.utils import time_now
+from src.infrastructure.mongo.enums import KeyEnum
+
+if TYPE_CHECKING:
+    from beanie import BulkWriter, DeleteRules
+    from beanie.odm.actions import ActionDirections
+    from pymongo.asynchronous.client_session import AsyncClientSession
+    from pymongo.results import DeleteResult
+
+
+class WithKeyDocument(Document):
+    # TODO: Автоматическая генерация если не передан
+    key: str = Field(min_length=1, max_length=64)
+
+
+class WithKeyLabelDocument(WithKeyDocument):
+    label: str = Field(min_length=1, max_length=255)
+
+
+class WithVersionDocument(Document):
+    major_version: int = Field(ge=0, default=0)
+    minor_version: int = Field(ge=0, default=0)
+
+    def version(self) -> str:
+        return f"{self.major_version}.{self.minor_version}"
+
+
+class WithSoftDeleteDocument(DocumentWithSoftDelete):
+    created_at: datetime
+    updated_at: datetime | None
+
+    def set_updated_at(self) -> None:
+        self.updated_at = time_now()
+
+
+class DocumentWithRefs(Document):
+    refs: int = Field(default=0)
+
+    async def delete(
+        self,
+        session: AsyncClientSession | None = None,
+        bulk_writer: BulkWriter | None = None,
+        link_rule: DeleteRules = DeleteRules.DO_NOTHING,
+        skip_actions: list[ActionDirections | str] | None = None,
+        **pymongo_kwargs: Any,  # noqa: ANN401
+    ) -> DeleteResult | None:
+        document = await self.find_one({KeyEnum.id: self.id})
+        if document is None:
+            return None
+        if document.refs > 0:
+            return None
+        return await super().delete(
+            session=session,
+            bulk_writer=bulk_writer,
+            link_rule=link_rule,
+            skip_actions=skip_actions,
+            **pymongo_kwargs,
+        )
