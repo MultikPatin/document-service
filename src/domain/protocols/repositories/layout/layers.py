@@ -4,11 +4,9 @@ from src.domain.protocols.methods import (
     AddMixinProtocol,
     # UpdateMixinProtocol,
     # DeleteWithRefCountMixinProtocol,
-    DecRefCountMixinProtocol,
     GetByHashMixinProtocol,
     GetByIDsMixinProtocol,
     GetMixinProtocol,
-    IncRefCountMixinProtocol,
 )
 
 if TYPE_CHECKING:
@@ -22,8 +20,6 @@ class LayerRepositoryProtocol(
     AddMixinProtocol,
     # UpdateMixinProtocol,
     # DeleteWithRefCountMixinProtocol,
-    DecRefCountMixinProtocol,
-    IncRefCountMixinProtocol,
     Protocol,
 ):
     async def add_by_hash[R, C: HashDTO](

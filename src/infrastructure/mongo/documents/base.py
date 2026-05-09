@@ -30,8 +30,14 @@ class DocumentWithVersion(Document):
     def version(self) -> str:
         return f"{self.major_version}.{self.minor_version}"
 
+    def increment_major_version(self) -> None:
+        self.major_version += 1
 
-class WithSoftDeleteDocument(DocumentWithSoftDelete):
+    def increment_minor_version(self) -> None:
+        self.minor_version += 1
+
+
+class WithTimeStampsDocument(DocumentWithSoftDelete):
     created_at: datetime
     updated_at: datetime | None
 
@@ -41,6 +47,16 @@ class WithSoftDeleteDocument(DocumentWithSoftDelete):
 
 class DocumentWithRefs(Document):
     refs: NonNegativeInt = 0
+
+    def increment_refs(self) -> None:
+        self.refs += 1
+
+    def decrement_refs(self) -> None:
+        if self.refs > 0:
+            self.refs -= 1
+
+    def is_referenced_by(self) -> bool:
+        return self.refs > 0
 
     async def delete(
         self,
@@ -53,7 +69,7 @@ class DocumentWithRefs(Document):
         document = await self.find_one({KeyEnum.id: self.id})
         if document is None:
             return None
-        if document.refs > 0:
+        if self.is_referenced_by():
             return None
         return await super().delete(
             session=session,

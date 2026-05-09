@@ -12,7 +12,7 @@ from src.infrastructure.mongo.constants import (
 from src.infrastructure.mongo.documents.base import (
     DocumentWithKeyLabel,
     DocumentWithVersion,
-    WithSoftDeleteDocument,
+    WithTimeStampsDocument,
 )
 
 if TYPE_CHECKING:
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class LayoutDocument(
-    DocumentWithKeyLabel, DocumentWithVersion, WithSoftDeleteDocument
+    DocumentWithKeyLabel, DocumentWithVersion, WithTimeStampsDocument
 ):
     ref_count: int = Field(default=0)
 

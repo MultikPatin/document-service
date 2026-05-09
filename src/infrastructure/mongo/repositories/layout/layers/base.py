@@ -4,11 +4,9 @@ from src.infrastructure.mongo.repositories.mixins import (
     AddMixin,
     # UpdateMixin,
     # DeleteWithRefCountMixin,
-    DecRefCountMixin,
     GetByHashMixin,
     GetByIDsMixin,
     GetMixin,
-    IncRefCountMixin,
 )
 
 if TYPE_CHECKING:
@@ -22,8 +20,6 @@ class LayoutLayerRepository(
     AddMixin,
     # UpdateMixin,
     # DeleteWithRefCountMixin,
-    DecRefCountMixin,
-    IncRefCountMixin,
 ):
     async def add_by_hash[R, C: HashDTO](
         self, condition: C, *, return_as: type[R]
