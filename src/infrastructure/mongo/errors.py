@@ -11,7 +11,7 @@ class StartSessionError(InfrastructureError):
         super().__init__(message)
 
 
-class InvalidMongoIDError(MongoError):
+class InvalidIDError(MongoError):
     def __init__(self, value: str, /) -> None:
         message = (
             f"Invalid ID value: {value}, type: {type(value)}"

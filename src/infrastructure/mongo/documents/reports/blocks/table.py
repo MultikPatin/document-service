@@ -1,10 +1,13 @@
 from typing import Any
 
+from beanie import Document
+from pydantic import Field
+
 from src.infrastructure.mongo.constants import REPORT_BLOCK_TABLE_COLLECTION
-from src.infrastructure.mongo.documents.mixins import Key
 
 
-class ReportBlockTableDocument(Key):
+class ReportBlockTableDocument(Document):
+    key: str = Field(min_length=1, max_length=64)
     values: list[list[Any]]
 
     class Settings:

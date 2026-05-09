@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from src.infrastructure.mongo.protocols import TransactionRepositoryProtocol
 
 
-class AsyncTransactionContext:
+class AtomicTransaction:
     def __init_(self, *repositories: TransactionRepositoryProtocol) -> None:
         self._repositories = repositories
         self._session: AsyncClientSession | None = None

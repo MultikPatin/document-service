@@ -1,13 +1,16 @@
+from beanie import Document
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
 from src.infrastructure.mongo.constants import (
     LAYOUT_LAYER_VALIDATION_COLLECTION,
 )
-from src.infrastructure.mongo.documents.mixins import Hash, RefCount
 
 
-class LayoutLayerValidationDocument(RefCount, Hash):
+class LayoutLayerValidationDocument(Document):
+    ref_count: int = Field(default=0)
+    hash: str = Field(min_length=8, max_length=255)
+
     gt: int | None = Field(default=None)
     ge: int | None = Field(default=None)
     lt: int | None = Field(default=None)
