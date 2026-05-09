@@ -22,7 +22,7 @@ class _Result[T](BaseModel):
     total: int
 
 
-class PagesResult[T](_Result):
+class PagesResult[T](_Result[T]):
     current_page: int
     previous_page: int | None
     next_page: int | None
@@ -49,7 +49,7 @@ class PagesResult[T](_Result):
         )
 
 
-class LimitOffsetResult[T](_Result):
+class LimitOffsetResult[T](_Result[T]):
     limit: int
     offset: int
 
@@ -65,7 +65,7 @@ class LimitOffsetResult[T](_Result):
         )
 
 
-class CursorResult[T: BaseEntity](_Result):
+class CursorResult[T: BaseEntity](_Result[T]):
     current_page: str | None
     previous_page: str | None
     next_page: str | None

@@ -2,17 +2,19 @@ from typing import TYPE_CHECKING, Any
 
 from beanie import Link
 from pydantic import Field
+from pymongo import DESCENDING, IndexModel
 
 from src.domain.enums import LifeStatusEnum
-from src.infrastructure.mongo.constants import LAYOUT_COLLECTION
-from src.infrastructure.mongo.documents.mixins import (
-    CreatedAt,
-    Key,
-    RefCount,
-    UpdatedAt,
+from src.infrastructure.mongo.constants import (
+    INDEX_KEY_VERSION_DESCENDING,
+    LAYOUT_COLLECTION,
+)
+from src.infrastructure.mongo.documents.base import (
+    DocumentWithKeyLabel,
+    DocumentWithVersion,
+    WithTimeStampsDocument,
 )
 
-# from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
     from .blocks import (
         LayoutBlockMessageDocument,
@@ -21,33 +23,30 @@ if TYPE_CHECKING:
     )
 
 
-class LayoutDocument(Key, RefCount, CreatedAt, UpdatedAt):
-    label: str = Field(min_length=1, max_length=255)
+class LayoutDocument(
+    DocumentWithKeyLabel, DocumentWithVersion, WithTimeStampsDocument
+):
+    ref_count: int = Field(default=0)
 
-    major_version: int = Field(ge=0, default=0)
-    minor_version: int = Field(ge=0, default=0)
     status: LifeStatusEnum = Field(default=LifeStatusEnum.created)
-
     skeleton: list[dict[str, Any]]
 
-    singles: list[Link[LayoutBlockSingleDocument]] | None = Field(default=None)
-    tables: list[Link[LayoutBlockTableDocument]] | None = Field(default=None)
-    messages: list[Link[LayoutBlockMessageDocument]] | None = Field(
-        default=None
-    )
+    singles: list[Link[LayoutBlockSingleDocument]] | None = None
+    tables: list[Link[LayoutBlockTableDocument]] | None = None
+    messages: list[Link[LayoutBlockMessageDocument]] | None = None
 
     class Settings:
         name = LAYOUT_COLLECTION
         max_nesting_depth = 1
         use_state_management = True
-        # indexes = [
-        #     IndexModel(
-        #         [
-        #             ("major_version", DESCENDING),
-        #             ("minor_version", DESCENDING),
-        #             ("key", DESCENDING),
-        #         ],
-        #         name="key_version_unique_idx_DESCENDING",
-        #         unique=True,
-        #     ),
-        # ]
+        indexes = [  # noqa: RUF012
+            IndexModel(
+                [
+                    ("major_version", DESCENDING),
+                    ("minor_version", DESCENDING),
+                    ("key", DESCENDING),
+                ],
+                name=INDEX_KEY_VERSION_DESCENDING,
+                unique=True,
+            ),
+        ]

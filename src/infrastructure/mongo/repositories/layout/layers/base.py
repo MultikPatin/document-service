@@ -4,11 +4,9 @@ from src.infrastructure.mongo.repositories.mixins import (
     AddMixin,
     # UpdateMixin,
     # DeleteWithRefCountMixin,
-    DecRefCountMixin,
     GetByHashMixin,
     GetByIDsMixin,
     GetMixin,
-    IncRefCountMixin,
 )
 
 if TYPE_CHECKING:
@@ -22,8 +20,6 @@ class LayoutLayerRepository(
     AddMixin,
     # UpdateMixin,
     # DeleteWithRefCountMixin,
-    DecRefCountMixin,
-    IncRefCountMixin,
 ):
     async def add_by_hash[R, C: HashDTO](
         self, condition: C, *, return_as: type[R]
@@ -36,6 +32,8 @@ class LayoutLayerRepository(
         if result is None:
             document = self._document(**condition.model_dump(exclude_none=True))
             await document.create(session=self._session)
-            result = self.as_dto(document, return_as, replace_links=True)
+            result = self.converter.as_dto(
+                document, return_as, replace_links=True
+            )
 
         return result

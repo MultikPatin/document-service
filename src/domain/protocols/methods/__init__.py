@@ -7,9 +7,7 @@ from .delete import DeleteByIDMixinProtocol
 from .get import GetByHashMixinProtocol, GetByIDsMixinProtocol, GetMixinProtocol
 from .helpers import (
     CountMixinProtocol,
-    DecRefCountMixinProtocol,
     ExistsMixinProtocol,
-    IncRefCountMixinProtocol,
 )
 
 __all__ = [
@@ -17,11 +15,9 @@ __all__ = [
     "BulkAddMixinProtocol",
     "BulkAddWithReturnIdMixinProtocol",
     "CountMixinProtocol",
-    "DecRefCountMixinProtocol",
     "DeleteByIDMixinProtocol",
     "ExistsMixinProtocol",
     "GetByHashMixinProtocol",
     "GetByIDsMixinProtocol",
     "GetMixinProtocol",
-    "IncRefCountMixinProtocol",
 ]

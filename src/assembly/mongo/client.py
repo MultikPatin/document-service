@@ -5,7 +5,12 @@ from dishka import Provider, Scope, provide
 
 from src.assembly import InitComponentProtocol
 from src.infrastructure.mongo import Client, Settings, collect_documents
+from src.infrastructure.mongo.converter import Converter
 from src.infrastructure.mongo.logger import LoggerNames
+from src.infrastructure.mongo.protocols import (
+    ConverterProtocol,
+    SettingsProtocol,
+)
 
 logger = logging.getLogger(LoggerNames.init())
 
@@ -17,7 +22,7 @@ class ClientProvider(Provider):
         return InitComponentProtocol
 
     @provide(scope=Scope.APP)
-    async def __settings(self) -> Settings:
+    async def __settings(self) -> SettingsProtocol:
         logger.info("loading the settings...")
         settings = Settings()
 
@@ -32,7 +37,9 @@ class ClientProvider(Provider):
         return settings
 
     @provide(scope=Scope.APP)
-    async def __client(self, settings: Settings) -> AsyncGenerator[Client]:
+    async def __client(
+        self, settings: SettingsProtocol
+    ) -> AsyncGenerator[Client]:
         logger.info("component initialization...")
         logger.info("client initialization...")
         client = Client(settings)
@@ -52,6 +59,10 @@ class ClientProvider(Provider):
         logger.info("stopping the client...")
         await client.close()
         logger.info("stopping the client has been completed successfully")
+
+    @provide(scope=Scope.APP)
+    def __converter(self) -> ConverterProtocol:
+        return Converter()
 
     # session_alias = alias(source=AsyncClientSession, provides=SessionProtocol)
 

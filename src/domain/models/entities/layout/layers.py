@@ -2,13 +2,13 @@ from src.domain.models.entities.base import BaseEntity
 from src.domain.models.vo import layout
 
 
-class Schema(BaseEntity, layout.Schema):
+class LayoutLayerSchemaEntity(BaseEntity, layout.Schema):
     pass
 
 
-class Default(BaseEntity, layout.Default):
+class LayoutLayerDefaultEntity(BaseEntity, layout.Default):
     pass
 
 
-class Validation(BaseEntity, layout.Validation):
+class LayoutLayerValidationEntity(BaseEntity, layout.Validation):
     pass

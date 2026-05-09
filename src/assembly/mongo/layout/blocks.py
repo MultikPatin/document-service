@@ -10,6 +10,7 @@ from src.infrastructure.mongo.documents import (
     LayoutBlockSingleDocument,
     LayoutBlockTableDocument,
 )
+from src.infrastructure.mongo.protocols import ConverterProtocol
 from src.infrastructure.mongo.repositories import (
     LayoutBlockMessageRepository,
     LayoutBlockSingleRepository,
@@ -19,13 +20,25 @@ from src.infrastructure.mongo.repositories import (
 
 class _BlocksProvider(Provider):
     @provide(scope=Scope.APP)
-    async def __single(self) -> LayoutBlockSingleRepositoryProtocol:
-        return LayoutBlockSingleRepository(LayoutBlockSingleDocument)
+    async def __single(
+        self, converter: ConverterProtocol
+    ) -> LayoutBlockSingleRepositoryProtocol:
+        return LayoutBlockSingleRepository(
+            LayoutBlockSingleDocument, converter=converter
+        )
 
     @provide(scope=Scope.APP)
-    async def __table(self) -> LayoutBlockTableRepositoryProtocol:
-        return LayoutBlockTableRepository(LayoutBlockTableDocument)
+    async def __table(
+        self, converter: ConverterProtocol
+    ) -> LayoutBlockTableRepositoryProtocol:
+        return LayoutBlockTableRepository(
+            LayoutBlockTableDocument, converter=converter
+        )
 
     @provide(scope=Scope.APP)
-    async def __message(self) -> LayoutBlockMessageRepositoryProtocol:
-        return LayoutBlockMessageRepository(LayoutBlockMessageDocument)
+    async def __message(
+        self, converter: ConverterProtocol
+    ) -> LayoutBlockMessageRepositoryProtocol:
+        return LayoutBlockMessageRepository(
+            LayoutBlockMessageDocument, converter=converter
+        )

@@ -12,7 +12,7 @@ class ReportRepository(GetMixin, AddMixin):
         self, id_: str, *, return_as: type[R]
     ) -> R | None:
         document = await self._document.find_one(
-            {KeyEnum.id: self.as_id(id_)},
+            {KeyEnum.id: self.converter.as_id(id_)},
             session=self._session,
             fetch_links=True,
             nesting_depths_per_field={
@@ -23,11 +23,11 @@ class ReportRepository(GetMixin, AddMixin):
         )
         if document is None:
             return None
-        return self.as_dto(document, return_as, replace_links=True)
+        return self.converter.as_dto(document, return_as, replace_links=True)
 
     async def get_layout_id(self, id_: str) -> str | None:
         document = await self._document.find_one(
-            {KeyEnum.id: self.as_id(id_)},
+            {KeyEnum.id: self.converter.as_id(id_)},
             session=self._session,
             projection_model=LayoutIDProjection,
         )
