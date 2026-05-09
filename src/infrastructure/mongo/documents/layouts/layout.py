@@ -2,16 +2,19 @@ from typing import TYPE_CHECKING, Any
 
 from beanie import Link
 from pydantic import Field
+from pymongo import DESCENDING, IndexModel
 
 from src.domain.enums import LifeStatusEnum
-from src.infrastructure.mongo.constants import LAYOUT_COLLECTION
+from src.infrastructure.mongo.constants import (
+    INDEX_KEY_VERSION_DESCENDING,
+    LAYOUT_COLLECTION,
+)
 from src.infrastructure.mongo.documents.base import (
-    WithKeyLabelDocument,
+    DocumentWithKeyLabel,
+    DocumentWithVersion,
     WithSoftDeleteDocument,
-    WithVersionDocument,
 )
 
-# from pymongo import DESCENDING, IndexModel
 if TYPE_CHECKING:
     from .blocks import (
         LayoutBlockMessageDocument,
@@ -21,7 +24,7 @@ if TYPE_CHECKING:
 
 
 class LayoutDocument(
-    WithKeyLabelDocument, WithVersionDocument, WithSoftDeleteDocument
+    DocumentWithKeyLabel, DocumentWithVersion, WithSoftDeleteDocument
 ):
     ref_count: int = Field(default=0)
 
@@ -32,21 +35,18 @@ class LayoutDocument(
     tables: list[Link[LayoutBlockTableDocument]] | None = None
     messages: list[Link[LayoutBlockMessageDocument]] | None = None
 
-    def version(self) -> str:
-        return f"{self.major_version}.{self.minor_version}"
-
     class Settings:
         name = LAYOUT_COLLECTION
         max_nesting_depth = 1
         use_state_management = True
-        # indexes = [
-        #     IndexModel(
-        #         [
-        #             ("major_version", DESCENDING),
-        #             ("minor_version", DESCENDING),
-        #             ("key", DESCENDING),
-        #         ],
-        #         name="key_version_unique_idx_DESCENDING",
-        #         unique=True,
-        #     ),
-        # ]
+        indexes = [  # noqa: RUF012
+            IndexModel(
+                [
+                    ("major_version", DESCENDING),
+                    ("minor_version", DESCENDING),
+                    ("key", DESCENDING),
+                ],
+                name=INDEX_KEY_VERSION_DESCENDING,
+                unique=True,
+            ),
+        ]

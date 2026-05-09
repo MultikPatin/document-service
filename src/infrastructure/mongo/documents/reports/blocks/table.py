@@ -1,10 +1,10 @@
 from typing import Any
 
 from src.infrastructure.mongo.constants import REPORT_BLOCK_TABLE_COLLECTION
-from src.infrastructure.mongo.documents.base import WithKeyDocument
+from src.infrastructure.mongo.documents.base import DocumentWithKey
 
 
-class ReportBlockTableDocument(WithKeyDocument):
+class ReportBlockTableDocument(DocumentWithKey):
     values: list[list[Any]]
 
     class Settings:

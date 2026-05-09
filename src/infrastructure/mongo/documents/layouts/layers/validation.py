@@ -3,6 +3,7 @@ from pydantic import Field
 from pymongo import HASHED, IndexModel
 
 from src.infrastructure.mongo.constants import (
+    INDEX_HASH_HASHED,
     LAYOUT_LAYER_VALIDATION_COLLECTION,
 )
 
@@ -26,7 +27,7 @@ class LayoutLayerValidationDocument(Document):
         indexes = [  # noqa: RUF012
             IndexModel(
                 [("hash", HASHED)],
-                name="hash_idx_DESCENDING",
+                name=INDEX_HASH_HASHED,
                 unique=True,
             )
         ]

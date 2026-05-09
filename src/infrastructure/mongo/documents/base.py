@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from beanie import Document, DocumentWithSoftDelete
-from pydantic import Field
+from pydantic import Field, NonNegativeInt
 
 from src.domain.utils import time_now
 from src.infrastructure.mongo.enums import KeyEnum
@@ -14,18 +14,18 @@ if TYPE_CHECKING:
     from pymongo.results import DeleteResult
 
 
-class WithKeyDocument(Document):
+class DocumentWithKey(Document):
     # TODO: Автоматическая генерация если не передан
     key: str = Field(min_length=1, max_length=64)
 
 
-class WithKeyLabelDocument(WithKeyDocument):
+class DocumentWithKeyLabel(DocumentWithKey):
     label: str = Field(min_length=1, max_length=255)
 
 
-class WithVersionDocument(Document):
-    major_version: int = Field(ge=0, default=0)
-    minor_version: int = Field(ge=0, default=0)
+class DocumentWithVersion(Document):
+    major_version: NonNegativeInt = 0
+    minor_version: NonNegativeInt = 0
 
     def version(self) -> str:
         return f"{self.major_version}.{self.minor_version}"
@@ -40,7 +40,7 @@ class WithSoftDeleteDocument(DocumentWithSoftDelete):
 
 
 class DocumentWithRefs(Document):
-    refs: int = Field(default=0)
+    refs: NonNegativeInt = 0
 
     async def delete(
         self,

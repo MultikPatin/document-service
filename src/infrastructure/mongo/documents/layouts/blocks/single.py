@@ -1,10 +1,10 @@
 from pydantic import Field
 
 from src.infrastructure.mongo.constants import LAYOUT_BLOCK_SINGLE_COLLECTION
-from src.infrastructure.mongo.documents.base import WithKeyLabelDocument
+from src.infrastructure.mongo.documents.base import DocumentWithKeyLabel
 
 
-class LayoutBlockSingleDocument(WithKeyLabelDocument):
+class LayoutBlockSingleDocument(DocumentWithKeyLabel):
     ref_count: int = Field(default=0)
 
     schemas: list[str]

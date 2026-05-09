@@ -2,7 +2,10 @@ from beanie import Document
 from pydantic import Field
 from pymongo import HASHED, IndexModel
 
-from src.infrastructure.mongo.constants import LAYOUT_LAYER_DEFAULT_COLLECTION
+from src.infrastructure.mongo.constants import (
+    INDEX_HASH_HASHED,
+    LAYOUT_LAYER_DEFAULT_COLLECTION,
+)
 
 
 class LayoutLayerDefaultDocument(Document):
@@ -17,7 +20,7 @@ class LayoutLayerDefaultDocument(Document):
         indexes = [  # noqa: RUF012
             IndexModel(
                 [("hash", HASHED)],
-                name="hash_idx_DESCENDING",
+                name=INDEX_HASH_HASHED,
                 unique=True,
             )
         ]
