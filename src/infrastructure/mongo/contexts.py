@@ -10,6 +10,8 @@ if TYPE_CHECKING:
     from pymongo.encryption_options import AutoEncryptionOpts
     from pymongo.server_api import ServerApi
 
+    from src.infrastructure.mongo.annotations import QuerySortType
+
     from .annotations import (
         EventListenerType,
         ServerSelectorType,
@@ -34,3 +36,15 @@ class InitBeanieContex:
     allow_index_dropping: bool = False
     recreate_views: bool = False
     skip_indexes: bool = False
+
+
+@dataclass(frozen=True, slots=True, eq=False, match_args=False)
+class PaginationQueryContex:
+    sort: QuerySortType = None
+    ignore_cache: bool = False
+    fetch_links: bool = False
+    with_children: bool = False
+    lazy_parse: bool = False
+    nesting_depth: int | None = None
+    nesting_depths_per_field: dict[str, int] | None = None
+    pymongo_kwargs: Mapping[str, Any] = field(default_factory=dict)
