@@ -15,9 +15,6 @@ mongo = [
 ]
 
 [dependency-groups]
-coverage = [
-    "pytest-cov>=7.1.0",
-]
 tests = [
     "pytest>=9.0.3",
 ]

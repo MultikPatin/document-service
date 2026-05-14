@@ -1,14 +1,13 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from beanie import Document, DocumentWithSoftDelete
+from beanie import BulkWriter, DeleteRules, Document, DocumentWithSoftDelete
 from pydantic import Field, NonNegativeInt
 
 from src.domain.utils import time_now
 from src.infrastructure.mongo.enums import KeyEnum
 
 if TYPE_CHECKING:
-    from beanie import BulkWriter, DeleteRules
     from beanie.odm.actions import ActionDirections
     from pymongo.asynchronous.client_session import AsyncClientSession
     from pymongo.results import DeleteResult
