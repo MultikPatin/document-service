@@ -35,22 +35,6 @@ jobs:
             uv tool install ruff==${{ inputs.ruff-version }}
           fi
 
-      - name: Verify installed versions
-        shell: bash
-        run: |
-          echo "========================================"
-          echo "Installed versions in Ruff Action:"
-          echo "========================================"
-          echo "Python: $(python --version 2>&1)"
-          echo "UV: $(uv --version)"
-          echo "Ruff: $(ruff --version)"
-          echo "========================================"
-          echo "Requested versions:"
-          echo "Python (input): ${{ inputs.python-version }}"
-          echo "UV (input): ${{ inputs.uv-version }}"
-          echo "Ruff (input): ${{ inputs.ruff-version }}"
-          echo "========================================"
-
       - name: Run Ruff linter
         run: ruff check .
 
