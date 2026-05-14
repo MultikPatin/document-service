@@ -21,3 +21,7 @@ coverage = [
 tests = [
     "pytest>=9.0.3",
 ]
+
+[tool.uv]
+python-version = "3.14"
+uv-version = "0.10.7"
