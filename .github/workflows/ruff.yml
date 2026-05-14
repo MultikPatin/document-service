@@ -9,6 +9,10 @@ on:
       uv-version:
         required: true
         type: string
+      ruff-version:
+        required: false
+        type: string
+        default: 'latest'
 
 jobs:
   ruff:
@@ -22,6 +26,15 @@ jobs:
           uv-version: ${{ inputs.uv-version }}
           all-extras: 'true'
 
+      - name: Install Ruff via uv tool
+        shell: bash
+        run: |
+          if [ "${{ inputs.ruff-version }}" = "latest" ]; then
+            uv tool install ruff
+          else
+            uv tool install ruff==${{ inputs.ruff-version }}
+          fi
+
       - name: Verify installed versions
         shell: bash
         run: |
@@ -30,15 +43,16 @@ jobs:
           echo "========================================"
           echo "Python: $(python --version 2>&1)"
           echo "UV: $(uv --version)"
-          echo "Ruff: $(uv run ruff --version)"
+          echo "Ruff: $(ruff --version)"
           echo "========================================"
           echo "Requested versions:"
           echo "Python (input): ${{ inputs.python-version }}"
           echo "UV (input): ${{ inputs.uv-version }}"
+          echo "Ruff (input): ${{ inputs.ruff-version }}"
           echo "========================================"
 
       - name: Run Ruff linter
-        run: uv run ruff check .
+        run: ruff check .
 
       - name: Run Ruff formatter
-        run: uv run ruff format --check
+        run: ruff format --check
