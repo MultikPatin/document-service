@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, dev ]
+
+
+jobs:
+  ruff:
+    if: github.base_ref == 'dev' || github.base_ref == 'main'
+    uses: ./.github/workflows/ruff.yml
+    with:
+      python-version: '3.14'
+      uv-version: '0.10.7'
+
+  ty:
+    if: github.base_ref == 'dev' || github.base_ref == 'main'
+    uses: ./.github/workflows/ty.yml
+    with:
+      python-version: '3.14'
+      uv-version: '0.10.7'
+
+  tests:
+    if: github.base_ref == 'main'
+    uses: ./.github/workflows/tests.yml
+    with:
+      python-version: '3.14'
+      uv-version: '0.10.7'

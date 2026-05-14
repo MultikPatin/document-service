@@ -1,0 +1,39 @@
+name: Ty
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+      uv-version:
+        required: true
+        type: string
+      ty-version:
+        required: false
+        type: string
+        default: 'latest'
+
+jobs:
+  ty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-uv-project
+        with:
+          python-version: ${{ inputs.python-version }}
+          uv-version: ${{ inputs.uv-version }}
+          all-extras: 'true'
+
+      - name: Install Ty via uv tool
+        shell: bash
+        run: |
+          if [ "${{ inputs.ty-version }}" = "latest" ]; then
+            uv tool install ty
+          else
+            uv tool install ty==${{ inputs.ty-version }}
+          fi
+
+      - name: Run ty checker
+        run: ty check .
