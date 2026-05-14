@@ -1,0 +1,28 @@
+name: Ty
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: false
+        type: string
+        default: '3.14'
+      uv-version:
+        required: false
+        type: string
+        default: '0.10.7'
+
+jobs:
+  ty:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-uv-project
+        with:
+          python-version: ${{ inputs.python-version }}
+          uv-version: ${{ inputs.uv-version }}
+          all-extras: 'true'
+
+      - name: Run ty checker
+        run: uv run ty check .
