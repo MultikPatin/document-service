@@ -4,13 +4,11 @@ on:
   workflow_call:
     inputs:
       python-version:
-        required: false
+        required: true
         type: string
-        default: '3.14'
       uv-version:
-        required: false
+        required: true
         type: string
-        default: '0.10.7'
 
 jobs:
   ty:

@@ -4,12 +4,10 @@ description: 'Setup Python with uv and install dependencies'
 inputs:
   python-version:
     description: 'Python version'
-    required: false
-    default: '3.11'
+    required: true
   uv-version:
     description: 'uv version'
-    required: false
-    default: 'latest'
+    required: true
   with-tests:
     description: 'Install test dependencies'
     required: false
@@ -30,6 +28,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Debug inputs
+      shell: bash
+      run: |
+        echo "uv-version input: '${{ inputs.uv-version }}'"
+        echo "python-version input: '${{ inputs.python-version }}'"
+
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
