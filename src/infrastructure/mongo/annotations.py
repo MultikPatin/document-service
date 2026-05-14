@@ -28,4 +28,4 @@ type EventListenerType = Sequence[
     | ServerListener
 ]
 
-type QuerySortType = str | Sequence[tuple[str, SortDirection]] | None
+type QuerySortType = str | list[tuple[str, SortDirection]] | None

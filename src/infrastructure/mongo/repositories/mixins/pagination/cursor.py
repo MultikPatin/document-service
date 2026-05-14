@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from src.domain.models.pagination import CursorResult
+from src.infrastructure.mongo.contexts import PaginationQueryContex
 
 from .base import BasePaginationMixin
 
@@ -9,30 +10,23 @@ if TYPE_CHECKING:
 
     from src.domain.models.entities import BaseEntity
     from src.domain.protocols.pagination import CursorParamsProtocol
-    from src.infrastructure.mongo.annotations import (
-        QueryConditionsType,
-        QuerySortType,
-    )
+    from src.infrastructure.mongo.annotations import QueryConditionsType
 
 
 class PaginationCursorMixin(BasePaginationMixin):
-    async def _get_all_cursor[R: BaseEntity, P: BaseModel](  # noqa: PLR0913
+    async def _get_all_cursor[R: BaseEntity, P: BaseModel](
         self,
         conditions: QueryConditionsType,
         *,
         return_as: type[R],
         params: CursorParamsProtocol,
         projection: type[P] | None = None,
-        sort: QuerySortType = None,
-        ignore_cache: bool = False,
-        fetch_links: bool = False,
-        with_children: bool = False,
-        lazy_parse: bool = False,
-        nesting_depth: int | None = None,
-        nesting_depths_per_field: dict[str, int] | None = None,
-        **pymongo_kwargs: Any,  # noqa: ANN401
+        ctx: PaginationQueryContex | None = None,
     ) -> CursorResult[R] | None:
         raise NotImplementedError
+
+        if ctx is None:
+            ctx = PaginationQueryContex()
 
         documents = await self._document.find_many(
             *conditions,
@@ -40,14 +34,14 @@ class PaginationCursorMixin(BasePaginationMixin):
             # skip=skip,
             session=self._session,
             projection_model=projection,
-            sort=sort,
-            ignore_cache=ignore_cache,
-            fetch_links=fetch_links,
-            with_children=with_children,
-            nesting_depth=nesting_depth,
-            nesting_depths_per_field=nesting_depths_per_field,
-            lazy_parse=lazy_parse,
-            **pymongo_kwargs,
+            sort=ctx.sort,
+            ignore_cache=ctx.ignore_cache,
+            fetch_links=ctx.fetch_links,
+            with_children=ctx.with_children,
+            nesting_depth=ctx.nesting_depth,
+            nesting_depths_per_field=ctx.nesting_depths_per_field,
+            lazy_parse=ctx.lazy_parse,
+            **ctx.pymongo_kwargs,
         ).to_list()
 
         if not documents:
@@ -56,11 +50,10 @@ class PaginationCursorMixin(BasePaginationMixin):
         count = await self._document.find(
             *conditions,
             session=self._session,
-            ignore_cache=ignore_cache,
-            fetch_links=fetch_links,
-            **pymongo_kwargs,
+            ignore_cache=ctx.ignore_cache,
+            fetch_links=ctx.fetch_links,
+            **ctx.pymongo_kwargs,
         ).count()
 
-        return CursorResult.from_params(
-            params, count, self._convert_items(documents, return_as, projection)
-        )
+        items = self._convert_items(documents, return_as, projection)
+        return CursorResult.from_params(params, count, items)
