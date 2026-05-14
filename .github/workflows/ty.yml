@@ -24,5 +24,20 @@ jobs:
           uv-version: ${{ inputs.uv-version }}
           all-extras: 'true'
 
+      - name: Verify installed versions
+        shell: bash
+        run: |
+          echo "========================================"
+          echo "Installed versions in Ty Action:"
+          echo "========================================"
+          echo "Python: $(python --version 2>&1)"
+          echo "UV: $(uv --version)"
+          echo "Ty: $(uv run ty --version)"
+          echo "========================================"
+          echo "Requested versions:"
+          echo "Python (input): ${{ inputs.python-version }}"
+          echo "UV (input): ${{ inputs.uv-version }}"
+          echo "========================================"
+
       - name: Run ty checker
         run: uv run ty check .

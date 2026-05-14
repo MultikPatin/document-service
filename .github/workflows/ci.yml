@@ -13,20 +13,19 @@ jobs:
     if: github.base_ref == 'dev' || github.base_ref == 'main'
     uses: ./.github/workflows/ruff.yml
     with:
-      python-version: ${{ env.PYTHON_VERSION }}
-      uv-version: ${{ env.UV_VERSION }}
+      python-version: ${{ vars.PYTHON_VERSION }}
+      uv-version: ${{ vars.UV_VERSION }}
 
   ty:
     if: github.base_ref == 'dev' || github.base_ref == 'main'
     uses: ./.github/workflows/ty.yml
     with:
-      python-version: ${{ env.PYTHON_VERSION }}
-      uv-version: ${{ env.UV_VERSION }}
+      python-version: ${{ vars.PYTHON_VERSION }}
+      uv-version: ${{ vars.UV_VERSION }}
 
   tests:
     if: github.base_ref == 'dev' || github.base_ref == 'main'
     uses: ./.github/workflows/tests.yml
     with:
-      python-version: ${{ env.PYTHON_VERSION }}
-      uv-version: ${{ env.UV_VERSION }}
-
+      python-version: ${{ vars.PYTHON_VERSION }}
+      uv-version: ${{ vars.UV_VERSION }}
