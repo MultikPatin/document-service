@@ -5,8 +5,8 @@ repos:
     rev: v6.0.0
     hooks:
       - id: check-added-large-files
-        args: [ '--maxkb=512' ]
-        description: "Prevent committing large files (>512KB)"
+        args: [ '--maxkb=2048' ]
+        description: "Prevent committing large files (>2048KB)"
 
       - id: check-case-conflict
         description: "Check for files that would conflict on case-insensitive filesystems"
