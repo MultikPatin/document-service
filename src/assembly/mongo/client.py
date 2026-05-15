@@ -4,9 +4,9 @@ from collections.abc import AsyncGenerator
 from dishka import Provider, Scope, provide
 
 from src.assembly import InitComponentProtocol
+from src.assembly.logger import LoggerNames
 from src.infrastructure.mongo import Client, Settings, collect_documents
 from src.infrastructure.mongo.converter import Converter
-from src.infrastructure.mongo.logger import LoggerNames
 from src.infrastructure.mongo.protocols import (
     ConverterProtocol,
     SettingsProtocol,
@@ -18,7 +18,7 @@ logger = logging.getLogger(LoggerNames.init())
 class ClientProvider(Provider):
     @provide(scope=Scope.APP)
     async def __init(self, client: Client) -> InitComponentProtocol:
-        logger.info("component initialization completed successfully")
+        logger.info("MongoDB initialization completed successfully")
         return InitComponentProtocol
 
     @provide(scope=Scope.APP)
@@ -40,7 +40,7 @@ class ClientProvider(Provider):
     async def __client(
         self, settings: SettingsProtocol
     ) -> AsyncGenerator[Client]:
-        logger.info("component initialization...")
+        logger.info("MongoDB initialization...")
         logger.info("client initialization...")
         client = Client(settings)
         logger.info("client initialization completed successfully")

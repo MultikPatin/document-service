@@ -12,9 +12,12 @@ class Settings(BaseSettings):
 
     IS_DEV_MODE: bool = Field(
         default=BaseDefaults.IS_DEV_MODE,
-        description="Is Development Mode",
+        description="Enable development mode",
     )
-
+    IS_STATIC_DOCS: bool = Field(
+        default=BaseDefaults.IS_STATIC_DOCS,
+        description="Enable static api documentation assets",
+    )
     ALLOW_ORIGINS: list[str] = Field(
         default=BaseDefaults.ALLOW_ORIGINS,
         description="Allow origins",
@@ -28,6 +31,11 @@ class Settings(BaseSettings):
     ALLOW_METHODS: list[str] = Field(
         default=BaseDefaults.ALLOW_METHODS,
         description="Allow methods",
+        min_length=1,
+    )
+    ROOT_PATH: str = Field(
+        default=BaseDefaults.ROOT_PATH,
+        description="Root path of the api",
         min_length=1,
     )
 

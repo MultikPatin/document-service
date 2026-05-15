@@ -1,5 +1,4 @@
 import time
-from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING
 
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -8,7 +7,7 @@ if TYPE_CHECKING:
     from fastapi import Request, Response
     from starlette.types import ASGIApp
 
-type CallNext = Callable[[Request], Awaitable[Response]]
+    from src.api.annotations import CallNext
 
 
 class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware):

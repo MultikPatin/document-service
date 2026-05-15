@@ -3,7 +3,7 @@ from typing import Final, final
 
 @final
 class LoggerNames:
-    MAIN: Final[str] = "mongo"
+    MAIN: Final[str] = "app"
     SEPARATOR: Final[str] = "."
     INIT: Final[str] = "init"
 
