@@ -1,11 +1,7 @@
-from typing import Any, Protocol
+from typing import Protocol
 
 
 class InitComponentsProtocol(Protocol): ...
 
 
 class InitComponentProtocol(Protocol): ...
-
-
-class ApiBuilderProtocol(Protocol):
-    def build(self) -> Any: ...  # noqa: ANN401

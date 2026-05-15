@@ -3,14 +3,11 @@ from collections.abc import AsyncGenerator
 
 from dishka import Provider, Scope, provide
 
-from src.assembly import InitComponentProtocol
 from src.assembly.logger import LoggerNames
-from src.infrastructure.mongo import Client, Settings, collect_documents
-from src.infrastructure.mongo.converter import Converter
-from src.infrastructure.mongo.protocols import (
-    ConverterProtocol,
-    SettingsProtocol,
-)
+from src.assembly.protocols import InitComponentProtocol
+from src.infra.mongo import Client, Settings, collect_documents
+from src.infra.mongo.converter import Converter
+from src.infra.mongo.protocols import ConverterProtocol, SettingsProtocol
 
 logger = logging.getLogger(LoggerNames.init())
 

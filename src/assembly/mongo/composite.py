@@ -1,4 +1,4 @@
-from src.assembly import ComponentsEnum
+from src.assembly.enums import ComponentsEnum
 
 from .client import ClientProvider
 from .layout import LayoutProvider

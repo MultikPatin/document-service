@@ -4,12 +4,12 @@ from src.domain.protocols.repositories import (
     ReportSingleRepositoryProtocol,
     ReportTableRepositoryProtocol,
 )
-from src.infrastructure.mongo.documents import (
+from src.infra.mongo.documents import (
     ReportBlockSingleDocument,
     ReportBlockTableDocument,
 )
-from src.infrastructure.mongo.protocols import ConverterProtocol
-from src.infrastructure.mongo.repositories import (
+from src.infra.mongo.protocols import ConverterProtocol
+from src.infra.mongo.repositories import (
     ReportBlockSingleRepository,
     ReportBlockTableRepository,
 )

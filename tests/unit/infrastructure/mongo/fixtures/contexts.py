@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 from bson.codec_options import DatetimeConversion
 
-from src.infrastructure.mongo.contexts import (
+from src.infra.mongo.contexts import (
     ClientContex,
     InitBeanieContex,
 )
