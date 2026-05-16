@@ -1,7 +1,7 @@
 from pydantic import Field
 from pydantic_settings import BaseSettings
 
-from src.api.constants import GzipDefaults
+from src.api.core.constants import GzipDefaults
 
 
 class GzipSettings(BaseSettings):

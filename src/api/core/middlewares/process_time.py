@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from fastapi import Request, Response
     from starlette.types import ASGIApp
 
-    from src.api.annotations import CallNext
+    from src.api.core.annotations import CallNext
 
 
 class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware):

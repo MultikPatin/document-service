@@ -1,5 +1,4 @@
-from src.api.core.settings.api_core import Settings
-
 from .builder import Builder
+from .settings import Settings
 
 __all__ = ["Builder", "Settings"]

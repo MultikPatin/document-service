@@ -7,7 +7,7 @@ from fastapi.openapi.docs import (
 )
 from fastapi.staticfiles import StaticFiles
 
-from src.api.enums import URLEnum
+from src.api.core.enums import URLEnum
 
 if TYPE_CHECKING:
     from fastapi import FastAPI
