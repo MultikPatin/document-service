@@ -6,7 +6,7 @@ from src.assembly.protocols import InitComponentsProtocol
 database = ComponentsEnum.mongo
 
 
-class ApplicationProvider(Provider):
+class DomainProvider(Provider):
     @provide(scope=Scope.APP)
     async def __init(
         self,

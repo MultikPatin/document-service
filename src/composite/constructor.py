@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from src.assembly.fastapi import create_api
+from src.assembly.api.constructor import create_app
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -11,4 +11,4 @@ logging.basicConfig(
 )
 logging.getLogger("pymongo").setLevel(logging.INFO)
 
-api = create_api()
+app = create_app()

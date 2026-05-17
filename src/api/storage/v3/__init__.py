@@ -1,4 +1,4 @@
-from .assembly import make_mount_builder
+from .composite import make_mountable_app_ctx
 from .settings import Settings
 
-__all__ = ["Settings", "make_mount_builder"]
+__all__ = ["Settings", "make_mountable_app_ctx"]

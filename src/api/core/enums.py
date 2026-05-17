@@ -10,3 +10,5 @@ class URLEnum(StrEnum):
 
     docs = "/docs"
     static = "/static"
+    liveness = "/liveness"
+    readiness = "/readiness"
