@@ -1,9 +1,9 @@
 from dishka import Scope, provide
 
 from src.domain.protocols.repositories import LayoutRepositoryProtocol
-from src.infrastructure.mongo.documents import LayoutDocument
-from src.infrastructure.mongo.protocols import ConverterProtocol
-from src.infrastructure.mongo.repositories import LayoutRepository
+from src.infra.mongo.documents import LayoutDocument
+from src.infra.mongo.protocols import ConverterProtocol
+from src.infra.mongo.repositories import LayoutRepository
 
 from .blocks import _BlocksProvider
 from .layers import _LayersProvider

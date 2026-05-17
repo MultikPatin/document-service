@@ -5,13 +5,13 @@ from src.domain.protocols.repositories import (
     LayoutLayerSchemaRepositoryProtocol,
     LayoutLayerValidationRepositoryProtocol,
 )
-from src.infrastructure.mongo.documents import (
+from src.infra.mongo.documents import (
     LayoutLayerDefaultDocument,
     LayoutLayerSchemaDocument,
     LayoutLayerValidationDocument,
 )
-from src.infrastructure.mongo.protocols import ConverterProtocol
-from src.infrastructure.mongo.repositories import (
+from src.infra.mongo.protocols import ConverterProtocol
+from src.infra.mongo.repositories import (
     LayoutLayerDefaultRepository,
     LayoutLayerSchemaRepository,
     LayoutLayerValidationRepository,

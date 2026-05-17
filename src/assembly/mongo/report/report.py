@@ -1,9 +1,9 @@
 from dishka import Scope, provide
 
 from src.domain.protocols.repositories import ReportRepositoryProtocol
-from src.infrastructure.mongo.documents import ReportDocument
-from src.infrastructure.mongo.protocols import ConverterProtocol
-from src.infrastructure.mongo.repositories import ReportRepository
+from src.infra.mongo.documents import ReportDocument
+from src.infra.mongo.protocols import ConverterProtocol
+from src.infra.mongo.repositories import ReportRepository
 
 from .blocks import _BlocksProvider
 

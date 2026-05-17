@@ -5,13 +5,13 @@ from src.domain.protocols.repositories import (
     LayoutBlockSingleRepositoryProtocol,
     LayoutBlockTableRepositoryProtocol,
 )
-from src.infrastructure.mongo.documents import (
+from src.infra.mongo.documents import (
     LayoutBlockMessageDocument,
     LayoutBlockSingleDocument,
     LayoutBlockTableDocument,
 )
-from src.infrastructure.mongo.protocols import ConverterProtocol
-from src.infrastructure.mongo.repositories import (
+from src.infra.mongo.protocols import ConverterProtocol
+from src.infra.mongo.repositories import (
     LayoutBlockMessageRepository,
     LayoutBlockSingleRepository,
     LayoutBlockTableRepository,

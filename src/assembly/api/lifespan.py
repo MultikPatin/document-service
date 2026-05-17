@@ -2,7 +2,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING
 
-from src.assembly import InitComponentsProtocol
+from src.assembly.protocols import InitComponentsProtocol
 
 if TYPE_CHECKING:
     from fastapi import FastAPI

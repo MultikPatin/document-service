@@ -10,7 +10,7 @@ from src.domain.protocols.methods import (
 )
 
 if TYPE_CHECKING:
-    from src.core.dtos import HashDTO
+    from src.domain.models.dtos import HashDTO
 
 
 class LayerRepositoryProtocol(
