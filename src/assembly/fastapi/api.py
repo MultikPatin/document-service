@@ -30,26 +30,16 @@ def create_api() -> FastAPI:
 
     logger.info("api initialization...")
 
-    builder = CoreBuilder(
-        CoreBuilderContex(
-            settings=settings,
-            lifespan=lifespan,
-        )
+    ctx = CoreBuilderContex(
+        settings=settings,
+        lifespan=lifespan,
     )
+
+    builder = CoreBuilder(ctx)
     setup_dishka(container=container, app=builder.api)
 
-    builder.include_mount_builder(
-        v2.make_mount_builder(
-            settings.IS_DEV_MODE,
-            settings.ROOT_PATH,
-        )
-    )
-    builder.include_mount_builder(
-        v3.make_mount_builder(
-            settings.IS_DEV_MODE,
-            settings.ROOT_PATH,
-        )
-    )
+    builder.include_mount_builder(v2.make_mount_builder(v2.Settings(), ctx))
+    builder.include_mount_builder(v3.make_mount_builder(v3.Settings(), ctx))
 
     logger.info("api initialization completed successfully")
 

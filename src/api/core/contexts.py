@@ -99,6 +99,16 @@ class MountBuilderContex:
     is_dev_mode: bool
     root_path: str
 
+    @classmethod
+    def from_core_ctx(
+        cls, settings: MountSettings, ctx: CoreBuilderContex
+    ) -> MountBuilderContex:
+        return cls(
+            settings=settings,
+            is_dev_mode=ctx.is_dev_mode,
+            root_path=ctx.root_path,
+        )
+
     @property
     def path(self) -> str:
         return f"/v{self.settings.VERSION}"
