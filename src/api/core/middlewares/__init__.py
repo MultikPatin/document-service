@@ -1,3 +1,3 @@
-from .process_time import ProcessTimeHeaderMiddleware
+from .process_time import ProcessTimeMiddleware
 
-__all__ = ["ProcessTimeHeaderMiddleware"]
+__all__ = ["ProcessTimeMiddleware"]

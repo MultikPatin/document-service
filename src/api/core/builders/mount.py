@@ -13,7 +13,6 @@ class MountBuilder:
     def __init__(self, ctx: MountBuilderContex) -> None:
         self._routers_ctx: list[RouterContex] = []
         self._ctx = ctx
-
         self._api = FastAPI(
             title=ctx.title,
             description=ctx.description,

@@ -1,32 +1,28 @@
+from dataclasses import asdict
 from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from src.api.core.constants import API_HEADER_PROCESS_TIME
-from src.api.core.middlewares import ProcessTimeHeaderMiddleware
+from src.api.core.middlewares import ProcessTimeMiddleware
 
 if TYPE_CHECKING:
-    from starlette.types import Lifespan
-
-    from src.api.core.settings.api import CoreSettings
+    from src.api.core.contexts import CoreBuilderContex
 
     from .mount import MountBuilder
 
 
 class CoreBuilder:
-    def __init__[S: CoreSettings](
-        self, settings: S, *, lifespan: Lifespan[FastAPI] | None = None
-    ) -> None:
+    def __init__(self, ctx: CoreBuilderContex) -> None:
         self._mount_builders: list[MountBuilder] = []
-        self._settings = settings
+        self._ctx = ctx
         self._api = FastAPI(
-            lifespan=lifespan,
+            lifespan=ctx.lifespan,
             docs_url=None,
             redoc_url=None,
             openapi_url=None,
-            root_path=settings.ROOT_PATH,
+            root_path=ctx.root_path,
         )
 
     @property
@@ -49,18 +45,15 @@ class CoreBuilder:
     def _register_middlewares(self) -> None:
         self._api.add_middleware(
             CORSMiddleware,
-            allow_origins=self._settings.ALLOW_ORIGINS,
-            allow_headers=self._settings.ALLOW_HEADERS,
-            allow_methods=self._settings.ALLOW_METHODS,
+            **asdict(self._ctx.cors_middleware_ctx()),
         )
-        if self._settings.IS_DEV_MODE:
+        if self._ctx.is_dev_mode:
             self._api.add_middleware(
-                ProcessTimeHeaderMiddleware,
-                header_name=API_HEADER_PROCESS_TIME,
+                ProcessTimeMiddleware,
+                **asdict(self._ctx.process_time_middleware_ctx()),
             )
-        if self._settings.gzip.ENABLE:
+        if self._ctx.is_gzip_enabled:
             self._api.add_middleware(
                 GZipMiddleware,
-                minimum_size=self._settings.gzip.MIN_SIZE,
-                compresslevel=self._settings.gzip.COMPRESS_LEVEL,
+                **asdict(self._ctx.gzip_middleware_ctx()),
             )

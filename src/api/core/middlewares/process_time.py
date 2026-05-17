@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from src.api.core.annotations import CallNext
 
 
-class ProcessTimeHeaderMiddleware(BaseHTTPMiddleware):
+class ProcessTimeMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, header_name: str) -> None:
         super().__init__(app=app)
         self.header_name = header_name
