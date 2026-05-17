@@ -3,46 +3,42 @@ from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 
-from src.api.core.contexts import IncludedRouterContex
-from src.api.core.enums import URLEnum
 from src.api.core.static_docs import register_static_docs
 
 if TYPE_CHECKING:
-    from src.api.core.settings.api_mounted import Settings
+    from src.api.core.contexts import MountBuilderContex, RouterContex
 
 
-class Builder:
-    def __init__[R: IncludedRouterContex, S: Settings](
-        self, router_ctx: R, settings: S, *, is_dev_mode: bool
-    ) -> None:
-        self._settings = settings
-        self._is_dev_mode = is_dev_mode
-        self._path = settings.path
+class MountBuilder:
+    def __init__(self, ctx: MountBuilderContex) -> None:
+        self._routers_ctx: list[RouterContex] = []
+        self._ctx = ctx
 
         self._api = FastAPI(
-            title=settings.TITLE,
-            description=settings.DESCRIPTION,
-            version=str(settings.VERSION),
-            docs_url=self._get_docs_url(),
+            title=ctx.title,
+            description=ctx.description,
+            version=ctx.version,
+            docs_url=ctx.docs_url,
+            redoc_url=None,
         )
-
-        self._api.include_router(**asdict(router_ctx))
 
     @property
     def path(self) -> str:
-        return self._path
+        return self._ctx.path
 
-    def _get_docs_url(self) -> str | None:
-        return (
-            None
-            if self._settings.IS_STATIC_DOCS or not self._is_dev_mode
-            else URLEnum.docs
-        )
-
-    def build(self, root_path: str) -> FastAPI:
-        self._register_static_docs(root_path)
+    def build(self) -> FastAPI:
+        self._register_static_docs()
+        self._register_routers_ctx()
         return self._api
 
-    def _register_static_docs(self, root_path: str) -> None:
-        if self._settings.IS_STATIC_DOCS and self._is_dev_mode:
-            register_static_docs(app=self._api, path=root_path + self._path)
+    def include_router_ctx(self, ctx: RouterContex) -> None:
+        self._routers_ctx.append(ctx)
+
+    def _register_routers_ctx(self) -> None:
+        # TODO Raise Error if self._router_ctxs = []
+        for rc in self._routers_ctx:
+            self._api.include_router(**asdict(rc))
+
+    def _register_static_docs(self) -> None:
+        if self._ctx.use_static_docs:
+            register_static_docs(app=self._api, path=self._ctx.static_docs_path)

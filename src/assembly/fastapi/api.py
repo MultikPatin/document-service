@@ -3,10 +3,10 @@ from typing import TYPE_CHECKING
 
 from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 
-from src.api import Builder, Settings
-from src.api.constructor import v2 as constructor_pkg
-from src.api.core.contexts import IncludedRouterContex
-from src.api.storage import v3 as storage_pkg
+from src.api.constructor import v2
+from src.api.core.builders import CoreBuilder
+from src.api.core.settings.api import CoreSettings
+from src.api.storage import v3
 from src.assembly.app import make_container
 from src.assembly.logger import LoggerNames
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(LoggerNames.init())
 
 def create_api() -> FastAPI:
     logger.info("loading api settings...")
-    settings = Settings()
+    settings = CoreSettings()
     logger.info("api settings was loaded successfully")
 
     logger.info("start assembly application container...")
@@ -29,16 +29,20 @@ def create_api() -> FastAPI:
 
     logger.info("api initialization...")
 
-    builder = Builder(settings, lifespan)
+    builder = CoreBuilder(settings, lifespan=lifespan)
     setup_dishka(container=container, app=builder.api)
 
-    builder.include_api(
-        IncludedRouterContex(router=constructor_pkg.router),
-        constructor_pkg.Settings(),
+    builder.include_mount_builder(
+        v2.make_mount_builder(
+            settings.IS_DEV_MODE,
+            settings.ROOT_PATH,
+        )
     )
-    builder.include_api(
-        IncludedRouterContex(router=storage_pkg.router),
-        storage_pkg.Settings(),
+    builder.include_mount_builder(
+        v3.make_mount_builder(
+            settings.IS_DEV_MODE,
+            settings.ROOT_PATH,
+        )
     )
 
     logger.info("api initialization completed successfully")

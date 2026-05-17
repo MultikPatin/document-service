@@ -3,23 +3,23 @@ from typing import TYPE_CHECKING
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from starlette.types import Lifespan
 
-from src.api.core.builders.mount import Builder as MountedBuilder
 from src.api.core.constants import API_HEADER_PROCESS_TIME
-from src.api.core.contexts import IncludedRouterContex
 from src.api.core.middlewares import ProcessTimeHeaderMiddleware
 
 if TYPE_CHECKING:
-    from src.api.core.settings.api_core import Settings
-    from src.api.core.settings.api_mounted import Settings as MountedSettings
+    from starlette.types import Lifespan
+
+    from src.api.core.settings.api import CoreSettings
+
+    from .mount import MountBuilder
 
 
-class Builder:
-    def __init__[S: Settings](
-        self, settings: S, lifespan: Lifespan[FastAPI] | None = None
+class CoreBuilder:
+    def __init__[S: CoreSettings](
+        self, settings: S, *, lifespan: Lifespan[FastAPI] | None = None
     ) -> None:
-        self._mount_builders: list[MountedBuilder] = []
+        self._mount_builders: list[MountBuilder] = []
         self._settings = settings
         self._api = FastAPI(
             lifespan=lifespan,
@@ -33,26 +33,18 @@ class Builder:
     def api(self) -> FastAPI:
         return self._api
 
-    def include_api[R: IncludedRouterContex, S: MountedSettings](
-        self, router_ctx: R, settings: S
-    ) -> None:
-        self._mount_builders.append(
-            MountedBuilder(
-                router_ctx, settings, is_dev_mode=self._settings.IS_DEV_MODE
-            )
-        )
-
-    def register_mounted_apis(self) -> None:
-        for api in self._mount_builders:
-            self._api.mount(
-                app=api.build(self._settings.ROOT_PATH),
-                path=api.path,
-            )
-
     def build(self) -> FastAPI:
         self._register_middlewares()
-        self.register_mounted_apis()
+        self._register_mount_builders()
         return self._api
+
+    def include_mount_builder(self, builder: MountBuilder) -> None:
+        self._mount_builders.append(builder)
+
+    def _register_mount_builders(self) -> None:
+        # TODO Raise Error if self._mount_builders = []
+        for mb in self._mount_builders:
+            self._api.mount(app=mb.build(), path=mb.path)
 
     def _register_middlewares(self) -> None:
         self._api.add_middleware(

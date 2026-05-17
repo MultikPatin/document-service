@@ -2,12 +2,11 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 from src.api.core.constants import API_ENV_PREFIX, CoreDefaults
+from src.api.core.settings.gzip import GzipSettings
 from src.domain.utils import settings_model_config
 
-from .gzip import GzipSettings
 
-
-class Settings(BaseSettings):
+class CoreSettings(BaseSettings):
     model_config = settings_model_config(env_prefix=API_ENV_PREFIX)
 
     IS_DEV_MODE: bool = Field(
