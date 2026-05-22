@@ -1,42 +1,32 @@
+from collections.abc import Iterable
 from typing import TYPE_CHECKING, Protocol
 
-from src.domain.protocols.methods import (
-    AddMixinProtocol,
-    # UpdateMixinProtocol,
-    # DeleteWithRefCountMixinProtocol,
-    GetByHashMixinProtocol,
-    GetByIDsMixinProtocol,
-    GetMixinProtocol,
-)
-
 if TYPE_CHECKING:
-    from src.domain.models.dtos import HashDTO
+    from src.domain.models.entities import (
+        BaseEntity,
+        LayoutLayerDefaultEntity,
+        LayoutLayerSchemaEntity,
+        LayoutLayerValidationEntity,
+    )
 
 
-class LayerRepositoryProtocol(
-    GetMixinProtocol,
-    GetByIDsMixinProtocol,
-    GetByHashMixinProtocol,
-    AddMixinProtocol,
-    # UpdateMixinProtocol,
-    # DeleteWithRefCountMixinProtocol,
-    Protocol,
-):
-    async def add_by_hash[R, C: HashDTO](
-        self, condition: C, *, return_as: type[R]
-    ) -> R: ...
+class LayerRepositoryProtocol[E: BaseEntity](Protocol):
+    async def get(self, id_: str) -> E | None: ...
+    async def get_by_ids(self, ids: Iterable[str]) -> list[E] | None: ...
+    async def get_by_hash(self, hash_string: str) -> E | None: ...
+    async def exists_by_hash(self, hash_string: str) -> bool: ...
 
 
 class LayoutLayerDefaultRepositoryProtocol(
-    LayerRepositoryProtocol, Protocol
+    LayerRepositoryProtocol[LayoutLayerDefaultEntity], Protocol
 ): ...
 
 
 class LayoutLayerSchemaRepositoryProtocol(
-    LayerRepositoryProtocol, Protocol
+    LayerRepositoryProtocol[LayoutLayerSchemaEntity], Protocol
 ): ...
 
 
 class LayoutLayerValidationRepositoryProtocol(
-    LayerRepositoryProtocol, Protocol
+    LayerRepositoryProtocol[LayoutLayerValidationEntity], Protocol
 ): ...

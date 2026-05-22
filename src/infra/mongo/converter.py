@@ -5,7 +5,7 @@ from beanie import BackLink, Link, PydanticObjectId
 from bson.errors import InvalidId
 
 from src.domain.constants import CURSOR_SEPARATOR
-from src.infra.mongo.errors import InvalidIDError
+from src.infra.mongo.errors import InvalidIDFormatError
 
 if TYPE_CHECKING:
     from pydantic import BaseModel
@@ -20,7 +20,7 @@ class Converter:
                 return PydanticObjectId(id_)
             return PydanticObjectId(s[-1])
         except InvalidId as e:
-            raise InvalidIDError(id_) from e
+            raise InvalidIDFormatError(id_) from e
 
     def as_ids(self, ids: Iterable[str]) -> Iterable[PydanticObjectId]:
         return [self.as_id(i) for i in ids]

@@ -13,13 +13,19 @@ class StartSessionError(InfrastructureError):
         super().__init__(message)
 
 
-class InvalidIDError(MongoError):
+class InvalidIDFormatError(MongoError):
     def __init__(self, value: str) -> None:
         message = (
             f"Invalid ID value: {value}, type: {type(value)}"
             f"Expected Bson ObjectID in string format. "
             f"It must be a 12-byte input or a 24-character hex string."
         )
+        super().__init__(message)
+
+
+class NoneIDError(MongoError):
+    def __init__(self) -> None:
+        message = "Couldn't get None in 'id' field"
         super().__init__(message)
 
 

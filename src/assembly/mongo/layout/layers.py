@@ -5,40 +5,18 @@ from src.domain.protocols.repositories import (
     LayoutLayerSchemaRepositoryProtocol,
     LayoutLayerValidationRepositoryProtocol,
 )
-from src.infra.mongo.documents import (
-    LayoutLayerDefaultDocument,
-    LayoutLayerSchemaDocument,
-    LayoutLayerValidationDocument,
-)
-from src.infra.mongo.protocols import ConverterProtocol
-from src.infra.mongo.repositories import (
-    LayoutLayerDefaultRepository,
-    LayoutLayerSchemaRepository,
-    LayoutLayerValidationRepository,
-)
+from src.infra.mongo.repositories.layout import layers
 
 
-class _LayersProvider(Provider):
+class Layers(Provider):
     @provide(scope=Scope.APP)
-    async def __schema(
-        self, converter: ConverterProtocol
-    ) -> LayoutLayerSchemaRepositoryProtocol:
-        return LayoutLayerSchemaRepository(
-            LayoutLayerSchemaDocument, converter=converter
-        )
+    async def __schema(self) -> LayoutLayerSchemaRepositoryProtocol:
+        return layers.Shema()
 
     @provide(scope=Scope.APP)
-    async def __validation(
-        self, converter: ConverterProtocol
-    ) -> LayoutLayerValidationRepositoryProtocol:
-        return LayoutLayerValidationRepository(
-            LayoutLayerValidationDocument, converter=converter
-        )
+    async def __validation(self) -> LayoutLayerValidationRepositoryProtocol:
+        return layers.Validation()
 
     @provide(scope=Scope.APP)
-    async def __default(
-        self, converter: ConverterProtocol
-    ) -> LayoutLayerDefaultRepositoryProtocol:
-        return LayoutLayerDefaultRepository(
-            LayoutLayerDefaultDocument, converter=converter
-        )
+    async def __default(self) -> LayoutLayerDefaultRepositoryProtocol:
+        return layers.Default()

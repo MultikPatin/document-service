@@ -1,32 +1,25 @@
-from typing import TYPE_CHECKING
+from collections.abc import Iterable
 
 from src.domain.models.entities import LayoutLayerDefaultEntity
+from src.domain.protocols.repositories import (
+    LayoutLayerDefaultRepositoryProtocol,
+)
 
-if TYPE_CHECKING:
-    from src.domain.protocols.repositories import (
-        LayoutLayerDefaultRepositoryProtocol,
-    )
+type Entity = LayoutLayerDefaultEntity
 
 
 class LayoutLayerDefaultService:
     def __init__(self, repo: LayoutLayerDefaultRepositoryProtocol) -> None:
         self._repo = repo
 
-    async def get(self, id_: str) -> LayoutLayerDefaultEntity | None:
-        return await self._repo.get(id_, return_as=LayoutLayerDefaultEntity)
+    async def get(self, id_: str) -> Entity | None:
+        return await self._repo.get(id_)
 
-    # async def add(
-    #     self, condition: "LayoutDefaultCreateDTO"
-    # ) -> "LayoutDefaultDB":
-    #     return await self._repo.add(condition)
-    #
-    # async def update(
-    #     self,
-    #     _id: str,
-    #     condition: "LayoutDefaultUpdateDTO",
-    #     *,
-    # ) -> "LayoutDefaultDB":
-    #     return await self._repo.update(_id, condition)
-    #
-    # async def delete(self, id_: str) -> str:
-    #     return await self._repo.delete(id_)
+    async def get_by_ids(self, ids: Iterable[str]) -> list[Entity] | None:
+        return await self._repo.get_by_ids(ids)
+
+    async def get_by_hash(self, hash_: str) -> Entity | None:
+        return await self._repo.get_by_hash(hash_)
+
+    async def exists_by_hash(self, hash_: str) -> bool:
+        return await self._repo.exists_by_hash(hash_)

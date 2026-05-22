@@ -6,10 +6,10 @@ from src.infra.mongo.protocols import ConverterProtocol
 from src.infra.mongo.repositories import LayoutRepository
 
 from .blocks import _BlocksProvider
-from .layers import _LayersProvider
+from .layers import Layers
 
 
-class LayoutProvider(_LayersProvider, _BlocksProvider):
+class LayoutProvider(Layers, _BlocksProvider):
     @provide(scope=Scope.APP)
     async def __layout(
         self, converter: ConverterProtocol
