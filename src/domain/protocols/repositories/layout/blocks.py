@@ -1,8 +1,14 @@
 from typing import TYPE_CHECKING, Protocol
 
-from src.domain.protocols.methods import AddMixinProtocol, GetMixinProtocol
+from src.domain.models.entities import (
+    LayoutBlockMessageEntity,
+    LayoutBlockSingleEntity,
+    LayoutBlockTableEntity,
+)
 
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
     from src.domain.annotations import (
         LayoutMessageCursorFiltersType,
         LayoutMessageLimitOffsetFiltersType,
@@ -22,67 +28,62 @@ if TYPE_CHECKING:
     )
 
 
-class BlockRepositoryProtocol(GetMixinProtocol, AddMixinProtocol, Protocol): ...
+class BlockRepositoryProtocol[E: BaseEntity](Protocol):
+    async def get(self, id_: str) -> E | None: ...
 
 
-class LayoutBlockMessageRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R](
-        self,
-        filters: LayoutMessagePageFiltersType,
-        *,
-        return_as: type[R],
-    ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R](
-        self,
-        filters: LayoutMessageLimitOffsetFiltersType,
-        *,
-        return_as: type[R],
-    ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity](
-        self,
-        filters: LayoutMessageCursorFiltersType,
-        *,
-        return_as: type[R],
-    ) -> CursorResult[R] | None: ...
+class LayoutBlockSingleRepositoryProtocol(
+    BlockRepositoryProtocol[LayoutBlockSingleEntity], Protocol
+):
+    async def get_all_pages[P: BaseModel](
+        self, filters: LayoutSinglePageFiltersType, *, projection: type[P]
+    ) -> PagesResult[P] | None: ...
 
-
-class LayoutBlockSingleRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R](
-        self,
-        filters: LayoutSinglePageFiltersType,
-        *,
-        return_as: type[R],
-    ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R](
+    async def get_all_limit_offset[P: BaseModel](
         self,
         filters: LayoutSingleLimitOffsetFiltersType,
         *,
-        return_as: type[R],
-    ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity](
-        self,
-        filters: LayoutSingleCursorFiltersType,
-        *,
-        return_as: type[R],
-    ) -> CursorResult[R] | None: ...
+        projection: type[P],
+    ) -> LimitOffsetResult[P] | None: ...
+
+    async def get_all_cursor[P: BaseEntity](
+        self, filters: LayoutSingleCursorFiltersType, *, projection: type[P]
+    ) -> CursorResult[P] | None: ...
 
 
-class LayoutBlockTableRepositoryProtocol(BlockRepositoryProtocol, Protocol):
-    async def get_all_pages[R](
-        self,
-        filters: LayoutTablePageFiltersType,
-        *,
-        return_as: type[R],
-    ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R](
+class LayoutBlockTableRepositoryProtocol(
+    BlockRepositoryProtocol[LayoutBlockTableEntity], Protocol
+):
+    async def get_all_pages[P: BaseModel](
+        self, filters: LayoutTablePageFiltersType, *, projection: type[P]
+    ) -> PagesResult[P] | None: ...
+
+    async def get_all_limit_offset[P: BaseModel](
         self,
         filters: LayoutTableLimitOffsetFiltersType,
         *,
-        return_as: type[R],
-    ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity](
+        projection: type[P],
+    ) -> LimitOffsetResult[P] | None: ...
+
+    async def get_all_cursor[P: BaseEntity](
+        self, filters: LayoutTableCursorFiltersType, *, projection: type[P]
+    ) -> CursorResult[P] | None: ...
+
+
+class LayoutBlockMessageRepositoryProtocol(
+    BlockRepositoryProtocol[LayoutBlockMessageEntity], Protocol
+):
+    async def get_all_pages[P: BaseModel](
+        self, filters: LayoutMessagePageFiltersType, *, projection: type[P]
+    ) -> PagesResult[P] | None: ...
+
+    async def get_all_limit_offset[P: BaseModel](
         self,
-        filters: LayoutTableCursorFiltersType,
+        filters: LayoutMessageLimitOffsetFiltersType,
         *,
-        return_as: type[R],
-    ) -> CursorResult[R] | None: ...
+        projection: type[P],
+    ) -> LimitOffsetResult[P] | None: ...
+
+    async def get_all_cursor[P: BaseEntity](
+        self, filters: LayoutMessageCursorFiltersType, *, projection: type[P]
+    ) -> CursorResult[P] | None: ...

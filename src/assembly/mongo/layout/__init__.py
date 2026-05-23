@@ -1,3 +1,3 @@
-from .layout import LayoutProvider
+from .layout import Layout
 
-__all__ = ["LayoutProvider"]
+__all__ = ["Layout"]

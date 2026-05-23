@@ -1,17 +1,13 @@
 from dishka import Scope, provide
 
 from src.domain.protocols.repositories import LayoutRepositoryProtocol
-from src.infra.mongo.documents import LayoutDocument
-from src.infra.mongo.protocols import ConverterProtocol
-from src.infra.mongo.repositories import LayoutRepository
+from src.infra.mongo.repositories.layout import Layout as LayoutRepository
 
-from .blocks import _BlocksProvider
+from .blocks import Blocks
 from .layers import Layers
 
 
-class LayoutProvider(Layers, _BlocksProvider):
+class Layout(Layers, Blocks):
     @provide(scope=Scope.APP)
-    async def __layout(
-        self, converter: ConverterProtocol
-    ) -> LayoutRepositoryProtocol:
-        return LayoutRepository(LayoutDocument, converter=converter)
+    async def __layout(self) -> LayoutRepositoryProtocol:
+        return LayoutRepository()

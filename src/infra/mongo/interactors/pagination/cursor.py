@@ -2,37 +2,45 @@ from typing import TYPE_CHECKING
 
 from src.domain.models.pagination import CursorResult
 from src.infra.mongo.contexts import PaginationQueryContex
-
-from .base import BasePaginationMixin
+from src.infra.mongo.interactors.base import BaseInteractor
+from src.infra.mongo.interactors.find import FindMany
+from src.infra.mongo.interactors.helpers import CountByConditions
 
 if TYPE_CHECKING:
-    from pydantic import BaseModel
+    from beanie import Document
 
     from src.domain.models.entities import BaseEntity
     from src.domain.protocols.pagination import CursorParamsProtocol
     from src.infra.mongo.annotations import QueryConditionsType
 
 
-class PaginationCursorMixin(BasePaginationMixin):
-    async def _get_all_cursor[R: BaseEntity, P: BaseModel](
+class PaginateAsCursor[D: Document](BaseInteractor[D]):
+    async def __call__[P: BaseEntity](
         self,
         conditions: QueryConditionsType,
         *,
-        return_as: type[R],
         params: CursorParamsProtocol,
-        projection: type[P] | None = None,
+        projection: type[P],
         ctx: PaginationQueryContex | None = None,
-    ) -> CursorResult[R] | None:
+    ) -> CursorResult[P] | None:
         raise NotImplementedError
 
         if ctx is None:
             ctx = PaginationQueryContex()
 
-        documents = await self._document.find_many(
-            *conditions,
-            # limit=limit,
-            # skip=skip,
-            session=self._session,
+        interactor = CountByConditions[D](self._document, self._session)
+        count = await interactor(
+            conditions,
+            ignore_cache=ctx.ignore_cache,
+            fetch_links=ctx.fetch_links,
+            **ctx.pymongo_kwargs,
+        )
+
+        interactor = FindMany[D, P](self._document, self._session)
+        items = await interactor(
+            conditions,
+            limit=params.limit,
+            skip=params.offset,
             projection_model=projection,
             sort=ctx.sort,
             ignore_cache=ctx.ignore_cache,
@@ -42,18 +50,9 @@ class PaginationCursorMixin(BasePaginationMixin):
             nesting_depths_per_field=ctx.nesting_depths_per_field,
             lazy_parse=ctx.lazy_parse,
             **ctx.pymongo_kwargs,
-        ).to_list()
+        )
 
-        if not documents:
+        if not items:
             return None
 
-        count = await self._document.find(
-            *conditions,
-            session=self._session,
-            ignore_cache=ctx.ignore_cache,
-            fetch_links=ctx.fetch_links,
-            **ctx.pymongo_kwargs,
-        ).count()
-
-        items = self._convert_items(documents, return_as, projection)
         return CursorResult.from_params(params, count, items)

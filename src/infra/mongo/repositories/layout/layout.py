@@ -1,21 +1,19 @@
 from typing import TYPE_CHECKING
 
 from src.domain.enums import LifeStatusEnum
-from src.infra.mongo.projections import PaginatedLayoutProjection
-from src.infra.mongo.repositories.mixins import (
-    GetMixin,
-    PaginationCursorMixin,
-    PaginationLimitOffsetMixin,
-    PaginationPagesMixin,
-)
+from src.infra.mongo import interactors
+from src.infra.mongo.documents import LayoutDocument
+from src.infra.mongo.repositories import BaseRepository
 
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
     from src.domain.annotations import (
         LayoutCursorFiltersType,
         LayoutLimitOffsetFiltersType,
         LayoutPageFiltersType,
     )
-    from src.domain.models.entities import BaseEntity
+    from src.domain.models.entities import BaseEntity, LayoutEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,
@@ -24,50 +22,52 @@ if TYPE_CHECKING:
     from src.domain.protocols.pagination import LayoutFiltersProtocol
     from src.infra.mongo.annotations import QueryConditionsType
 
+type E = LayoutEntity
+type D = LayoutDocument
 
-class LayoutRepository(
-    GetMixin,
-    PaginationCursorMixin,
-    PaginationLimitOffsetMixin,
-    PaginationPagesMixin,
-):
-    async def get_all_pages[R](
-        self,
-        filters: LayoutPageFiltersType,
-        *,
-        return_as: type[R],
-    ) -> PagesResult[R] | None:
-        return await self._get_all_pages(
-            conditions=self._pagination_conditions(filters),
+
+class Layout(BaseRepository[D]):
+    async def get(self, id_: str) -> E | None:
+        interactor = interactors.FindByID[D](self._document, self._session)
+        document = await interactor(id_)
+        if document is None:
+            return None
+        return document.as_entity()
+
+    async def get_all_pages[P: BaseModel](
+        self, filters: LayoutPageFiltersType, *, projection: type[P]
+    ) -> PagesResult[P] | None:
+        interactor = interactors.PaginateAsPages[D](
+            self._document, self._session
+        )
+        return await interactor(
+            self._pagination_conditions(filters),
             params=filters.pagination_params,
-            return_as=return_as,
-            projection=PaginatedLayoutProjection,
+            projection=projection,
         )
 
-    async def get_all_limit_offset[R](
-        self,
-        filters: LayoutLimitOffsetFiltersType,
-        *,
-        return_as: type[R],
-    ) -> LimitOffsetResult[R] | None:
-        return await self._get_all_limit_offset(
-            conditions=self._pagination_conditions(filters),
+    async def get_all_limit_offset[P: BaseModel](
+        self, filters: LayoutLimitOffsetFiltersType, *, projection: type[P]
+    ) -> LimitOffsetResult[P] | None:
+        interactor = interactors.PaginateAsLimitOffset[D](
+            self._document, self._session
+        )
+        return await interactor(
+            self._pagination_conditions(filters),
             params=filters.pagination_params,
-            return_as=return_as,
-            projection=PaginatedLayoutProjection,
+            projection=projection,
         )
 
-    async def get_all_cursor[R: BaseEntity](
-        self,
-        filters: LayoutCursorFiltersType,
-        *,
-        return_as: type[R],
-    ) -> CursorResult[R] | None:
-        return await self._get_all_cursor(
-            conditions=self._pagination_conditions(filters),
+    async def get_all_cursor[P: BaseEntity](
+        self, filters: LayoutCursorFiltersType, *, projection: type[P]
+    ) -> CursorResult[P] | None:
+        interactor = interactors.PaginateAsCursor[D](
+            self._document, self._session
+        )
+        return await interactor(
+            self._pagination_conditions(filters),
             params=filters.pagination_params,
-            return_as=return_as,
-            projection=PaginatedLayoutProjection,
+            projection=projection,
         )
 
     def _pagination_conditions(

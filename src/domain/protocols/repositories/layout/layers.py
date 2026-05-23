@@ -1,13 +1,14 @@
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Protocol
 
+from src.domain.models.entities import (
+    LayoutLayerDefaultEntity,
+    LayoutLayerSchemaEntity,
+    LayoutLayerValidationEntity,
+)
+
 if TYPE_CHECKING:
-    from src.domain.models.entities import (
-        BaseEntity,
-        LayoutLayerDefaultEntity,
-        LayoutLayerSchemaEntity,
-        LayoutLayerValidationEntity,
-    )
+    from src.domain.models.entities import BaseEntity
 
 
 class LayerRepositoryProtocol[E: BaseEntity](Protocol):

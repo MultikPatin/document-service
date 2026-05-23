@@ -10,30 +10,75 @@ from .base import BaseInteractor
 
 if TYPE_CHECKING:
     from beanie import Document, PydanticObjectId
+    from pydantic import BaseModel
+
+    from src.infra.mongo.annotations import QueryConditionsType, QuerySortType
 
 
-class FindByID[D: Document](BaseInteractor[D]):
+class FindOne[D: Document, P: BaseModel](BaseInteractor[D]):
     async def __call__(  # noqa: PLR0913
         self,
-        document_id: Any,  # noqa: ANN401
+        conditions: QueryConditionsType,
         *,
+        projection: type[P] | None = None,
+        limit: int,
+        offset: int,
         ignore_cache: bool = False,
         fetch_links: bool = False,
         with_children: bool = False,
+        lazy_parse: bool = False,
         nesting_depth: int | None = None,
         nesting_depths_per_field: dict[str, int] | None = None,
         **pymongo_kwargs: Any,  # noqa: ANN401
     ) -> D | None:
-        return await self._document.get(
-            document_id,
+        return await self._document.find_one(
+            *conditions,
+            limit=limit,
+            skip=offset,
             session=self._session,
+            projection_model=projection,
             ignore_cache=ignore_cache,
             fetch_links=fetch_links,
             with_children=with_children,
             nesting_depth=nesting_depth,
             nesting_depths_per_field=nesting_depths_per_field,
+            lazy_parse=lazy_parse,
             **pymongo_kwargs,
         )
+
+
+class FindMany[D: Document, P: BaseModel](BaseInteractor[D]):
+    async def __call__(  # noqa: PLR0913
+        self,
+        conditions: QueryConditionsType,
+        *,
+        projection: type[P] | None = None,
+        limit: int,
+        offset: int,
+        sort: QuerySortType = None,
+        ignore_cache: bool = False,
+        fetch_links: bool = False,
+        with_children: bool = False,
+        lazy_parse: bool = False,
+        nesting_depth: int | None = None,
+        nesting_depths_per_field: dict[str, int] | None = None,
+        **pymongo_kwargs: Any,  # noqa: ANN401
+    ) -> list[D] | None:
+        return await self._document.find_many(
+            *conditions,
+            limit=limit,
+            skip=offset,
+            session=self._session,
+            projection_model=projection,
+            sort=sort,
+            ignore_cache=ignore_cache,
+            fetch_links=fetch_links,
+            with_children=with_children,
+            nesting_depth=nesting_depth,
+            nesting_depths_per_field=nesting_depths_per_field,
+            lazy_parse=lazy_parse,
+            **pymongo_kwargs,
+        ).to_list()
 
 
 class FindByHash[D: Document](BaseInteractor[D]):
@@ -50,6 +95,30 @@ class FindByHash[D: Document](BaseInteractor[D]):
     ) -> D | None:
         return await self._document.find_one(
             {"hash": hash_string},
+            session=self._session,
+            ignore_cache=ignore_cache,
+            fetch_links=fetch_links,
+            with_children=with_children,
+            nesting_depth=nesting_depth,
+            nesting_depths_per_field=nesting_depths_per_field,
+            **pymongo_kwargs,
+        )
+
+
+class FindByID[D: Document](BaseInteractor[D]):
+    async def __call__(  # noqa: PLR0913
+        self,
+        document_id: Any,  # noqa: ANN401
+        *,
+        ignore_cache: bool = False,
+        fetch_links: bool = False,
+        with_children: bool = False,
+        nesting_depth: int | None = None,
+        nesting_depths_per_field: dict[str, int] | None = None,
+        **pymongo_kwargs: Any,  # noqa: ANN401
+    ) -> D | None:
+        return await self._document.get(
+            document_id,
             session=self._session,
             ignore_cache=ignore_cache,
             fetch_links=fetch_links,

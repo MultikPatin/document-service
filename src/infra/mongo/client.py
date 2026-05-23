@@ -1,5 +1,5 @@
 from dataclasses import asdict
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from beanie import init_beanie
 from pymongo import AsyncMongoClient
@@ -40,6 +40,9 @@ class Client:
             document_models=documents,
             **asdict(ctx),
         )
+
+    async def server_info(self) -> dict[str, Any]:
+        return await self._client.server_info()
 
     async def close(self) -> None:
         await self._client.aclose()

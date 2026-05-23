@@ -5,40 +5,18 @@ from src.domain.protocols.repositories import (
     LayoutBlockSingleRepositoryProtocol,
     LayoutBlockTableRepositoryProtocol,
 )
-from src.infra.mongo.documents import (
-    LayoutBlockMessageDocument,
-    LayoutBlockSingleDocument,
-    LayoutBlockTableDocument,
-)
-from src.infra.mongo.protocols import ConverterProtocol
-from src.infra.mongo.repositories import (
-    LayoutBlockMessageRepository,
-    LayoutBlockSingleRepository,
-    LayoutBlockTableRepository,
-)
+from src.infra.mongo.repositories.layout import blocks
 
 
-class _BlocksProvider(Provider):
+class Blocks(Provider):
     @provide(scope=Scope.APP)
-    async def __single(
-        self, converter: ConverterProtocol
-    ) -> LayoutBlockSingleRepositoryProtocol:
-        return LayoutBlockSingleRepository(
-            LayoutBlockSingleDocument, converter=converter
-        )
+    async def __single(self) -> LayoutBlockSingleRepositoryProtocol:
+        return blocks.Single()
 
     @provide(scope=Scope.APP)
-    async def __table(
-        self, converter: ConverterProtocol
-    ) -> LayoutBlockTableRepositoryProtocol:
-        return LayoutBlockTableRepository(
-            LayoutBlockTableDocument, converter=converter
-        )
+    async def __table(self) -> LayoutBlockTableRepositoryProtocol:
+        return blocks.Table()
 
     @provide(scope=Scope.APP)
-    async def __message(
-        self, converter: ConverterProtocol
-    ) -> LayoutBlockMessageRepositoryProtocol:
-        return LayoutBlockMessageRepository(
-            LayoutBlockMessageDocument, converter=converter
-        )
+    async def __message(self) -> LayoutBlockMessageRepositoryProtocol:
+        return blocks.Message()

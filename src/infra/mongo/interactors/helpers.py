@@ -8,6 +8,26 @@ from .base import BaseInteractor
 if TYPE_CHECKING:
     from beanie import Document
 
+    from src.infra.mongo.annotations import QueryConditionsType
+
+
+class CountByConditions[D: Document](BaseInteractor[D]):
+    async def __call__(
+        self,
+        conditions: QueryConditionsType,
+        *,
+        ignore_cache: bool = False,
+        fetch_links: bool = False,
+        **pymongo_kwargs: Any,  # noqa: ANN401
+    ) -> int:
+        return await self._document.find(
+            *conditions,
+            session=self._session,
+            ignore_cache=ignore_cache,
+            fetch_links=fetch_links,
+            **pymongo_kwargs,
+        ).count()
+
 
 class ExistsByHash[D: Document](BaseInteractor[D]):
     async def __call__(

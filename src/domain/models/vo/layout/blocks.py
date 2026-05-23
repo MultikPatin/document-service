@@ -6,7 +6,10 @@ from src.domain.utils import vo_model_config
 class _Base(BaseModel):
     model_config = vo_model_config()
 
+    ref_count: int
+
     key: str
+    label: str
 
 
 class Message(_Base):

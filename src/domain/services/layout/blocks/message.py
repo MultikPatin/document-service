@@ -23,39 +23,25 @@ class LayoutBlockMessageService:
         self._repo = repo
 
     async def get(self, id_: str) -> LayoutBlockMessageEntity | None:
-        return await self._repo.get(id_, return_as=LayoutBlockMessageEntity)
-
-    # async def add(self, condition: LayoutMessageCreate) -> LayoutMessageDB:
-    #     return await self._repo.add(
-    #         LayoutMessageCreateDTO(
-    #             **condition.model_dump(),
-    #             key=generate_random_string(),
-    #         ),
-    #         session=session,
-    #     )
-
-    # async def update(
-    #     self, id_: str, condition: LayoutMessageUpdateDTO
-    # ) -> LayoutMessageDB:
-    #     return await self._repo.update(id_, condition)
+        return await self._repo.get(id_)
 
     async def get_all_pages(
         self, filters: LayoutMessagePageFiltersType
     ) -> PagesResult[LayoutBlockMessageEntity] | None:
         return await self._repo.get_all_pages(
-            filters, return_as=LayoutBlockMessageEntity
+            filters, projection=LayoutBlockMessageEntity
         )
 
     async def get_all_limit_offset(
         self, filters: LayoutMessageLimitOffsetFiltersType
     ) -> LimitOffsetResult[LayoutBlockMessageEntity] | None:
         return await self._repo.get_all_limit_offset(
-            filters, return_as=LayoutBlockMessageEntity
+            filters, projection=LayoutBlockMessageEntity
         )
 
     async def get_all_cursor(
         self, filters: LayoutMessageCursorFiltersType
     ) -> CursorResult[LayoutBlockMessageEntity] | None:
         return await self._repo.get_all_cursor(
-            filters, return_as=LayoutBlockMessageEntity
+            filters, projection=LayoutBlockMessageEntity
         )

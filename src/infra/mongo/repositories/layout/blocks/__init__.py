@@ -1,9 +1,5 @@
-from .message import LayoutBlockMessageRepository
-from .single import LayoutBlockSingleRepository
-from .table import LayoutBlockTableRepository
+from .message import Message
+from .single import Single
+from .table import Table
 
-__all__ = [
-    "LayoutBlockMessageRepository",
-    "LayoutBlockSingleRepository",
-    "LayoutBlockTableRepository",
-]
+__all__ = ["Message", "Single", "Table"]

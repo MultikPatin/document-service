@@ -1,13 +1,3 @@
-from .blocks import (
-    LayoutBlockMessageRepository,
-    LayoutBlockSingleRepository,
-    LayoutBlockTableRepository,
-)
-from .layout import LayoutRepository
+from .layout import Layout
 
-__all__ = [
-    "LayoutBlockMessageRepository",
-    "LayoutBlockSingleRepository",
-    "LayoutBlockTableRepository",
-    "LayoutRepository",
-]
+__all__ = ["Layout"]

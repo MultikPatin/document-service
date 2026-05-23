@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING, Protocol
 
-from src.domain.protocols.methods import GetMixinProtocol
-
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
     from src.domain.annotations import (
         LayoutCursorFiltersType,
         LayoutLimitOffsetFiltersType,
         LayoutPageFiltersType,
     )
-    from src.domain.models.entities import BaseEntity
+    from src.domain.models.entities import BaseEntity, LayoutEntity
     from src.domain.models.pagination import (
         CursorResult,
         LimitOffsetResult,
@@ -16,22 +16,16 @@ if TYPE_CHECKING:
     )
 
 
-class LayoutRepositoryProtocol(GetMixinProtocol, Protocol):
-    async def get_all_pages[R](
-        self,
-        filters: LayoutPageFiltersType,
-        *,
-        return_as: type[R],
-    ) -> PagesResult[R] | None: ...
-    async def get_all_limit_offset[R](
-        self,
-        filters: LayoutLimitOffsetFiltersType,
-        *,
-        return_as: type[R],
-    ) -> LimitOffsetResult[R] | None: ...
-    async def get_all_cursor[R: BaseEntity](
-        self,
-        filters: LayoutCursorFiltersType,
-        *,
-        return_as: type[R],
-    ) -> CursorResult[R] | None: ...
+class LayoutRepositoryProtocol[E: LayoutEntity](Protocol):
+    async def get(self, id_: str) -> E | None: ...
+    async def get_all_pages[P: BaseModel](
+        self, filters: LayoutPageFiltersType, *, projection: type[P]
+    ) -> PagesResult[P] | None: ...
+
+    async def get_all_limit_offset[P: BaseModel](
+        self, filters: LayoutLimitOffsetFiltersType, *, projection: type[P]
+    ) -> LimitOffsetResult[P] | None: ...
+
+    async def get_all_cursor[P: BaseEntity](
+        self, filters: LayoutCursorFiltersType, *, projection: type[P]
+    ) -> CursorResult[P] | None: ...
