@@ -58,7 +58,7 @@ def _link_replacer(dump: MutableMapping[str, Any] | Sequence[Any]) -> None:
             else:
                 _link_replacer(dump[k])  # ty:ignore[invalid-argument-type]
         for k in to_delete:
-            del dump[k]
+            del dump[k]  # ty:ignore[not-subscriptable]
     elif isinstance(dump, list):
         for i in dump:
             _link_replacer(i)
